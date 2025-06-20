@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * It was also refactored so I could use {@code List<String>} instead of
  * {@code String[]}, and it doesn't require server. It's local tab completer!
  */
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class TabCompleter
 {
     protected GuiTextField textField;

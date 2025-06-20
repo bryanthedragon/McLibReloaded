@@ -25,7 +25,7 @@ import org.lwjgl.Sys;
 /**
  * GUI utilities
  */
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class GuiUtils
 {
     public static void drawModel(ModelBase model, EntityPlayer player, int x, int y, float scale)

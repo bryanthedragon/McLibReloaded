@@ -52,7 +52,7 @@ public class NBTUtils
         return list;
     }
 
-    public static NBTTagCompound readInfiniteTag(ByteBuf buf)
+    public static CompoundTag readInfiniteTag(ByteBuf buf)
     {
         int i = buf.readerIndex();
         byte b0 = buf.readByte();

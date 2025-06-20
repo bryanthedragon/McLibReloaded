@@ -40,7 +40,7 @@ public class TickEvent extends Event {
         private final MinecraftServer server;
 
         protected ServerTickEvent(BooleanSupplier haveTime, MinecraftServer server, Phase phase) {
-            super(Type.SERVER, LogicalSide.SERVER, phase);
+            super(Type.SERVER, LogicalDist.DEDICATED_SERVER, phase);
             this.haveTime = haveTime;
             this.server = server;
         }
@@ -76,7 +76,7 @@ public class TickEvent extends Event {
 
     public static class ClientTickEvent extends TickEvent {
         protected ClientTickEvent(Phase phase) {
-            super(Type.CLIENT, LogicalSide.CLIENT, phase);
+            super(Type.CLIENT, LogicalDist.CLIENT, phase);
         }
 
         public static class Pre extends ClientTickEvent {
@@ -129,7 +129,7 @@ public class TickEvent extends Event {
         public final Player player;
 
         protected PlayerTickEvent(Player player, Phase phase) {
-            super(Type.PLAYER, player instanceof ServerPlayer ? LogicalSide.SERVER : LogicalSide.CLIENT, phase);
+            super(Type.PLAYER, player instanceof ServerPlayer ? LogicalDist.DEDICATED_SERVER : LogicalDist.CLIENT, phase);
             this.player = player;
         }
 
@@ -150,7 +150,7 @@ public class TickEvent extends Event {
         private final DeltaTracker timer;
 
         private RenderTickEvent(Phase phase, DeltaTracker timer) {
-            super(Type.RENDER, LogicalSide.CLIENT, phase);
+            super(Type.RENDER, LogicalDist.CLIENT, phase);
             this.timer = timer;
         }
 

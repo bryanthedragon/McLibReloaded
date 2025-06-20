@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class GuiConfigPanel extends GuiDashboardPanel<GuiAbstractDashboard>
 {
     public GuiIconElement request;

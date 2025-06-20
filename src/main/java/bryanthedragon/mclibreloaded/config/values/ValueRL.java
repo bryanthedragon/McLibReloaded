@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ValueRL extends GenericValue<ResourceLocation> implements IServerValue, IConfigGuiProvider
 {
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public static GuiTexturePicker picker;
 
     private boolean useServer;
@@ -79,7 +79,7 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiElement element = new GuiElement(mc);
@@ -177,7 +177,7 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
     {
         if (buffer.readBoolean())
         {
-            NBTTagCompound tag = ByteBufUtils.readTag(buffer);
+            CompoundTag tag = ByteBufUtils.readTag(buffer);
 
             return RLUtils.create(tag.getTag("RL"));
         }
@@ -212,7 +212,7 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
 
         if (rl != null)
         {
-            NBTTagCompound tag = new NBTTagCompound();
+            CompoundTag tag = new CompoundTag();
 
             tag.setTag("RL", RLUtils.writeNbt(rl));
             ByteBufUtils.writeTag(buffer, tag);

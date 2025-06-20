@@ -1,12 +1,18 @@
 package bryanthedragon.mclibreloaded.network.mclib.common;
 
 import com.mojang.brigadier.Message;
+
+import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
+
 import io.netty.buffer.ByteBuf;
+
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 public class PacketDropItem implements Message
 {
-    public net.minecraft.world.item.ItemStack stack = ItemStack.EMPTY;
+    public ItemStack stack = ItemStack.EMPTY;
 
     public PacketDropItem()
     {}
@@ -18,7 +24,7 @@ public class PacketDropItem implements Message
 
     public void fromBytes(ByteBuf buf)
     {
-        NBTTagCompound tagCompound = ByteBufUtils.readTag(buf);
+        ItemLike tagCompound = ByteBufUtils.readTag(buf);
 
         if (tagCompound != null)
         {
@@ -30,7 +36,13 @@ public class PacketDropItem implements Message
     {
         if (!this.stack.isEmpty())
         {
-            ByteBufUtils.writeTag(buf, this.stack.writeToNBT(new NBTTagCompound()));
+            ByteBufUtils.writeTag(buf, this.stack.writeToNBT(new CompoundTag()));
         }
+    }
+
+    @Override
+    public String getString() 
+    {
+        return "Drop Item Packet: " + (this.stack.isEmpty() ? "Empty" : this.stack.getItem().getDescriptionId());
     }
 }

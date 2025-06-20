@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Delegated {@link IGuiElement}
  */
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class GuiDelegateElement<T extends GuiElement> extends GuiElement
 {
     public T delegate;

@@ -1,11 +1,14 @@
 package bryanthedragon.mclibreloaded.network.mclib.common;
 
 import com.mojang.brigadier.Message;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.KeyParser;
 import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerConfirm;
 import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerConfirm;
+
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -17,6 +20,7 @@ public class PacketConfirm implements Message
     public IKey langKey;
     public boolean confirm;
 
+    @SuppressWarnings("unchecked")
     public PacketConfirm(ClientHandlerConfirm.GUI gui, IKey langKey, Consumer<Boolean> callback)
     {
         this.gui = gui;
@@ -47,5 +51,11 @@ public class PacketConfirm implements Message
         buf.writeInt(this.gui.ordinal());
         buf.writeInt(this.consumerID);
         buf.writeBoolean(this.confirm);
+    }
+
+    @Override
+    public String getString() 
+    {
+        return "Confirm Packet: GUI=" + this.gui + ", LangKey=" + this.langKey + ", ConsumerID=" + this.consumerID + ", Confirm=" + this.confirm;
     }
 }

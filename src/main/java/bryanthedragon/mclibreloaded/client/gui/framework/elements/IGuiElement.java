@@ -3,7 +3,7 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public interface IGuiElement
 {
     /**

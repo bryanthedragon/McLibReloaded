@@ -29,7 +29,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
@@ -155,7 +155,7 @@ public class GuiTexturePicker extends GuiElement
 
         try
         {
-            NBTTagCompound compound = JsonToNBT.getTagFromJson(GuiScreen.getClipboardString());
+            CompoundTag compound = JsonToNBT.getTagFromJson(GuiScreen.getClipboardString());
 
             location = RLUtils.create(compound.getTag("RL"));
         }
@@ -175,7 +175,7 @@ public class GuiTexturePicker extends GuiElement
         }
         else
         {
-            NBTTagCompound tag = new NBTTagCompound();
+            CompoundTag tag = new CompoundTag();
 
             tag.setTag("RL", location);
 

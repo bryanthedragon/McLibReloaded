@@ -106,9 +106,7 @@ public class McLibReloaded
         trackpadDecimalPlaces = builder.getInt("trackpad_decimal_places", 6, 3, 31);
         enableGridRendering = builder.getBoolean("enable_grid_rendering", true);
         userIntefaceScale = builder.getInt("user_interface_scale", 2, 0, 4);
-        tooltipStyle = builder.getInt("tooltip_style", 1).modes(
-                (IKey) IKey.lang("mclib.tooltip_style.light"),
-                (IKey) IKey.lang("mclib.tooltip_style.dark")
+        tooltipStyle = builder.getInt("tooltip_style", 1).modes((IKey) IKey.lang("mclib.tooltip_style.light"), (IKey) IKey.lang("mclib.tooltip_style.dark")
         );
         renderTranslateTextColors = builder.getBoolean("render_translation_text_colours", false);
 
@@ -122,13 +120,7 @@ public class McLibReloaded
         enableMouseButtonRendering = builder.getBoolean("enable_mouse_buttons_rendering", false);
         enableKeystrokeRendering = builder.getBoolean("enable_keystrokes_rendering", false);
         keystrokeOffset = builder.getInt("keystroke_offset", 10, 0, 20);
-        keystrokeMode = builder.getInt("keystroke_position", 1).modes(
-                (IKey) IKey.lang("mclibreload.keystrokes_position.auto"),
-                (IKey) IKey.lang("mclibreload.keystrokes_position.bottom_left"),
-                (IKey) IKey.lang("mclibreload.keystrokes_position.bottom_right"),
-                (IKey) IKey.lang("mclibreload.keystrokes_position.top_right"),
-                (IKey) IKey.lang("mclibreload.keystrokes_position.top_left")
-        );
+        keystrokeMode = builder.getInt("keystroke_position", 1).modes((IKey) IKey.lang("mclibreload.keystrokes_position.auto"), (IKey) IKey.lang("mclibreload.keystrokes_position.bottom_left"), (IKey) IKey.lang("mclibreload.keystrokes_position.bottom_right"), (IKey) IKey.lang("mclibreload.keystrokes_position.top_right"), (IKey) IKey.lang("mclibreload.keystrokes_position.top_left"));
 
         builder.getCategory().markClientSide();
 

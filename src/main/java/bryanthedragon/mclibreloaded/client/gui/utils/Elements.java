@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class Elements
 {
     public static GuiElement row(Minecraft mc, int margin, GuiElement... elements)

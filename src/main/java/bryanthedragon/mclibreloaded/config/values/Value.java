@@ -410,13 +410,13 @@ public class Value implements IByteBufSerializable, ICopy<Value>
 
     /* Client side stuff */
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getLabelKey()
     {
         return this.config.getValueLabelKey(this);
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getCommentKey()
     {
         return this.config.getValueCommentKey(this);

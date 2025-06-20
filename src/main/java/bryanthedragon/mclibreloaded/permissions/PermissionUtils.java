@@ -4,7 +4,8 @@ import bryanthedragon.mclibreloaded.network.mclib.Dispatcher;
 import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerAnswer;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketRequestPermission;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.entity.player.Player;
+
 import java.util.function.Consumer;
 
 public class PermissionUtils
@@ -16,16 +17,16 @@ public class PermissionUtils
      * @param callback the callback to be executed after checking the player
      *                 or after the server has sent the permission result.
      */
-    public static void hasPermission(EntityPlayer player, PermissionCategory permission, Consumer<Boolean> callback)
+    public static void hasPermission(Player player, PermissionCategory permission, Consumer<Boolean> callback)
     {
-        if (!Minecraft.getMinecraft().world.isRemote)
+        if (!Minecraft.getInstance().level.isClientSide)
         {
             callback.accept(permission.playerHasPermission(player));
         }
         else
         {
             //in singleplayer there is no use in having a permission system
-            if (Minecraft.getMinecraft().isIntegratedServerRunning())
+            if (Minecraft.getInstance().isIntegratedServerRunning())
             {
                 callback.accept(true);
             }

@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * This class is a workaround class which allows using lightmap methods 
  * without having to resort to straight copy-pasting the code.
  */
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class RenderLightmap extends RenderLivingBase<EntityLivingBase>
 {
     /**

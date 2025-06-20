@@ -54,7 +54,7 @@ public class ValueDouble extends GenericNumberValue<Double> implements IServerVa
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiElement element = new GuiElement(mc);

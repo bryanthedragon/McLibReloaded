@@ -18,7 +18,7 @@ import java.util.List;
  *
  * This class allows to
  */
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class Waveform
 {
     public float[] average;
@@ -199,7 +199,7 @@ public class Waveform
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public static class WaveformSprite
     {
         public final int texture;

@@ -181,7 +181,7 @@ public class ScrollArea extends Area
 
     /* GUI code for easier manipulations */
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public boolean mouseClicked(GuiContext context)
     {
         return this.mouseClicked(context.mouseX, context.mouseY);
@@ -216,7 +216,7 @@ public class ScrollArea extends Area
         return isInside;
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public boolean mouseScroll(GuiContext context)
     {
         return this.mouseScroll(context.mouseX, context.mouseY, context.mouseWheel);
@@ -238,7 +238,7 @@ public class ScrollArea extends Area
         return isInside && (this.cancelScrollEdge || lastScroll != this.scroll);
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void mouseReleased(GuiContext context)
     {
         this.mouseReleased(context.mouseX, context.mouseY);
@@ -252,7 +252,7 @@ public class ScrollArea extends Area
         this.dragging = false;
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void drag(GuiContext context)
     {
         this.drag(context.mouseX, context.mouseY);
@@ -275,7 +275,7 @@ public class ScrollArea extends Area
     /**
      * This method is responsible for drawing a scroll bar 
      */
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void drawScrollbar()
     {
         int side = this.direction.getSide(this);

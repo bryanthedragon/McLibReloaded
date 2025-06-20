@@ -67,31 +67,31 @@ public class Config implements IByteBufSerializable
 
     /* Translation string related methods */
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getTitleKey()
     {
         return this.id + ".config.title";
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getCategoryTitleKey(Value value)
     {
         return this.id + ".config." + value.getPath() + ".title";
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getCategoryTooltipKey(Value value)
     {
         return this.id + ".config." + value.getPath() + ".tooltip";
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getValueLabelKey(Value value)
     {
         return this.id + ".config." + value.getPath();
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getValueCommentKey(Value value)
     {
         return this.id + ".config.comments." + value.getPath();

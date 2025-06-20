@@ -37,7 +37,7 @@ public class ValueBoolean extends GenericValue<Boolean> implements IServerValue,
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiToggleElement toggle = new GuiToggleElement(mc, this);

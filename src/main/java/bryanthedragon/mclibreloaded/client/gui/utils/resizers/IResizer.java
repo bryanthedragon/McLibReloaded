@@ -13,10 +13,10 @@ public interface IResizer
 
     public void postApply(Area area);
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void add(GuiElement parent, GuiElement child);
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void remove(GuiElement parent, GuiElement child);
 
     public int getX();

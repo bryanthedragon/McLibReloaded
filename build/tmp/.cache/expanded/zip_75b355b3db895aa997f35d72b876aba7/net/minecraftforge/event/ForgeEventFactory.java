@@ -804,11 +804,11 @@ public final class ForgeEventFactory {
     }
 
     public static void onPreLevelTick(Level level, BooleanSupplier haveTime) {
-        post(new TickEvent.LevelTickEvent.Pre(level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER, level, haveTime));
+        post(new TickEvent.LevelTickEvent.Pre(level.isClientSide ? LogicalDist.CLIENT : LogicalDist.DEDICATED_SERVER, level, haveTime));
     }
 
     public static void onPostLevelTick(Level level, BooleanSupplier haveTime) {
-        post(new TickEvent.LevelTickEvent.Post(level.isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER, level, haveTime));
+        post(new TickEvent.LevelTickEvent.Post(level.isClientSide ? LogicalDist.CLIENT : LogicalDist.DEDICATED_SERVER, level, haveTime));
     }
 
     public static void onPreClientTick() {

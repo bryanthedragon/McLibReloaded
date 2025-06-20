@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public abstract class GuiElement extends Gui implements IGuiElement
 {
     /**

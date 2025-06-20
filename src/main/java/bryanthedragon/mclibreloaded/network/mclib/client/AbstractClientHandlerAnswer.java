@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+@SuppressWarnings("rawtypes")
 @Mod.EventBusSubscriber
 public abstract class AbstractClientHandlerAnswer<T extends PacketAnswer> extends ClientMessageHandler<T>
 {
@@ -65,6 +66,7 @@ public abstract class AbstractClientHandlerAnswer<T extends PacketAnswer> extend
      */
     public static <T extends Serializable> void requestServerAnswer(AbstractDispatcher dispatcher, IAnswerRequest<T> request, Consumer<T> callback)
     {
+        @SuppressWarnings("unchecked")
         int id = CONSUMERS.register((obj) ->
         {
             T param;

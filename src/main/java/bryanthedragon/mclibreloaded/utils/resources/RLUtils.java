@@ -34,7 +34,7 @@ public class RLUtils
     /**
      * Get stream for multi resource location 
      */
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public static IResource getStreamForMultiskin(MultiResourceLocation multi) throws IOException
     {
         if (multi.children.isEmpty())

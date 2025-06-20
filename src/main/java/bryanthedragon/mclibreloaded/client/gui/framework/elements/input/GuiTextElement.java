@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * 
  * This element is a wrapper for the text field class
  */
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, ITextColoring
 {
     public static final Predicate<String> FILENAME_PREDICATE = (s) -> Patterns.FILENAME.matcher(s).find();

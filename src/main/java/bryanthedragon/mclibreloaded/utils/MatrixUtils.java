@@ -14,7 +14,7 @@ import javax.vecmath.*;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class MatrixUtils
 {
     /**

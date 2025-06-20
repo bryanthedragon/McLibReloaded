@@ -3,7 +3,7 @@ package bryanthedragon.mclibreloaded.utils.resources;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 
@@ -157,7 +157,7 @@ public class FilteredResourceLocation implements IWritableLocation<FilteredResou
             return;
         }
 
-        NBTTagCompound tag = (NBTTagCompound) nbt;
+        CompoundTag tag = (CompoundTag) nbt;
 
         this.path = RLUtils.create(tag.getString("Path"));
 
@@ -280,7 +280,7 @@ public class FilteredResourceLocation implements IWritableLocation<FilteredResou
     @Override
     public NBTBase writeNbt()
     {
-        NBTTagCompound tag = new NBTTagCompound();
+        CompoundTag tag = new CompoundTag();
 
         tag.setString("Path", this.toString());
 

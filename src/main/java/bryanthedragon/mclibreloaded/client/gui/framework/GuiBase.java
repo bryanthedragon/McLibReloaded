@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Base class for GUI screens using this framework
  */
-@SideOnly(Side.CLIENT)
+@SideOnly(Dist.CLIENT)
 public class GuiBase extends GuiScreen
 {
     private static GuiContext current;

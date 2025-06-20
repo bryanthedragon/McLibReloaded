@@ -329,7 +329,7 @@ public class ValueItemSlots extends GenericValue<ItemStack[]>
 
         for (int i = 0; i < this.value.length; i++)
         {
-            NBTTagCompound tag = new NBTTagCompound();
+            CompoundTag tag = new CompoundTag();
             ItemStack stack = this.value[i];
 
             if (!stack.isEmpty())

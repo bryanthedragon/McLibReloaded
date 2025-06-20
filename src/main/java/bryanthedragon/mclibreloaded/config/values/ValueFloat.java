@@ -54,7 +54,7 @@ public class ValueFloat extends GenericNumberValue<Float> implements IServerValu
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiElement element = new GuiElement(mc);

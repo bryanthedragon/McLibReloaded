@@ -62,6 +62,6 @@ public class PacketRequestPermission implements IAnswerRequest<Boolean>
     @Override
     public String getString()
     {
-        return "";
+        return "Request Permission Packet: " + (this.request != null ? this.request.getName() : "null") + ", CallbackID: " + this.callbackID;
     }
 }

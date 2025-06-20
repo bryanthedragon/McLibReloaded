@@ -42,7 +42,7 @@ public class ForgeInternalHandler {
                     entity.discard();
                     event.setCanceled(true);
                     @SuppressWarnings("resource")
-                    var executor = LogicalSidedProvider.WORKQUEUE.get(event.getLevel().isClientSide ? LogicalSide.CLIENT : LogicalSide.SERVER);
+                    var executor = LogicalSidedProvider.WORKQUEUE.get(event.getLevel().isClientSide ? LogicalDist.CLIENT : LogicalDist.DEDICATED_SERVER);
                     executor.schedule(new TickTask(0, () -> event.getLevel().addFreshEntity(newEntity)));
                 }
             }

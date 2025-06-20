@@ -29,6 +29,7 @@ public class PacketAnswer<T extends Serializable> implements Message
         return this.answer;
     }
 
+    @SuppressWarnings("unchecked")
     public void fromBytes(ByteBuf buf)
     {
         this.callBackID = buf.readInt();
@@ -48,5 +49,11 @@ public class PacketAnswer<T extends Serializable> implements Message
     {
         buf.writeInt(this.callBackID);
         ByteBufUtils.writeObject(buf, this.answer);
+    }
+
+    @Override
+    public String getString() 
+    {
+        return "";
     }
 }

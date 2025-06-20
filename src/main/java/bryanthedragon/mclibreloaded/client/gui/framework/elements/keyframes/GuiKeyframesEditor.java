@@ -24,7 +24,7 @@ import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 import org.lwjgl.input.Keyboard;
@@ -225,7 +225,7 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
     {
         try
         {
-            NBTTagCompound tag = JsonToNBT.getTagFromJson(GuiScreen.getClipboardString());
+            CompoundTag tag = JsonToNBT.getTagFromJson(GuiScreen.getClipboardString());
             Map<String, List<Keyframe>> temp = new HashMap<String, List<Keyframe>>();
 
             for (String key : tag.getKeySet())
@@ -266,7 +266,7 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
      */
     private void copyKeyframes()
     {
-        NBTTagCompound keyframes = new NBTTagCompound();
+        CompoundTag keyframes = new CompoundTag();
 
         for (GuiSheet sheet : this.graph.getSheets())
         {

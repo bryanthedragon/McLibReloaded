@@ -1,64 +1,50 @@
 package bryanthedragon.mclibreloaded.network;
 
-import com.mojang.brigadier.Message;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.behavior.EntityTracker;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.SimpleChannel;
 
-/**
- * Network dispatcher
- *
- * @author Ernio (Ernest Sadowski)
- */
-public abstract class AbstractDispatcher
-{
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+public abstract class AbstractDispatcher {
     private final SimpleChannel dispatcher;
-    private byte nextPacketID;
+    private int packetId = 0;
 
-    public AbstractDispatcher(String modID)
-    {
-        this.dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(modID);
+    public AbstractDispatcher(String modID) {
+        this.dispatcher = NetworkRegistry.ChannelBuilder
+            .named(new ResourceLocation(modID, "main"))
+            .networkProtocolVersion(() -> "1")
+            .clientAcceptedVersions(s -> true)
+            .serverAcceptedVersions(s -> true)
+            .simpleChannel();
     }
 
-    public SimpleChannel get()
-    {
-        return this.dispatcher;
+    public SimpleChannel get() {
+        return dispatcher;
     }
 
-    /**
-     * Here you supposed to register packets to handlers 
-     */
-    public abstract void register();
-
-    /**
-     * Send message to players who are tracking given entity
-     */
-    public void sendToTracked(Entity entity, Message message)
-    {
-        EntityTracker tracker = ((WorldServer) entity.level).getEntityTracker();
-
-        for (Player player : tracker.getTrackingPlayers(entity))
-        {
-            this.dispatcher.sendTo(message, player);
-        }
+    // Your new register method:
+    public <MSG> void register(Class<MSG> messageClass, Function<MSG, ?> encoder, Function<?, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> handler, Dist dist) {
+        dispatcher.messageBuilder(messageClass, packetId++, dist)
+        .encoder(encoder)
+        .decoder(decoder)
+        .consumer(handler)
+        .add();
     }
 
-    public void sendToTracked(Entity entity, Object msg)
+    public void register(Class<?> packet, Class<?> handler, Dist dist)
     {
-        dispatcher.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), (PacketDistributor.PacketTarget) msg);
+        // Implement the registration logic that binds packet and handler to the channel,
+        // handles client/server distinction using Dist,
+        // and assigns incrementing packet IDs.
+        dispatcher.messageBuilder(packet, packetId++, dist)
+            .encoder(encoder)
+            .decoder(decoder)
+            .consumer(handler)
+            .add();
     }
 
-    public void sendTo(Object msg, ServerPlayer player)
-    {
-        dispatcher.send(PacketDistributor.PLAYER.with(() -> player), msg);
-    }
-
-    public void sendToServer(Object msg)
-    {
-        dispatcher.sendToServer(msg);
-    }
 }

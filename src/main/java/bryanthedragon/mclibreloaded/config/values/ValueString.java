@@ -37,7 +37,7 @@ public abstract class ValueString extends GenericValue<String> implements IServe
     }
 
     @Override
-    @SideOnly(MixinEnvironment.Side.CLIENT)
+    @SideOnly(MixinEnvironment.Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiElement element = new GuiElement(mc) {

@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
 import bryanthedragon.mclibreloaded.network.INBTSerializable;
 import bryanthedragon.mclibreloaded.utils.ICopy;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 /**
  * Keyframe class
@@ -138,7 +138,7 @@ public class Keyframe implements IByteBufSerializable, INBTSerializable, ICopy<K
     }
 
     @Override
-    public void fromNBT(NBTTagCompound tag)
+    public void fromNBT(CompoundTag tag)
     {
         if (tag.hasKey("Tick")) this.tick = tag.getLong("Tick");
         if (tag.hasKey("Value")) this.value = tag.getDouble("Value");
@@ -151,7 +151,7 @@ public class Keyframe implements IByteBufSerializable, INBTSerializable, ICopy<K
     }
 
     @Override
-    public NBTTagCompound toNBT(NBTTagCompound tag)
+    public CompoundTag toNBT(CompoundTag tag)
     {
         tag.setLong("Tick", this.tick);
         tag.setDouble("Value", this.value);

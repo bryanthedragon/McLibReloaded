@@ -6,10 +6,7 @@ import bryanthedragon.mclibreloaded.network.ClientMessageHandler;
 import bryanthedragon.mclibreloaded.network.mclib.Dispatcher;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfirm;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientHandlerConfirm extends ClientMessageHandler<PacketConfirm>
 {
@@ -19,13 +16,13 @@ public class ClientHandlerConfirm extends ClientMessageHandler<PacketConfirm>
      * @param packet
      */
     @Override
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void run(LocalPlayer entityPlayerSP, PacketConfirm packet)
     {
         switch(packet.gui)
         {
             case MCSCREEN:
-                Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmationScreen(packet.langKey, (value) ->
+                Minecraft.getInstance().displayGuiScreen(new GuiConfirmationScreen(packet.langKey, (value) ->
                 {
                     this.dispatchPacket(packet, value);
                 }));

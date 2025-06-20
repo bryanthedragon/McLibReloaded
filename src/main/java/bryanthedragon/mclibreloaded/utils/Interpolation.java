@@ -664,13 +664,13 @@ public enum Interpolation implements IInterpolation
         this.key = key;
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getKey()
     {
         return "mclib.interpolations." + this.key;
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public String getTooltipKey()
     {
         return "mclib.interpolations.tooltips." + this.key;

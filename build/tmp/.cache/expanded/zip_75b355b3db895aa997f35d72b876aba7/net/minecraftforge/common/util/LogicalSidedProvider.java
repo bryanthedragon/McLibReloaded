@@ -23,11 +23,11 @@ public class LogicalSidedProvider<T> {
     public static final LogicalSidedProvider<Optional<Level>> CLIENTWORLD = new LogicalSidedProvider<>((c)-> Optional.of(c.get().level), (s)->Optional.empty());
 
     public T get(LogicalSide side) {
-        return side == LogicalSide.CLIENT ? clientSide.apply(client) : serverSide.apply(server);
+        return side == LogicalDist.CLIENT ? clientSide.apply(client) : serverSide.apply(server);
     }
 
     public T get(boolean client) {
-        return get(client ? LogicalSide.CLIENT : LogicalSide.SERVER);
+        return get(client ? LogicalDist.CLIENT : LogicalDist.DEDICATED_SERVER);
     }
 
     // =========================================

@@ -18,10 +18,13 @@ import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerConfirm;
 import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerDropItem;
 import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerPermissionRequest;
 import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerRequestConfigs;
+
 import com.mojang.brigadier.Message;
+
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
 
 public class Dispatcher
 {
@@ -30,23 +33,23 @@ public class Dispatcher
         @Override
         public void register()
         {
-            register(PacketDropItem.class, ServerHandlerDropItem.class, Side.SERVER);
+            register(PacketDropItem.class, ServerHandlerDropItem.class, Dist.DEDICATED_SERVER);
 
             /* Config related packets */
-            register(PacketRequestConfigs.class, ServerHandlerRequestConfigs.class, Side.SERVER);
-            register(PacketConfig.class, ServerHandlerConfig.class, Side.SERVER);
-            register(PacketConfig.class, ClientHandlerConfig.class, Side.CLIENT);
+            register(PacketRequestConfigs.class, ServerHandlerRequestConfigs.class, Dist.DEDICATED_SERVER);
+            register(PacketConfig.class, ServerHandlerConfig.class, Dist.DEDICATED_SERVER);
+            register(PacketConfig.class, ClientHandlerConfig.class, Dist.CLIENT);
 
             //TODO abstract confirm thing into server to client to server answer thing - see IAnswerRequest etc.
             /* Confirm related packets */
-            register(PacketConfirm.class, ClientHandlerConfirm.class, Side.CLIENT);
-            register(PacketConfirm.class, ServerHandlerConfirm.class, Side.SERVER);
+            register(PacketConfirm.class, ClientHandlerConfirm.class, Dist.CLIENT);
+            register(PacketConfirm.class, ServerHandlerConfirm.class, Dist.DEDICATED_SERVER);
 
             /* client answer related packets */
-            register(PacketAnswer.class, ClientHandlerAnswer.class, Side.CLIENT);
-            register(PacketBoolean.class, ClientHandlerBoolean.class, Side.CLIENT);
+            register(PacketAnswer.class, ClientHandlerAnswer.class, Dist.CLIENT);
+            register(PacketBoolean.class, ClientHandlerBoolean.class, Dist.CLIENT);
 
-            register(PacketRequestPermission.class, ServerHandlerPermissionRequest.class, Side.SERVER);
+            register(PacketRequestPermission.class, ServerHandlerPermissionRequest.class, Dist.DEDICATED_SERVER);
         }
     };
 
@@ -69,9 +72,9 @@ public class Dispatcher
     /**
      * Send message to the server
      */
-    public static void sendToServer(PacketConfig message)
+    public static void sendToServer(PacketConfirm packet)
     {
-        DISPATCHER.sendToServer((Message) message);
+        DISPATCHER.sendToServer((Message) packet);
     }
 
     /**

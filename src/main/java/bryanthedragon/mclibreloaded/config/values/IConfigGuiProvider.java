@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface IConfigGuiProvider
 {
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui);
 }

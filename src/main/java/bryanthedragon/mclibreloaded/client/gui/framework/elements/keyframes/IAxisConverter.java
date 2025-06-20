@@ -13,9 +13,9 @@ public interface IAxisConverter
 
     public double to(double x);
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void updateField(GuiTrackpadElement element);
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public boolean forceInteger(Keyframe keyframe, Selection selection, boolean forceInteger);
 }

@@ -38,13 +38,13 @@ public class Icon
         this.textureH = textureH;
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void render(int x, int y)
     {
         this.render(x, y, 0, 0);
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void render(int x, int y, float ax, float ay)
     {
         if (this.location == null)
@@ -63,7 +63,7 @@ public class Icon
         GlStateManager.disableAlpha();
     }
 
-    @SideOnly(Side.CLIENT)
+    @SideOnly(Dist.CLIENT)
     public void renderArea(int x, int y, int w, int h)
     {
         GlStateManager.enableAlpha();

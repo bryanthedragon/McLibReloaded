@@ -285,7 +285,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
      * Calls {@link GenericBaseValue#valueFromNBT(NBTBase)}
      */
     @Override
-    public void fromNBT(NBTTagCompound tag)
+    public void fromNBT(CompoundTag tag)
     {
         for (Map.Entry<String, String> entry : this.nbtMap.entrySet())
         {
@@ -305,7 +305,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
      * Serializes always, if the value has been registered with alwaysWrite flag true.
      */
     @Override
-    public NBTTagCompound toNBT(NBTTagCompound tag)
+    public CompoundTag toNBT(CompoundTag tag)
     {
         for (Map.Entry<String, String> entry : this.nbtMap.entrySet())
         {

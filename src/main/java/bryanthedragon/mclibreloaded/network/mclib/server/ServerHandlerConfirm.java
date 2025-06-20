@@ -24,6 +24,7 @@ public class ServerHandlerConfirm extends ServerMessageHandler<PacketConfirm>
         consumers.put(id, item);
     }
 
+    @SuppressWarnings("rawtypes")
     public static Entry getLastConsumerEntry()
     {
         return consumers.lastEntry();

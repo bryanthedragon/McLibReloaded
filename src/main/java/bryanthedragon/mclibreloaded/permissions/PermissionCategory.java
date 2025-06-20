@@ -2,12 +2,8 @@ package bryanthedragon.mclibreloaded.permissions;
 
 import io.netty.buffer.ByteBuf;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.server.permission.DefaultPermissionLevel;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +84,7 @@ public class PermissionCategory implements IByteBufSerializable
         return (this.parent != null ? this.parent + "." : "") + this.name;
     }
 
+    @SuppressWarnings("null")
     @Override
     public void fromBytes(ByteBuf buffer)
     {
@@ -106,6 +103,7 @@ public class PermissionCategory implements IByteBufSerializable
         }
     }
 
+    @SuppressWarnings("null")
     @Override
     public void toBytes(ByteBuf buffer)
     {
@@ -118,5 +116,10 @@ public class PermissionCategory implements IByteBufSerializable
         {
             category.toBytes(buffer);
         }
+    }
+
+    public String getName() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getName'");
     }
 }
