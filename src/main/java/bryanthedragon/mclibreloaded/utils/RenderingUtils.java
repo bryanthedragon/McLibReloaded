@@ -1,18 +1,25 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import bryanthedragon.mclibreloaded.client.render.VertexBuilder;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import org.joml.Vector3f;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nullable;
+import javax.vecmath.*;
 import java.nio.FloatBuffer;
 
 public class RenderingUtils
 {
     private static final FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 
-    /*
+    /**
      * This method inverts the scale and rotation of the modelview matrix and
      * multiplies it on the OpenGL stack.
      */
@@ -42,9 +49,7 @@ public class RenderingUtils
             transformation[1].invert();
         }
         catch (SingularMatrixException e)
-        {
-
-        }
+        { }
 
         invertRotScale.mul(transformation[1], invertRotScale);
 
@@ -52,13 +57,13 @@ public class RenderingUtils
     }
 
 
-      /*
-        This method inverts the scale and rotation using the provided parameters
-        and multiplies the OpenGL matrix stack with it.
-        @param scale
-        @param rotation angles in radians
-        @param rotationOrder the order of the rotation
-      */
+    /**
+     * This method inverts the scale and rotation using the provided parameters
+     * and multiplies the OpenGL matrix stack with it.
+     * @param scale
+     * @param rotation angles in radians
+     * @param rotationOrder the order of the rotation
+     */
     public static void glRevertRotationScale(Vector3d rotation, Vector3d scale, MatrixUtils.RotationOrder rotationOrder)
     {
         double invSx = (scale.x != 0) ? 1 / scale.x : 0;
@@ -189,33 +194,33 @@ public class RenderingUtils
 
     public static void renderImage(ResourceLocation image, float scale, Color color)
     {
-        Minecraft.getMinecraft().renderEngine.bindTexture(image);
+        Minecraft.getInstance().renderEngine.bindTexture(image);
 
         boolean isCulling = GL11.glIsEnabled(GL11.GL_CULL_FACE);
 
-        RenderSystem.alphaFunc(GL11.GL_GREATER, 0);
-        RenderSystem.enableAlpha();
-        RenderSystem.enableBlend();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
+        GlStateManager.enableAlpha();
+        GlStateManager.enableBlend();
 
         if (ReflectionUtils.isOptifineShadowPass())
         {
-            RenderSystem.disableCull();
+            GlStateManager.disableCull();
         }
         else
         {
-            RenderSystem.enableCull();
+            GlStateManager.enableCull();
         }
 
-        RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        RenderSystem.color(color.r, color.g, color.b, color.a);
+        GlStateManager.color(color.r, color.g, color.b, color.a);
 
         buffer.begin(GL11.GL_QUADS, VertexBuilder.getFormat(false, true, false, true));
 
-        int perspective = Minecraft.getMinecraft().gameSettings.thirdPersonView;
+        int perspective = Minecraft.getInstance().gameSettings.thirdPersonView;
         float width = scale * (perspective == 2 ? -1 : 1) * 0.5F;
         float height = scale * 0.5F;
 
@@ -234,16 +239,16 @@ public class RenderingUtils
 
         if (isCulling)
         {
-            RenderSystem.enableCull();
+            GlStateManager.enableCull();
         }
         else
         {
-            RenderSystem.disableCull();
+            GlStateManager.disableCull();
         }
 
-        RenderSystem.disableBlend();
-        RenderSystem.disableAlpha();
-        RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F);
+        GlStateManager.disableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
     }
 
     public static Matrix4f getFacingRotation(Facing facing, Vector3f position)
@@ -258,8 +263,8 @@ public class RenderingUtils
             throw new IllegalArgumentException("Argument direction cannot be null when the facing mode has isDirection=true");
         }
 
-        Entity camera = Minecraft.getMinecraft().getRenderViewEntity();
-        float partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+        Entity camera = Minecraft.getInstance().getRenderViewEntity();
+        float partialTicks = Minecraft.getInstance().getRenderPartialTicks();
         Matrix4f transform = new Matrix4f();
         Matrix4f rotation = new Matrix4f();
 

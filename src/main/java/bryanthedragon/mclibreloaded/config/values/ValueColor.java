@@ -1,11 +1,14 @@
 package bryanthedragon.mclibreloaded.config.values;
 
-import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagInt;
 
 import javax.annotation.Nullable;
 
@@ -96,7 +99,7 @@ public class ValueColor extends GenericValue<Color>
         return new NBTTagInt(this.value.getRGBAColor());
     }
 
-    public MatrixUtils.RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
+    public Color interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
         if (!(to.value instanceof Color)) return this.value.copy();
 

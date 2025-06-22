@@ -1,6 +1,5 @@
 package bryanthedragon.mclibreloaded.config.values;
 
-import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -8,7 +7,10 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiToggleElement;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
+import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class ValueBoolean extends GenericValue<Boolean> implements IServerValue,
     }
 
     @Override
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiToggleElement toggle = new GuiToggleElement(mc, this);
@@ -169,7 +171,7 @@ public class ValueBoolean extends GenericValue<Boolean> implements IServerValue,
         return clone;
     }
 
-    public MatrixUtils.RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
+    public Boolean interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
         if (!(to.value instanceof Boolean)) return this.value;
 

@@ -4,7 +4,6 @@ import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.modals.GuiConfirmModal;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
-
 import java.util.function.Consumer;
 
 public class GuiConfirmationScreen extends GuiBase
@@ -18,27 +17,24 @@ public class GuiConfirmationScreen extends GuiBase
 
         this.callback = callback;
 
-        this.root.add(GuiConfirmModal.createTemplate(Minecraft.getMinecraft(), this.viewport, label, (value) ->
+        this.root.add(GuiConfirmModal.createTemplate(Minecraft.getInstance(), this.viewport, label, (value) ->
         {
             this.value = value;
             closeScreen();
         }));
     }
 
-    @Override
     public boolean doesGuiPauseGame()
     {
         return false;
     }
 
-    @Override
     protected void closeScreen()
     {
         this.callback.accept(this.value);
         super.closeScreen();
     }
 
-    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();

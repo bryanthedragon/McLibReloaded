@@ -183,23 +183,23 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
 
             if (this.slot == 1)
             {
-                Minecraft.getMinecraft().renderEngine.bindTexture(SHIELD);
+                Minecraft.getInstance().renderEngine.bindTexture(SHIELD);
             }
             else if (this.slot == 2)
             {
-                Minecraft.getMinecraft().renderEngine.bindTexture(BOOTS);
+                Minecraft.getInstance().renderEngine.bindTexture(BOOTS);
             }
             else if (this.slot == 3)
             {
-                Minecraft.getMinecraft().renderEngine.bindTexture(LEGGINGS);
+                Minecraft.getInstance().renderEngine.bindTexture(LEGGINGS);
             }
             else if (this.slot == 4)
             {
-                Minecraft.getMinecraft().renderEngine.bindTexture(CHESTPLATE);
+                Minecraft.getInstance().renderEngine.bindTexture(CHESTPLATE);
             }
             else if (this.slot == 5)
             {
-                Minecraft.getMinecraft().renderEngine.bindTexture(HELMET);
+                Minecraft.getInstance().renderEngine.bindTexture(HELMET);
             }
 
             Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, 16, 16, 16, 16);

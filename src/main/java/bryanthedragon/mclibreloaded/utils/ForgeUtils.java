@@ -1,20 +1,18 @@
 package bryanthedragon.mclibreloaded.utils;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import java.util.List;
 
-/*
-* A Utils class that holds common Forge calls.
-* Should help in abstraction for porting.
-*/
+/**
+ * A Utils class that holds common Forge calls.
+ * Should help in abstraction for porting.
+ */
 public class ForgeUtils
 {
-    /*
-    * @return a list of players on the server instance
-    */
-    public static List<ServerPlayer> getServerPlayers()
+    /**
+     * @return a list of players on the server instance
+     */
+    public static List<PlayerMP> getServerPlayers()
     {
-        return ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+        return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers();
     }
 }

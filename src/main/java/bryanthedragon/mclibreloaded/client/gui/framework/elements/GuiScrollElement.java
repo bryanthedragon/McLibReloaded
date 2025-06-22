@@ -1,18 +1,21 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
+import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiViewportStack;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.IViewportStack;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollArea;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollDirection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Scroll area GUI class
  * 
  * This bad boy allows to scroll stuff
  */
-public abstract class GuiScrollElement extends GuiElement implements IViewport
+public class GuiScrollElement extends GuiElement implements IViewport
 {
     public ScrollArea scroll;
 

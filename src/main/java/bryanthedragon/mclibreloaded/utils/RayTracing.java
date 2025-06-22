@@ -1,16 +1,20 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import com.google.common.base.Predicate;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+
 import javax.annotation.Nullable;
 import java.util.List;
+
 public class RayTracing
 {
     /**
      * Get the entity at which given player is looking at
      */
-    public static LivingEntity getTargetEntity(LivingEntity input, double maxReach)
+    public static Entity getTargetEntity(Entity input, double maxReach)
     {
         RayTraceResult result = rayTraceWithEntity(input, maxReach);
 
@@ -21,7 +25,7 @@ public class RayTracing
      * Kind of like rayTrace method, but as well it takes into account entity
      * ray tracing
      */
-    public static RayTraceResult rayTraceWithEntity(LivingEntity input, double maxReach)
+    public static RayTraceResult rayTraceWithEntity(Entity input, double maxReach)
     {
         double blockDistance = maxReach;
 
@@ -40,7 +44,7 @@ public class RayTracing
 
         float area = 1.0F;
 
-        List<Entity> list = input.world.getEntitiesInAABBexcluding(input, input.getBoundingBox().expand(look.x * maxReach, look.y * maxReach, look.z * maxReach).grow(area, area, area), new Predicate<Entity>()
+        List<Entity> list = input.world.getEntitiesInAABBexcluding(input, input.getEntityBoundingBox().expand(look.x * maxReach, look.y * maxReach, look.z * maxReach).grow(area, area, area), new Predicate<Entity>()
         {
             @Override
             public boolean apply(@Nullable Entity entity)
@@ -53,14 +57,14 @@ public class RayTracing
 
         for (int i = 0; i < list.size(); ++i)
         {
-            LivingEntity entity = (LivingEntity) list.get(i);
+            Entity entity = list.get(i);
 
             if (entity == input)
             {
                 continue;
             }
 
-            AxisAlignedBB aabb = entity.getBoundingBox().grow(entity.getCollisionBorderSize());
+            AxisAlignedBB aabb = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
             RayTraceResult intercept = aabb.calculateIntercept(eyes, max);
 
             if (aabb.contains(eyes))
@@ -108,7 +112,7 @@ public class RayTracing
      * This method is extracted from {@link Entity} class, because it was marked
      * as client side only code.
      */
-    public static RayTraceResult rayTrace(LivingEntity input, double blockReachDistance, float partialTicks)
+    public static RayTraceResult rayTrace(Entity input, double blockReachDistance, float partialTicks)
     {
         Vec3d eyePos = new Vec3d(input.posX, input.posY + input.getEyeHeight(), input.posZ);
         Vec3d eyeDir = input.getLook(partialTicks);

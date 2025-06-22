@@ -3,11 +3,17 @@ package bryanthedragon.mclibreloaded.config.values;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.config.Config;
 import bryanthedragon.mclibreloaded.config.ConfigManager;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
 import bryanthedragon.mclibreloaded.utils.ICopy;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -410,13 +416,13 @@ public class Value implements IByteBufSerializable, ICopy<Value>
 
     /* Client side stuff */
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getLabelKey()
     {
         return this.config.getValueLabelKey(this);
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getCommentKey()
     {
         return this.config.getValueCommentKey(this);

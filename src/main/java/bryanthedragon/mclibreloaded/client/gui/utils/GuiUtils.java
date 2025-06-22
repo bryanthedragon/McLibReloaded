@@ -1,34 +1,21 @@
 package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.Util;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.Dist;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
-import org.lwjgl.Sys;
-
 /**
  * GUI utilities
  */
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiUtils
 {
-    public static void drawModel(ModelBase model, EntityPlayer player, int x, int y, float scale)
+    public static void drawModel(ModelBase model, Player player, int x, int y, float scale)
     {
         drawModel(model, player, x, y, scale, 1.0F);
     }
@@ -37,7 +24,7 @@ public class GuiUtils
      * Draw a {@link ModelBase} without using the {@link RenderManager} (which 
      * adds a lot of useless transformations and stuff to the screen rendering).
      */
-    public static void drawModel(ModelBase model, EntityPlayer player, int x, int y, float scale, float alpha)
+    public static void drawModel(ModelBase model, Player player, int x, int y, float scale, float alpha)
     {
         float factor = 0.0625F;
 
@@ -131,7 +118,7 @@ public class GuiUtils
 
         GlStateManager.translate(0.0F, 0.0F, 0.0F);
 
-        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
         rendermanager.setRenderShadow(false);
         rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
@@ -186,7 +173,7 @@ public class GuiUtils
 
         GlStateManager.translate(0.0F, 0.0F, 0.0F);
 
-        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
         rendermanager.setRenderShadow(false);
         rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
@@ -238,7 +225,7 @@ public class GuiUtils
 
     public static void playClick()
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        Minecraft.getInstance().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     /**

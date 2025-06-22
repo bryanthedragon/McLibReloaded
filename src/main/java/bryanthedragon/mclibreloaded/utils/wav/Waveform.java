@@ -1,14 +1,14 @@
 package bryanthedragon.mclibreloaded.utils.wav;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.platform.TextureUtil;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
  *
  * This class allows to
  */
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class Waveform
 {
     public float[] average;
@@ -130,7 +130,7 @@ public class Waveform
     {
         for (WaveformSprite sprite : this.sprites)
         {
-            GlStateManager.deleteTexture(sprite.texture);
+            GlStateManager._deleteTexture(sprite.texture);
         }
 
         this.sprites.clear();
@@ -190,7 +190,7 @@ public class Waveform
 
             int so = offset - u;
 
-            GlStateManager.bindTexture(sprite.texture);
+            GlStateManager._bindTexture(sprite.texture);
             GuiDraw.drawBillboard(x, y, u, v, Math.min(w, so), h, sw, height);
 
             x += so;
@@ -199,7 +199,7 @@ public class Waveform
         }
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static class WaveformSprite
     {
         public final int texture;

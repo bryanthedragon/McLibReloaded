@@ -2,10 +2,9 @@ package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class Icon
 {
@@ -38,13 +37,13 @@ public class Icon
         this.textureH = textureH;
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void render(int x, int y)
     {
         this.render(x, y, 0, 0);
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void render(int x, int y, float ax, float ay)
     {
         if (this.location == null)
@@ -57,18 +56,18 @@ public class Icon
 
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
-        Minecraft.getMinecraft().renderEngine.bindTexture(this.location);
+        Minecraft.getInstance().renderEngine.bindTexture(this.location);
         GuiDraw.drawBillboard(x, y, this.x, this.y, this.w, this.h, this.textureW, this.textureH);
         GlStateManager.disableBlend();
         GlStateManager.disableAlpha();
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void renderArea(int x, int y, int w, int h)
     {
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
-        Minecraft.getMinecraft().renderEngine.bindTexture(this.location);
+        Minecraft.getInstance().renderEngine.bindTexture(this.location);
         GuiDraw.drawRepeatBillboard(x, y, w, h, this.x, this.y, this.w, this.h, this.textureW, this.textureH);
         GlStateManager.disableBlend();
         GlStateManager.disableAlpha();

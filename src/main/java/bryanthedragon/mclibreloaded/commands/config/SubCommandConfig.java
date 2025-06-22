@@ -3,9 +3,7 @@ package bryanthedragon.mclibreloaded.commands.config;
 import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.commands.SubCommandBase;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
-import mchorse.mclib.config.values.Value;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
+import bryanthedragon.mclibreloaded.config.values.Value;
 
 public class SubCommandConfig extends SubCommandBase
 {
@@ -34,25 +32,21 @@ public class SubCommandConfig extends SubCommandBase
         this.add(new SubCommandConfigSet());
     }
 
-    @Override
     public String getName()
     {
         return "config";
     }
 
-    @Override
     public String getUsage(ICommandSender sender)
     {
         return "mclib.commands.mclib.config.help";
     }
 
-    @Override
     public String getSyntax()
     {
         return "{l}{6}/{r}mclib {8}config{r}";
     }
 
-    @Override
     public L10n getL10n()
     {
         return McLib.l10n;

@@ -1,21 +1,19 @@
 package bryanthedragon.mclibreloaded.client;
 
-
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
 
 public class Draw
 {
     public static void axis(float length)
     {
-        Tesselator tessellator = Tesselator.getInstance();
+        Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
         GL11.glLineWidth(5);
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
         buffer.pos(0, 0, 0).color(0, 0, 0, 1F).endVertex();
         buffer.pos(length, 0, 0).color(0, 0, 0, 1F).endVertex();
         buffer.pos(0, 0, 0).color(0, 0, 0, 1F).endVertex();
@@ -25,7 +23,7 @@ public class Draw
         tessellator.draw();
 
         GL11.glLineWidth(3);
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
         buffer.pos(0, 0, 0).color(1F, 0, 0, 1F).endVertex();
         buffer.pos(length, 0, 0).color(1F, 0, 0, 1F).endVertex();
         buffer.pos(0, 0, 0).color(0, 1F, 0, 1F).endVertex();
@@ -56,10 +54,10 @@ public class Draw
 
     public static void cube(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, float red, float green, float blue, float alpha)
     {
-        Tesselator tessellator = Tesselator.getInstance();
+        Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
         cube(buffer, minX, minY, minZ, maxX, maxY, maxZ, red, green, blue, alpha);
         tessellator.draw();
     }

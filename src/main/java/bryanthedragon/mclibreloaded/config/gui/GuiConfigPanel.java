@@ -23,14 +23,13 @@ import bryanthedragon.mclibreloaded.network.mclib.common.PacketRequestConfigs;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import bryanthedragon.mclibreloaded.utils.OpHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiConfigPanel extends GuiDashboardPanel<GuiAbstractDashboard>
 {
     public GuiIconElement request;
@@ -84,7 +83,7 @@ public class GuiConfigPanel extends GuiDashboardPanel<GuiAbstractDashboard>
     @Override
     public void open()
     {
-        this.request.setVisible(!Minecraft.getMinecraft().isIntegratedServerRunning() && OpHelper.isPlayerOp());
+        this.request.setVisible(!Minecraft.getInstance().isIntegratedServerRunning() && OpHelper.isPlayerOp());
     }
 
     @Override
@@ -165,7 +164,7 @@ public class GuiConfigPanel extends GuiDashboardPanel<GuiAbstractDashboard>
 
         boolean first = true;
         boolean checkForClient = this.serverConfigs != null;
-        boolean isSingleplayer = Minecraft.getMinecraft().isIntegratedServerRunning();
+        boolean isSingleplayer = Minecraft.getInstance().isIntegratedServerRunning();
 
         for (Value category : this.config.values.values())
         {

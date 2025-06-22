@@ -33,7 +33,7 @@ public class ConfigThread implements Runnable
 
     public void addConfig(Config config)
     {
-        if (!this.configs.contains(config))
+        if (this.configs.indexOf(config) == -1)
         {
             this.configs.add(config);
         }

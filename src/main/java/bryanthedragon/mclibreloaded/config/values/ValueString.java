@@ -1,24 +1,26 @@
 package bryanthedragon.mclibreloaded.config.values;
 
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
-import bryanthedragon.mclibreloaded.client.gui.framework.tooltips.ITooltip;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
-import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
-import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
-import bryanthedragon.mclibreloaded.utils.Interpolation;
-import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
+import bryanthedragon.mclibreloaded.client.gui.utils.Elements;
+import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
+import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
+import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
+import bryanthedragon.mclibreloaded.utils.Interpolation;
+import bryanthedragon.mclibreloaded.utils.MatrixUtils;
+import bryanthedragon.mclibreloaded.utils.resources.RLUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.Tag;
-import org.spongepowered.asm.mixin.MixinEnvironment;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class ValueString extends GenericValue<String> implements IServerValue, IConfigGuiProvider
+public class ValueString extends GenericValue<String> implements IServerValue, IConfigGuiProvider
 {
     public ValueString(String id)
     {
@@ -37,21 +39,11 @@ public abstract class ValueString extends GenericValue<String> implements IServe
     }
 
     @Override
-    @SideOnly(MixinEnvironment.Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
-        GuiElement element = new GuiElement(mc) {
-            @Override
-            public void mouseReleased(GuiContext context) {
-
-            }
-
-            @Override
-            public void OnmouseReleased(GuiContext context) {
-
-            }
-        };
-        GuiLabel label = label(IKey.lang(this.getConfig().getValueLabelKey(this)), 0).anchor(0, 0.5F);
+        GuiElement element = new GuiElement(mc);
+        GuiLabel label = Elements.label(IKey.lang(this.getConfig().getValueLabelKey(this)), 0).anchor(0, 0.5F);
         GuiTextElement textbox = new GuiTextElement(mc, this);
 
         textbox.flex().w(90);
@@ -60,9 +52,6 @@ public abstract class ValueString extends GenericValue<String> implements IServe
         element.add(label, textbox.removeTooltip());
 
         return Arrays.asList(element.tooltip(IKey.lang(this.getConfig().getValueCommentKey(this))));
-    }
-
-    private GuiLabel label(ITooltip lang, int i) {
     }
 
     @Override
@@ -78,16 +67,16 @@ public abstract class ValueString extends GenericValue<String> implements IServe
     }
 
     @Override
-    public void valueFromNBT(Tag tag)
+    public void valueFromNBT(NBTBase tag)
     {
-        if (tag != null)
+        if (tag instanceof NBTTagString)
         {
             this.set(((NBTTagString) tag).getString());
         }
     }
 
     @Override
-    public Tag valueToNBT()
+    public NBTBase valueToNBT()
     {
         return new NBTTagString(this.value == null ? "" : this.value);
     }
@@ -157,17 +146,7 @@ public abstract class ValueString extends GenericValue<String> implements IServe
     @Override
     public ValueString copy()
     {
-        ValueString clone = new ValueString(this.id) {
-            @Override
-            public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui) {
-                return List.of();
-            }
-
-            @Override
-            public MatrixUtils.RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor) {
-                return "";
-            }
-        };
+        ValueString clone = new ValueString(this.id);
         clone.defaultValue = this.defaultValue;
         clone.value = this.value;
         clone.serverValue = this.serverValue;
@@ -176,7 +155,7 @@ public abstract class ValueString extends GenericValue<String> implements IServe
     }
 
     @Override
-    public MatrixUtils.RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
+    public String interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
         if (!(to.value instanceof String)) return this.value;
 

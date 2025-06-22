@@ -2,6 +2,7 @@ package bryanthedragon.mclibreloaded.utils.resources;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NBTTagString;

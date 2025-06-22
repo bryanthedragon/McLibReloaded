@@ -1,5 +1,6 @@
 package bryanthedragon.mclibreloaded.utils;
 
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Interpolation methods
@@ -8,8 +9,8 @@ package bryanthedragon.mclibreloaded.utils;
  * interpolation code was from website below, but BauerCam also uses this code.
  *
  * @author mchorse
- * @link <a href="http://paulbourke.net/miscellaneous/interpolation/">...</a>
- * @link <a href="https://github.com/daipenger/BauerCam">...</a>
+ * @link http://paulbourke.net/miscellaneous/interpolation/
+ * @link https://github.com/daipenger/BauerCam
  */
 public class Interpolations
 {

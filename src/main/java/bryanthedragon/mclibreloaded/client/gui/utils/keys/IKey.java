@@ -1,14 +1,12 @@
 package bryanthedragon.mclibreloaded.client.gui.utils.keys;
 
-import bryanthedragon.mclibreloaded.client.gui.framework.tooltips.ITooltip;
-
 import java.io.Serializable;
 
 public interface IKey extends Serializable
 {
     public static final IKey EMPTY = new StringKey("");
 
-    public static ITooltip lang(String key)
+    public static IKey lang(String key)
     {
         return new LangKey(key);
     }

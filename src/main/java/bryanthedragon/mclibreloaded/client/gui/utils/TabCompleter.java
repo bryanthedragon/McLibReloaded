@@ -2,20 +2,17 @@ package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.google.common.collect.Lists;
-
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 /**
  * This class was brutally stolen from net.minecraft.util.
  *
  * It was also refactored so I could use {@code List<String>} instead of
  * {@code String[]}, and it doesn't require server. It's local tab completer!
  */
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class TabCompleter
 {
     protected GuiTextField textField;

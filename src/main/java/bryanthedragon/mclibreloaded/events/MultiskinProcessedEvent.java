@@ -1,10 +1,13 @@
 package bryanthedragon.mclibreloaded.events;
 
 import bryanthedragon.mclibreloaded.utils.resources.MultiResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.Event;
+
 import java.awt.image.BufferedImage;
 
-
+@OnlyIn(Dist.CLIENT)
 public class MultiskinProcessedEvent extends Event
 {
     public MultiResourceLocation location;

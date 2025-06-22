@@ -4,7 +4,8 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiKeybi
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.ModHelper;
-import net.minecraftforge.fml.common.ModContainer;
+
+import net.minecraftforge.fml.ModContainer;
 
 import java.util.ArrayList;
 import java.util.List;

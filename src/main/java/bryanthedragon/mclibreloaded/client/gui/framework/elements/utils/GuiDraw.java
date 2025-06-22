@@ -55,7 +55,7 @@ public class GuiDraw
     private static void scissorArea(int x, int y, int w, int h, int sw, int sh)
     {
         /* Clipping area around scroll area */
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
 
         float rx = (float) Math.ceil(mc.displayWidth / (double) sw);
         float ry = (float) Math.ceil(mc.displayHeight / (double) sh);
@@ -551,7 +551,7 @@ public class GuiDraw
         }
         else
         {
-            Minecraft.getMinecraft().renderEngine.bindTexture(background);
+            Minecraft.getInstance().renderEngine.bindTexture(background);
             ColorUtils.bindColor(color);
             GlStateManager.enableAlpha();
             GuiDraw.drawBillboard(x, y, 0, 0, width, height, width, height);

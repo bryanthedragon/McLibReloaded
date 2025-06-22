@@ -1,11 +1,15 @@
 package bryanthedragon.mclibreloaded.network.mclib.common;
 
-import com.mojang.brigadier.Message;
 import io.netty.buffer.ByteBuf;
 import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class PacketAnswer<T extends Serializable> implements Message
+public class PacketAnswer<T extends Serializable> implements IMessage
 {
     protected int callBackID;
     protected T answer;
@@ -44,16 +48,9 @@ public class PacketAnswer<T extends Serializable> implements Message
         }
     }
 
-
     public void toBytes(ByteBuf buf)
     {
         buf.writeInt(this.callBackID);
         ByteBufUtils.writeObject(buf, this.answer);
-    }
-
-    @Override
-    public String getString() 
-    {
-        return "";
     }
 }

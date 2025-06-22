@@ -1,8 +1,10 @@
 package bryanthedragon.mclibreloaded.events;
 
-import bryanthedragon.mclibreloaded.config.ConfigBuilder;
-import net.minecraftforge.eventbus.api.Event;
 import bryanthedragon.mclibreloaded.config.Config;
+import bryanthedragon.mclibreloaded.config.ConfigBuilder;
+
+import net.minecraftforge.eventbus.api.Event;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

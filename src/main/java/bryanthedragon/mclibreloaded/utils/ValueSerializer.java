@@ -7,9 +7,12 @@ import bryanthedragon.mclibreloaded.config.values.GenericBaseValue;
 import bryanthedragon.mclibreloaded.config.values.GenericValue;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
 import bryanthedragon.mclibreloaded.network.INBTSerializable;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.CompoundTag;
+
 import java.util.*;
 
-/*
+/**
  * A Serializer for GenericValue instances.
  * <br><br>
  * <h2>Ideal usage:</h2>
@@ -23,24 +26,24 @@ import java.util.*;
  */
 public class ValueSerializer implements IByteBufSerializable, INBTSerializable, ICopy<ValueSerializer>
 {
-    /*
+    /**
      * A pool of values, so we can easily retrieve a value that has been either registered for json or nbt.
      * The key is the path of the value.
      */
     private final Map<String, Value<?>> pool = new LinkedHashMap<>();
 
-    /*
+    /**
      * Key is the name that is used for serialization/deserialization
      * Value is the value's path -> Key in {@link #pool}.
      */
     private final Map<String, String> nbtMap = new HashMap<>();
-    /*
+    /**
      * Key is the name that is used for serialization/deserialization
      * Value is the value's path -> Key in {@link #pool}.
      */
     private final Map<String, String> jsonMap = new HashMap<>();
 
-    /*
+    /**
      * Register a value.
      * @param value
      * @returns a helper object where you can configure serialization.
@@ -56,7 +59,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         return this.pool.containsKey(path) ? Optional.of(this.pool.get(path).value) : Optional.empty();
     }
 
-    /*
+    /**
      * @return a list of all the registered values.
      */
     public List<GenericBaseValue<?>> getValues()
@@ -70,7 +73,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         return values;
     }
 
-    /*
+    /**
      * Register the provided GenericValue object reference
      * with the provided key name for NBT serialization/deserialization.
      * If the provided value is null or if the key already exists, it will not be registered.
@@ -87,7 +90,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         this.registerValue(nbt, "", value, false, false);
     }
 
-    /*
+    /**
      * Register the provided GenericValue object reference
      * with the provided key name for NBT serialization/deserialization.
      * If the provided value is null or if the key already exists, it will not be registered.
@@ -105,7 +108,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         this.registerValue(nbt, "", value, alwaysWrite, false);
     }
 
-    /*
+    /**
      * Register the provided GenericValue object reference
      * with the provided key name for JSON serialization/deserialization.
      * If the provided value is null or if the key already exists, it will not be registered.
@@ -122,7 +125,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         this.registerValue("", json, value, false, false);
     }
 
-    /*
+    /**
      * Register the provided GenericValue object reference
      * with the provided key name for JSON serialization/deserialization.
      * If the provided value is null or if the key already exists, it will not be registered.
@@ -140,7 +143,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         this.registerValue("", json, value, false, alwaysWrite);
     }
 
-    /*
+    /**
      * Register the provided GenericValue object reference
      * with the provided key names for NBT and JSON serialization/deserialization.
      * If the provided value is null or if the key already exists, it will not be registered.
@@ -159,7 +162,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         this.registerValue(nbt, json, value, false, false);
     }
 
-    /*
+    /**
      * Register the provided GenericValue object reference
      * with the provided key names for NBT and JSON serialization/deserialization.
      * If the provided value is null or if the key already exists, it will not be registered.
@@ -190,7 +193,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         }
     }
 
-    /*
+    /**
      * @throws IllegalArgumentException when the path of the value is already registered.
      */
     protected <T> Value<T> poolValue(GenericBaseValue<T> value)
@@ -215,7 +218,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         return packet;
     }
 
-    /*
+    /**
      * Registers the NBT value for serialization for quick access.
      * Has some safety checks to ensure that pooled values and serialization maps are consistent.
      * @throws IllegalArgumentException when the name is already registered with a different value reference.
@@ -237,7 +240,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         this.nbtMap.put(name, key);
     }
 
-    /*
+    /**
      * @throws IllegalArgumentException when the name is already registered with a different value reference.
      */
     protected void putJSONValue(String name, Value<?> value)
@@ -257,7 +260,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         this.jsonMap.put(name, key);
     }
 
-    /*
+    /**
      * Calls {@link GenericBaseValue#valueFromBytes(ByteBuf)}
      */
     @Override
@@ -269,7 +272,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         }
     }
 
-    /*
+    /**
      * Calls {@link GenericBaseValue#valueToBytes(ByteBuf)}
      */
     @Override
@@ -281,7 +284,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         }
     }
 
-    /*
+    /**
      * Calls {@link GenericBaseValue#valueFromNBT(NBTBase)}
      */
     @Override
@@ -300,7 +303,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         }
     }
 
-    /*
+    /**
      * Calls {@link GenericBaseValue#valueToNBT()}. Only serializes the value if it has changed.
      * Serializes always, if the value has been registered with alwaysWrite flag true.
      */
@@ -312,7 +315,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
             Value<?> packet = this.pool.get(entry.getValue());
             GenericBaseValue<?> value = packet.value;
 
-            if (!packet.nbtAlwaysWrite && value instanceof GenericValue && !((GenericValue<?>) value).hasChanged())
+            if (!packet.nbtAlwaysWrite && value instanceof GenericValue && !((GenericValue) value).hasChanged())
             {
                 continue;
             }
@@ -323,7 +326,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         return tag;
     }
 
-    /*
+    /**
      * Calls {@link GenericBaseValue#valueToJSON()}. Only serialize the value if it has changed.
      * Serializes always, if the value has been registered with alwaysWrite flag true.
      */
@@ -335,7 +338,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         {
             Value<?> packet = this.pool.get(entry.getValue());
             GenericBaseValue<?> value = packet.value;
-            if (!packet.jsonAlwaysWrite && value instanceof GenericValue && !((GenericValue<?>) value).hasChanged())
+            if (!packet.jsonAlwaysWrite && value instanceof GenericValue && !((GenericValue) value).hasChanged())
             {
                 continue;
             }
@@ -346,7 +349,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         return jsonRoot;
     }
 
-    /*
+    /**
      * Calls {@link GenericBaseValue#valueFromJSON(JsonElement)}
      * @param element
      */
@@ -372,7 +375,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         }
     }
 
-    /*
+    /**
      * Copies the values of the origin with matching paths to the values in this.
      * Only copies if copyable is true for the respective value.
      * @param origin
@@ -387,7 +390,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         }
     }
 
-    /*
+    /**
      * Compare the values with matching paths using the {@link GenericBaseValue#equals(Object)} method.
      * @param serializer
      * @return true if all values with matching paths are equal.
@@ -405,7 +408,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         return true;
     }
 
-    /*
+    /**
      * Interpolates values with matching paths from the provided serializer to this and then sets the values to this.
      * @param from
      */
@@ -423,7 +426,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         }
     }
 
-    /*
+    /**
      * @return deep copy of this valueSerializer
      */
     @Override
@@ -434,7 +437,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         return copy;
     }
 
-    /*
+    /**
      * Copies the values (deep copy), json and nbt mappings from the specified origin and put them into this.
      * @param origin
      */
@@ -460,8 +463,8 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         private String json;
         private boolean jsonAlwaysWrite;
         private boolean copyable = true;
-        private final GenericBaseValue<T> value;
-        private final ValueSerializer serializer;
+        private GenericBaseValue<T> value;
+        private ValueSerializer serializer;
 
         public Value(GenericBaseValue<T> value, ValueSerializer serializer)
         {
@@ -469,7 +472,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
             this.serializer = serializer;
         }
 
-        /*
+        /**
          * @throws IllegalArgumentException when the name is already registered with a different value reference.
          */
         public Value<T> serializeNBT(String nbt)
@@ -488,7 +491,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
             return this;
         }
 
-        /*
+        /**
          * @throws IllegalArgumentException when the name is already registered with a different value reference.
          */
         public Value<T> serializeJSON(String json)
@@ -496,7 +499,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
             return this.serializeJSON(json, false);
         }
 
-        /*
+        /**
          * @throws IllegalArgumentException when the name is already registered with a different value reference.
          */
         public Value<T> serializeJSON(String json, boolean alwaysWrite)
@@ -519,8 +522,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
             return this;
         }
 
-        public Value<T> copy(ValueSerializer destinationSerializer)
-        {
+        public Value<T> copy(ValueSerializer destinationSerializer) {
             Value<T> copy = new Value<>(this.value.copy(), destinationSerializer);
             copy.json = this.json;
             copy.jsonAlwaysWrite = this.jsonAlwaysWrite;

@@ -1,5 +1,8 @@
 package bryanthedragon.mclibreloaded.utils;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 public enum Interpolation implements IInterpolation
 {
     LINEAR("linear")
@@ -664,13 +667,13 @@ public enum Interpolation implements IInterpolation
         this.key = key;
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getKey()
     {
         return "mclib.interpolations." + this.key;
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getTooltipKey()
     {
         return "mclib.interpolations.tooltips." + this.key;

@@ -1,14 +1,13 @@
 package bryanthedragon.mclibreloaded.commands;
 
 import bryanthedragon.mclibreloaded.McLib;
-import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.level.Level;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -18,7 +17,7 @@ public class CommandCheats extends McCommandBase
     @Override
     public L10n getL10n()
     {
-        return McLibReloaded.l10n;
+        return McLib.l10n;
     }
 
     @Override
@@ -63,7 +62,7 @@ public class CommandCheats extends McCommandBase
     {
         if (args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, BOOLEANS);
+            return getListOfStringsMatchingLastWord(args, McCommandBase.BOOLEANS);
         }
 
         return super.getTabCompletions(server, sender, args, targetPos);

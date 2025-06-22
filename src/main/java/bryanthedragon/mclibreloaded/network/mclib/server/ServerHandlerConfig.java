@@ -1,24 +1,23 @@
 package bryanthedragon.mclibreloaded.network.mclib.server;
 
-import bryanthedragon.mclibreloaded.McLibReloaded;
+import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.config.Config;
 import bryanthedragon.mclibreloaded.config.ConfigManager;
 import bryanthedragon.mclibreloaded.network.ServerMessageHandler;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfig;
 import bryanthedragon.mclibreloaded.utils.OpHelper;
-import net.minecraft.world.entity.player.Player;
 
 public class ServerHandlerConfig extends ServerMessageHandler<PacketConfig>
 {
     @Override
-    public void run(Player player, PacketConfig message)
+    public void run(PlayerMP player, PacketConfig message)
     {
-        if (!OpHelper.isPlayerOp())
+        if (!OpHelper.isPlayerOp(player))
         {
             return;
         }
 
-        Config present = McLibReloaded.proxy.configs.modules.get(message.config.id);
+        Config present = McLib.proxy.configs.modules.get(message.config.id);
 
         if (present != null)
         {

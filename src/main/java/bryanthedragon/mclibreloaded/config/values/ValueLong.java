@@ -1,16 +1,23 @@
 package bryanthedragon.mclibreloaded.config.values;
 
-import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrackpadElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
 import bryanthedragon.mclibreloaded.client.gui.utils.Elements;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
+import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
+import bryanthedragon.mclibreloaded.utils.MathUtils;
+
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +62,7 @@ public class ValueLong extends GenericNumberValue<Long> implements IServerValue,
     }
 
     @Override
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiElement element = new GuiElement(mc);
@@ -175,7 +182,7 @@ public class ValueLong extends GenericNumberValue<Long> implements IServerValue,
         return Long.toString(this.value);
     }
 
-    public MatrixUtils.RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
+    public Long interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
         if (!(to.value instanceof Long)) return this.value;
 

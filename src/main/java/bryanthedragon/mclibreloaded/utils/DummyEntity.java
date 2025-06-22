@@ -1,13 +1,13 @@
 package bryanthedragon.mclibreloaded.utils;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.level.Level;
 import java.util.Arrays;
 
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
+import net.minecraft.world.World;
 
 /**
  * Dummy entity
@@ -15,28 +15,31 @@ import java.util.Arrays;
  * This class is used in model editor as a player substitution for the model
  * methods.
  */
-public class DummyEntity extends LivingEntity
+public class DummyEntity extends EntityLivingBase
 {
     private final ItemStack[] held;
     public ItemStack right;
     public ItemStack left;
 
-    public DummyEntity(Level worldIn) {
-        super(null, worldIn);
+    public DummyEntity(World worldIn)
+    {
+        super(worldIn);
 
         this.right = new ItemStack(Items.DIAMOND_SWORD);
         this.left = new ItemStack(Items.GOLDEN_SWORD);
         this.held = new ItemStack[] {ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY};
     }
 
-    public void setItems(ItemStack left, ItemStack right) {
+    public void setItems(ItemStack left, ItemStack right)
+    {
         this.left = left;
         this.right = right;
     }
 
-    public void toggleItems(boolean toggle) {
-        int main = EquipmentSlot.MAINHAND.getIndex();
-        int off = EquipmentSlot.OFFHAND.getIndex();
+    public void toggleItems(boolean toggle)
+    {
+        int main = EntityEquipmentSlot.MAINHAND.getSlotIndex();
+        int off = EntityEquipmentSlot.OFFHAND.getSlotIndex();
 
         if (toggle)
         {
@@ -49,31 +52,27 @@ public class DummyEntity extends LivingEntity
         }
     }
 
-    public Iterable<ItemStack> getArmorInventoryList() {
+    @Override
+    public Iterable<ItemStack> getArmorInventoryList()
+    {
         return Arrays.asList(this.held);
     }
 
-    public ItemStack getItemStackFromSlot(EquipmentSlot slotIn)
+    @Override
+    public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
     {
-        return this.held[slotIn.getIndex()];
-    }
-
-    public void setItemStackToSlot(EquipmentSlot slotIn, ItemStack stack)
-    {
-        this.held[slotIn.getIndex()] = stack;
-    }
-
-    public HumanoidArm getPrimaryHand()
-    {
-        return HumanoidArm.RIGHT;
-    }
-
-    public HumanoidArm getArms() {
-        return null;
+        return this.held[slotIn.getSlotIndex()];
     }
 
     @Override
-    public HumanoidArm getMainArm() {
-        return null;
+    public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)
+    {
+        this.held[slotIn.getSlotIndex()] = stack;
+    }
+
+    @Override
+    public EnumHandSide getPrimaryHand()
+    {
+        return EnumHandDist.RIGHT;
     }
 }

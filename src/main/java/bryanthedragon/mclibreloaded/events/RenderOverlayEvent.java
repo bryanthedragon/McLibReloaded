@@ -1,8 +1,15 @@
 package bryanthedragon.mclibreloaded.events;
 
+import bryanthedragon.mclibreloaded.forge.fml.common.eventhandler.Cancelable;
+
 import net.minecraft.client.Minecraft;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.Event;
 
+@Cancelable
+@OnlyIn(Dist.CLIENT)
 public abstract class RenderOverlayEvent extends Event
 {
     public final Minecraft mc;

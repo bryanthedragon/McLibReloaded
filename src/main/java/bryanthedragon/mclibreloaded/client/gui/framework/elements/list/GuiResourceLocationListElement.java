@@ -1,12 +1,15 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.list;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
+import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.list.GuiListElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.list.GuiStringListElement;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 
 /**

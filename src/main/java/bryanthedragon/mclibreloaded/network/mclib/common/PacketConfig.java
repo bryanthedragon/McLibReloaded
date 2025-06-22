@@ -1,13 +1,10 @@
 package bryanthedragon.mclibreloaded.network.mclib.common;
 
+import io.netty.buffer.ByteBuf;
 import bryanthedragon.mclibreloaded.config.Config;
 import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
 
-import com.mojang.brigadier.Message;
-
-import io.netty.buffer.ByteBuf;
-
-public class PacketConfig implements Message
+public class PacketConfig implements IMessage
 {
     public Config config;
     public boolean overwrite;
@@ -26,6 +23,7 @@ public class PacketConfig implements Message
         this.overwrite = overwrite;
     }
 
+
     public void fromBytes(ByteBuf buf)
     {
         this.config = new Config(ByteBufUtils.readUTF8String(buf));
@@ -33,17 +31,12 @@ public class PacketConfig implements Message
         this.overwrite = buf.readBoolean();
     }
 
+
     public void toBytes(ByteBuf buf)
     {
         ByteBufUtils.writeUTF8String(buf, this.config.id);
 
         this.config.toBytes(buf);
         buf.writeBoolean(this.overwrite);
-    }
-
-    @Override
-    public String getString() 
-    {
-        return "Config: " + this.config.id + ", Overwrite: " + this.overwrite;
     }
 }

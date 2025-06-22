@@ -2,10 +2,9 @@ package bryanthedragon.mclibreloaded.utils.resources;
 
 import bryanthedragon.mclibreloaded.utils.ReflectionUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.texture.TextureManager;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
@@ -91,7 +90,7 @@ public class MultiskinThread implements Runnable
         while (!this.locations.isEmpty() && instance != null)
         {
             MultiResourceLocation location = this.locations.peek();
-            ITextureObject texture = ReflectionUtils.getTextures(Minecraft.getMinecraft().renderEngine).get(location);
+            ITextureObject texture = ReflectionUtils.getTextures(Minecraft.getInstance().renderEngine).get(location);
 
             try
             {
@@ -104,7 +103,7 @@ public class MultiskinThread implements Runnable
                     int h = image.getHeight();
                     ByteBuffer buffer = bytesFromBuffer(image);
 
-                    Minecraft.getMinecraft().addScheduledTask(() ->
+                    Minecraft.getInstance().addScheduledTask(() ->
                     {
                         TextureUtil.allocateTexture(texture.getGlTextureId(), w, h);
 

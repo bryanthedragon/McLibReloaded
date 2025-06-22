@@ -16,8 +16,8 @@ import bryanthedragon.mclibreloaded.utils.keyframes.Keyframe;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeChannel;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
 import net.minecraft.client.Minecraft;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class GuiDebugPanel extends GuiDashboardPanel<GuiAbstractDashboard>
 {
@@ -117,7 +117,6 @@ public class GuiDebugPanel extends GuiDashboardPanel<GuiAbstractDashboard>
     public void draw(GuiContext context)
     {
         super.draw(context);
-
         this.text.background(System.currentTimeMillis() % 2000 < 1000);
     }
 }

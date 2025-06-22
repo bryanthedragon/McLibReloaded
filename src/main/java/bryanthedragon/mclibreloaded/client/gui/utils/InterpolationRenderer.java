@@ -2,6 +2,7 @@ package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import com.google.common.collect.ImmutableList;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.framework.tooltips.styles.TooltipStyle;
 import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;

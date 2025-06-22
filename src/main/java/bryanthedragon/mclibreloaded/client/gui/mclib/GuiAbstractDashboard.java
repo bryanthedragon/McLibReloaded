@@ -9,12 +9,12 @@ import bryanthedragon.mclibreloaded.events.RegisterDashboardPanels;
 import bryanthedragon.mclibreloaded.permissions.PermissionUtils;
 import bryanthedragon.mclibreloaded.utils.OpHelper;
 import net.minecraft.client.Minecraft;
-
 import java.util.function.Consumer;
 
 public abstract class GuiAbstractDashboard extends GuiBase
 {
     public GuiDashboardPanels panels;
+    @SuppressWarnings("rawtypes")
     public GuiDashboardPanel defaultPanel;
 
     private boolean wasClosed = true;
@@ -36,13 +36,11 @@ public abstract class GuiAbstractDashboard extends GuiBase
 
     protected abstract void registerPanels(Minecraft mc);
 
-    @Override
     public boolean doesGuiPauseGame()
     {
         return false;
     }
 
-    @Override
     public void onGuiClosed()
     {
         this.close();
@@ -55,7 +53,6 @@ public abstract class GuiAbstractDashboard extends GuiBase
         this.wasClosed = true;
     }
 
-    @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height)
     {
         this.checkPermissions();
@@ -70,6 +67,7 @@ public abstract class GuiAbstractDashboard extends GuiBase
         super.setWorldAndResolution(mc, width, height);
     }
 
+    @SuppressWarnings("rawtypes")
     private void checkPermissions()
     {
         int newOpLevel = OpHelper.getPlayerOpLevel();
@@ -90,7 +88,7 @@ public abstract class GuiAbstractDashboard extends GuiBase
 
             if (panel.getRequiredPermission() != null)
             {
-                PermissionUtils.hasPermission(Minecraft.getMinecraft().player, panel.getRequiredPermission(), task);
+                PermissionUtils.hasPermission(Minecraft.getInstance().player, panel.getRequiredPermission(), task);
             }
             else
             {
@@ -104,7 +102,7 @@ public abstract class GuiAbstractDashboard extends GuiBase
         {
             this.panels.setPanel(null);
 
-            PermissionUtils.hasPermission(Minecraft.getMinecraft().player, current.getRequiredPermission(), (allowed) ->
+            PermissionUtils.hasPermission(Minecraft.getInstance().player, current.getRequiredPermission(), (allowed) ->
             {
                 if (allowed)
                 {
@@ -124,7 +122,6 @@ public abstract class GuiAbstractDashboard extends GuiBase
         this.opLevel = newOpLevel;
     }
 
-    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         if (this.panels.view.delegate != null && this.panels.view.delegate.needsBackground())

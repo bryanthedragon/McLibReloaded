@@ -72,14 +72,14 @@ public class GuiPopUpModal extends GuiModal
             this.x0 = this.x0 < 0 ? 0 : this.x0;
             this.y0 = this.y0 < 0 ? 0 : this.y0;
 
-            if (Minecraft.getMinecraft().currentScreen.width < this.x0 + this.area.w)
+            if (Minecraft.getInstance().currentScreen.width < this.x0 + this.area.w)
             {
-                this.x0 = Minecraft.getMinecraft().currentScreen.width - this.area.w;
+                this.x0 = Minecraft.getInstance().currentScreen.width - this.area.w;
             }
 
-            if (Minecraft.getMinecraft().currentScreen.height < this.y0 + this.area.h)
+            if (Minecraft.getInstance().currentScreen.height < this.y0 + this.area.h)
             {
-                this.y0 = Minecraft.getMinecraft().currentScreen.height - this.area.h;
+                this.y0 = Minecraft.getInstance().currentScreen.height - this.area.h;
             }
 
             this.init = true;

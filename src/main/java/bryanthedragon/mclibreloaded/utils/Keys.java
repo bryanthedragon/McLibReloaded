@@ -1,19 +1,22 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import net.minecraft.client.Minecraft;
+
 import java.util.List;
-import org.lwjgl.glfw.GLFW;
+
+import org.lwjgl.input.Keyboard;
+
 import com.google.common.collect.ImmutableList;
 
 public class Keys
 {
-    public static final String[] KEYS = new String[GLFW.GLFW_KEY_LAST + 1];
-    public static final List<Integer> MODIFIERS = ImmutableList.<Integer>of(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_LEFT_ALT, GLFW.GLFW_KEY_RIGHT_CONTROL, GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_RIGHT_ALT);
+    public static final String[] KEYS = new String[Keyboard.KEYBOARD_SIZE];
+    public static final List<Integer> MODIFIERS = ImmutableList.<Integer>of(Keyboard.KEY_LCONTROL, Keyboard.KEY_LSHIFT, Keyboard.KEY_LMENU, Keyboard.KEY_RCONTROL, Keyboard.KEY_RSHIFT, Keyboard.KEY_RMENU);
     public static final String[] MODNAME = new String[] {"Ctrl", "Shift", "Alt"};
 
     public static String getKeyName(int key)
     {
-        if (key < GLFW.GLFW_KEY_NONE || key >= GLFW.GLFW_KEY_LAST)
+        if (key < Keyboard.KEY_NONE || key >= Keyboard.KEYBOARD_SIZE)
         {
             return null;
         }
@@ -34,61 +37,61 @@ public class Keys
     {
         switch (key)
         {
-            case GLFW.GLFW_KEY_MINUS:
+            case Keyboard.KEY_MINUS:
                 return "-";
-            case GLFW.GLFW_KEY_EQUALS:
+            case Keyboard.KEY_EQUALS:
                 return "=";
-            case GLFW.GLFW_KEY_LBRACKET:
+            case Keyboard.KEY_LBRACKET:
                 return "[";
-            case GLFW.GLFW_KEY_RBRACKET:
+            case Keyboard.KEY_RBRACKET:
                 return "]";
-            case GLFW.GLFW_KEY_SEMICOLON:
+            case Keyboard.KEY_SEMICOLON:
                 return ";";
-            case GLFW.GLFW_KEY_APOSTROPHE:
+            case Keyboard.KEY_APOSTROPHE:
                 return "'";
-            case GLFW.GLFW_KEY_BACKSLASH:
+            case Keyboard.KEY_BACKSLASH:
                 return "\\";
-            case GLFW.GLFW_KEY_COMMA:
+            case Keyboard.KEY_COMMA:
                 return ",";
-            case GLFW.GLFW_KEY_PERIOD:
+            case Keyboard.KEY_PERIOD:
                 return ".";
-            case GLFW.GLFW_KEY_SLASH:
+            case Keyboard.KEY_SLASH:
                 return "/";
-            case GLFW.GLFW_KEY_GRAVE:
+            case Keyboard.KEY_GRAVE:
                 return "`";
-            case GLFW.GLFW_KEY_TAB:
+            case Keyboard.KEY_TAB:
                 return "Tab";
-            case GLFW.GLFW_KEY_CAPITAL:
+            case Keyboard.KEY_CAPITAL:
                 return "Caps Lock";
-            case GLFW.GLFW_KEY_LSHIFT:
+            case Keyboard.KEY_LSHIFT:
                 return "L. Shift";
-            case GLFW.GLFW_KEY_LCONTROL:
+            case Keyboard.KEY_LCONTROL:
                 return "L. Ctrl";
-            case GLFW.GLFW_KEY_LMENU:
+            case Keyboard.KEY_LMENU:
                 return "L. Alt";
-            case GLFW.GLFW_KEY_LMETA:
+            case Keyboard.KEY_LMETA:
                 return Minecraft.IS_RUNNING_ON_MAC ? "L. Cmd" : "L. Win";
-            case GLFW.GLFW_KEY_RSHIFT:
+            case Keyboard.KEY_RSHIFT:
                 return "R. Shift";
-            case GLFW.GLFW_KEY_RCONTROL:
+            case Keyboard.KEY_RCONTROL:
                 return "R. Ctrl";
-            case GLFW.GLFW_KEY_RMENU:
+            case Keyboard.KEY_RMENU:
                 return "R. Alt";
-            case GLFW.GLFW_KEY_RMETA:
+            case Keyboard.KEY_RMETA:
                 return Minecraft.IS_RUNNING_ON_MAC ? "R. Cmd" : "R. Win";
-            case GLFW.GLFW_KEY_DIVIDE:
+            case Keyboard.KEY_DIVIDE:
                 return "Numpad /";
-            case GLFW.GLFW_KEY_MULTIPLY:
+            case Keyboard.KEY_MULTIPLY:
                 return "Numpad *";
-            case GLFW.GLFW_KEY_SUBTRACT:
+            case Keyboard.KEY_SUBTRACT:
                 return "Numpad -";
-            case GLFW.GLFW_KEY_ADD:
+            case Keyboard.KEY_ADD:
                 return "Numpad +";
-            case GLFW.GLFW_KEY_DECIMAL:
+            case Keyboard.KEY_DECIMAL:
                 return "Numpad .";
         }
 
-        String name = GLFW.GLFW_getKeyName(key);
+        String name = Keyboard.getKeyName(key);
 
 	// Adding this line prevents a null-pointer exception
 	if (name == null) {
@@ -133,16 +136,16 @@ public class Keys
 
     public static void main(String...args)
     {
-        System.out.println(getComboKeyName(getComboKeyCode(new int[] {GLFW.GLFW_KEY_RSHIFT, GLFW.GLFW_KEY_LMENU, GLFW.GLFW_KEY_LCONTROL, GLFW.GLFW_KEY_RCONTROL}, GLFW.GLFW_KEY_RMENU)));
+        System.out.println(getComboKeyName(getComboKeyCode(new int[] {Keyboard.KEY_RSHIFT, Keyboard.KEY_LMENU, Keyboard.KEY_LCONTROL, Keyboard.KEY_RCONTROL}, Keyboard.KEY_RMENU)));
     }
 
     public static int getMainKey(int comboKey)
     {
         int key = comboKey & 0x1FFFFFFF;
 
-        if (key >= GLFW.GLFW_KEYBOARD_SIZE)
+        if (key >= Keyboard.KEYBOARD_SIZE)
         {
-            key = GLFW.GLFW_KEY_NONE;
+            key = Keyboard.KEY_NONE;
         }
 
         return key;
@@ -153,7 +156,7 @@ public class Keys
         StringBuilder builder = new StringBuilder();
         int mainKey = getMainKey(comboKey);
 
-        if (mainKey == GLFW.GLFW_KEY_NONE)
+        if (mainKey == Keyboard.KEY_NONE)
         {
             return getKeyName(mainKey);
         }
@@ -193,19 +196,19 @@ public class Keys
 
     public static boolean isKeyDown(int key)
     {
-        if (key == GLFW.GLFW_KEY_LSHIFT || key == GLFW.GLFW_KEY_RSHIFT)
+        if (key == Keyboard.KEY_LSHIFT || key == Keyboard.KEY_RSHIFT)
         {
-            return GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_LSHIFT) || GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_RSHIFT);
+            return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
         }
-        else if (key == GLFW.GLFW_KEY_LCONTROL || key == GLFW.GLFW_KEY_RCONTROL)
+        else if (key == Keyboard.KEY_LCONTROL || key == Keyboard.KEY_RCONTROL)
         {
-            return GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_LCONTROL) || GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_RCONTROL);
+            return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
         }
-        else if (key == GLFW.GLFW_KEY_LMENU || key == GLFW.GLFW_KEY_RMENU)
+        else if (key == Keyboard.KEY_LMENU || key == Keyboard.KEY_RMENU)
         {
-            return GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_LMENU) || GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_RMENU);
+            return Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU);
         }
 
-        return GLFW.GLFW_isKeyDown(key);
+        return Keyboard.isKeyDown(key);
     }
 }

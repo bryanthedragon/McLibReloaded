@@ -1,11 +1,10 @@
 package bryanthedragon.mclibreloaded.network.mclib.common;
 
-import com.mojang.brigadier.Message;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public interface IAnswerRequest<T extends Serializable> extends Message
+public interface IAnswerRequest<T extends Serializable> extends IMessage
 {
     void setCallbackID(int callbackID);
     Optional<Integer> getCallbackID();

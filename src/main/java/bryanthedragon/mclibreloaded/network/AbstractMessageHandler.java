@@ -1,14 +1,15 @@
 package bryanthedragon.mclibreloaded.network;
 
-import com.mojang.brigadier.Message;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Base of all MessageHandlers.
  *
  * @author Ernio (Ernest Sadowski)
  */
-public abstract class AbstractMessageHandler<T extends Message> implements MessageHandler<T, Message>
+public abstract class AbstractMessageHandler<T extends IMessage> implements IMessageHandler<T, IMessage>
 {
     /**
      * Handle a message received on the client side
@@ -16,8 +17,8 @@ public abstract class AbstractMessageHandler<T extends Message> implements Messa
      * @return a message to send back to the Server, or null if no reply is
      *         necessary
      */
-
-    public abstract Message handleClientMessage(final T message);
+    @OnlyIn(Dist.CLIENT)
+    public abstract IMessage handleClientMessage(final T message);
 
     /**
      * Handle a message received on the server side
@@ -25,12 +26,12 @@ public abstract class AbstractMessageHandler<T extends Message> implements Messa
      * @return a message to send back to the Client, or null if no reply is
      *         necessary
      */
-    public abstract Message handleServerMessage(final Player player, final T message);
+    public abstract IMessage handleServerMessage(final ServerPlayer player, final T message);
 
     @Override
-    public Message onMessage(T message, MessageContext ctx)
+    public IMessage onMessage(T message, MessageContext ctx)
     {
-        if (ctx.side.isClient())
+        if (ctx.Dist.isClient())
         {
             return this.handleClientMessage(message);
         }

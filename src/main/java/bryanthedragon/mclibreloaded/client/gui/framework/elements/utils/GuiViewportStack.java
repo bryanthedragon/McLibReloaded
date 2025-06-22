@@ -3,7 +3,6 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.IViewport;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
-import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 
 import java.util.ArrayList;
 import java.util.List;

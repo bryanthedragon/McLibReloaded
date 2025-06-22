@@ -5,7 +5,9 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextE
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 

@@ -1,28 +1,35 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.PlayerSP;
+import net.minecraft.entity.player.PlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.UserListOpsEntry;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
 
 public class OpHelper
 {
-    /*
-    * Minimum OP level according to vanilla code
-    */
+    /**
+     * Minimum OP level according to vanilla code
+     */
     public static final int VANILLA_OP_LEVEL = 2;
 
+    @OnlyIn(Dist.CLIENT)
     public static int getPlayerOpLevel()
     {
-        EntityPlayerSP player = Minecraft.getInstance().player;
+        PlayerSP player = Minecraft.getInstance().player;
 
         return player == null ? 0 : player.getPermissionLevel();
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static boolean isPlayerOp()
     {
         return isOp(getPlayerOpLevel());
     }
 
-    public static boolean isPlayerOp(EntityPlayerMP player)
+    public static boolean isPlayerOp(PlayerMP player)
     {
         if (player == null)
         {

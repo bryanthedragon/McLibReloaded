@@ -2,7 +2,7 @@ package bryanthedragon.mclibreloaded.permissions;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import bryanthedragon.mclibreloaded.McLibReloaded;
+import bryanthedragon.mclibreloaded.McLib;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +23,7 @@ public class PermissionFactory
 
         if (this.permissions.containsKey(hash))
         {
-            McLibReloaded.LOGGER.warn("The hash of the permission " + name + " is equal to the already registered permission " + this.permissions.get(hash));
+            McLib.LOGGER.warn("The hash of the permission " + name + " is equal to the already registered permission " + this.permissions.get(hash));
 
             return;
         }

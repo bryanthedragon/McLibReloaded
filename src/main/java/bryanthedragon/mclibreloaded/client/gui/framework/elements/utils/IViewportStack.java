@@ -1,7 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
-import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 
 /**
  * General interface for viewport stack

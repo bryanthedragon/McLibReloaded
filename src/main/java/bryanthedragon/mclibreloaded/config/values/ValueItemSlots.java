@@ -1,10 +1,13 @@
 package bryanthedragon.mclibreloaded.config.values;
 
-import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
-import bryanthedragon.mclibreloaded.utils.Interpolation;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
+import bryanthedragon.mclibreloaded.utils.Color;
+import bryanthedragon.mclibreloaded.utils.Interpolation;
+import bryanthedragon.mclibreloaded.utils.JsonUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -51,6 +54,7 @@ public class ValueItemSlots extends GenericValue<ItemStack[]>
      * Set this value to a copy of the provided array
      * @param value
      */
+    @SuppressWarnings({ "null", "unused" })
     @Override
     public void set(@Nonnull ItemStack[] value)
     {
@@ -356,7 +360,7 @@ public class ValueItemSlots extends GenericValue<ItemStack[]>
         return str;
     }
 
-    public MatrixUtils.RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
+    public ItemStack[] interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
         if (!(to.value instanceof ItemStack[])) return this.copy().value;
 

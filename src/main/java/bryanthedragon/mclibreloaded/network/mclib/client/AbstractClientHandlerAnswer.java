@@ -1,21 +1,21 @@
 package bryanthedragon.mclibreloaded.network.mclib.client;
 
-import bryanthedragon.mclibreloaded.McLibReloaded;
+import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.network.AbstractDispatcher;
 import bryanthedragon.mclibreloaded.network.ClientMessageHandler;
 import bryanthedragon.mclibreloaded.network.mclib.Dispatcher;
 import bryanthedragon.mclibreloaded.network.mclib.common.IAnswerRequest;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketAnswer;
-import bryanthedragon.mclibreloaded.network.mclib.common.PacketBoolean;
 import bryanthedragon.mclibreloaded.utils.Consumers;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.fml.common.Mod;
+import bryanthedragon.mclibreloaded.forge.fml.common.Mod;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @SuppressWarnings("rawtypes")
 @Mod.EventBusSubscriber
@@ -29,13 +29,16 @@ public abstract class AbstractClientHandlerAnswer<T extends PacketAnswer> extend
     protected static final Map<Integer, IAnswerRequest<?>> REQUESTS = new HashMap<>();
 
     @Override
-    public void run(LocalPlayer player, PacketAnswer message)
+    @OnlyIn(Dist.CLIENT)
+    public void run(PlayerSP player, PacketAnswer message)
     {
         CONSUMERS.consume(message.getCallbackID(), message.getValue());
         TIME.remove(message.getCallbackID());
         REQUESTS.remove(message.getCallbackID());
     }
 
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
     public static void onClientTick(TickEvent.ClientTickEvent event)
     {
         if (event.phase == TickEvent.Phase.START) return;
@@ -49,7 +52,7 @@ public abstract class AbstractClientHandlerAnswer<T extends PacketAnswer> extend
             {
                 IAnswerRequest<?> request = REQUESTS.get(entry.getKey());
 
-                McLibReloaded.LOGGER.info("Timeout for the answer request " + request.getClass().getSimpleName() + ". The consumer has been removed.");
+                McLib.LOGGER.info("Timeout for the answer request " + request.getClass().getSimpleName() + ". The consumer has been removed.");
 
                 CONSUMERS.remove(entry.getKey());
                 TIME.remove(entry.getKey());
@@ -58,15 +61,15 @@ public abstract class AbstractClientHandlerAnswer<T extends PacketAnswer> extend
         }
     }
 
-    /*
+    /**
      * This will register the consumer and set the resulting callbackID to the provided AnswerRequest.
      * The AnswerRequest will then be sent to the server.
      * @param request
      * @param callback
      */
+    @OnlyIn(Dist.CLIENT)
     public static <T extends Serializable> void requestServerAnswer(AbstractDispatcher dispatcher, IAnswerRequest<T> request, Consumer<T> callback)
     {
-        @SuppressWarnings("unchecked")
         int id = CONSUMERS.register((obj) ->
         {
             T param;
@@ -77,7 +80,7 @@ public abstract class AbstractClientHandlerAnswer<T extends PacketAnswer> extend
             }
             catch (ClassCastException e)
             {
-                McLibReloaded.LOGGER.error("Type of the answer's value is incompatible with the consumer generic type!");
+                McLib.LOGGER.error("Type of the answer's value is incompatible with the consumer generic type!");
                 e.printStackTrace();
 
                 return;
@@ -94,14 +97,14 @@ public abstract class AbstractClientHandlerAnswer<T extends PacketAnswer> extend
     }
 
 
-    /*
+    /**
      * Send the answer to the player. The answer's generic datatype needs to be equal
-     * to the Consumer input datatype that has been registered on the client side.
+     * to the Consumer input datatype that has been registered on the client Dist.
      * @param receiver
      * @param answer
      * @param <T> the type of the registered Consumer input datatype.
      */
-    public static <T extends Serializable> void sendAnswerTo(Player receiver, PacketBoolean answer)
+    public static <T extends Serializable> void sendAnswerTo(PlayerMP receiver, PacketAnswer<T> answer)
     {
         Dispatcher.sendTo(answer, receiver);
     }

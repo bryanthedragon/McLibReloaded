@@ -4,8 +4,8 @@ import java.lang.reflect.Field;
 
 public class BetterLightsHelper
 {
-    private static final ReflectionElement<Class> betterLightsClass = new ReflectionElement<>();
-    private static final ReflectionElement<Field> shadowPass = new ReflectionElement<>();
+    private static ReflectionElement<Class> betterLightsClass = new ReflectionElement<>();
+    private static ReflectionElement<Field> shadowPass = new ReflectionElement<>();
 
     /**
      * Checks whether BetterLights is currently rendering shadow map.
@@ -17,12 +17,12 @@ public class BetterLightsHelper
         {
             try
             {
-                Class<?> context = Class.forName("dz.betterlights.utils.BetterLightsContext");
+                Class context = Class.forName("dz.betterlights.utils.BetterLightsContext");
 
                 shadowPass.element = context.getDeclaredField("isBlShadowPass");
                 shadowPass.element.setAccessible(true);
             }
-            catch (Exception ignored)
+            catch (Exception e)
             {}
 
             shadowPass.checked = true;
@@ -34,7 +34,7 @@ public class BetterLightsHelper
             {
                 return (boolean) shadowPass.element.get(null);
             }
-            catch (Exception ignored)
+            catch (Exception e)
             {}
         }
 
@@ -55,7 +55,7 @@ public class BetterLightsHelper
             {
                 betterLightsClass.element = Class.forName("dz.betterlights.BetterLightsMod");
             }
-            catch (Exception ignored)
+            catch (Exception e)
             { }
 
             betterLightsClass.checked = true;

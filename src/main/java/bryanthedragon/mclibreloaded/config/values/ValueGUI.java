@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import io.netty.buffer.ByteBuf;
 
-
 public abstract class ValueGUI extends Value implements IConfigGuiProvider
 {
     public ValueGUI(String id)

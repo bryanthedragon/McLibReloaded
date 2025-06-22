@@ -10,7 +10,7 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollArea;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.entity.PlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -54,7 +54,7 @@ public class GuiInventoryElement extends GuiElement
      */
     public static void drawItemStack(ItemStack stack, int x, int y, int z, String altText)
     {
-        RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
+        RenderItem itemRender = Minecraft.getInstance().getRenderItem();
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0.0F, 0.0F, 32.0F);
@@ -62,7 +62,7 @@ public class GuiInventoryElement extends GuiElement
 
         FontRenderer font = null;
         if (!stack.isEmpty()) font = stack.getItem().getFontRenderer(stack);
-        if (font == null) font = Minecraft.getMinecraft().fontRenderer;
+        if (font == null) font = Minecraft.getInstance().fontRenderer;
 
         itemRender.renderItemAndEffectIntoGUI(stack, x, y);
         itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
@@ -73,14 +73,14 @@ public class GuiInventoryElement extends GuiElement
     /**
      * Draw item tooltip
      */
-    public static void drawItemTooltip(ItemStack stack, EntityPlayerSP player, FontRenderer providedFont, int x, int y)
+    public static void drawItemTooltip(ItemStack stack, PlayerSP player, FontRenderer providedFont, int x, int y)
     {
         if (stack.isEmpty())
         {
             return;
         }
 
-        List<String> list = stack.getTooltip(player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+        List<String> list = stack.getTooltip(player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
         FontRenderer font = stack.getItem().getFontRenderer(stack);
 
         for (int i = 0; i < list.size(); ++i)
@@ -95,7 +95,7 @@ public class GuiInventoryElement extends GuiElement
             }
         }   
 
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        GuiScreen screen = Minecraft.getInstance().currentScreen;
 
         net.minecraftforge.fml.client.config.GuiUtils.preItemToolTip(stack);
         net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(list, x, y, screen.width, screen.height, -1, font == null ? providedFont : font);

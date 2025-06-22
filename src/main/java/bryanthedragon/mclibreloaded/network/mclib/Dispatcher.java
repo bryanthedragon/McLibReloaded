@@ -1,14 +1,14 @@
 package bryanthedragon.mclibreloaded.network.mclib;
 
-import bryanthedragon.mclibreloaded.McLibReloaded;
+import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.network.AbstractDispatcher;
-import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfig;
 import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerAnswer;
 import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerBoolean;
 import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerConfig;
 import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerConfirm;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketAnswer;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketBoolean;
+import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfig;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfirm;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketDropItem;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketRequestConfigs;
@@ -18,17 +18,13 @@ import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerConfirm;
 import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerDropItem;
 import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerPermissionRequest;
 import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerRequestConfigs;
-
-import com.mojang.brigadier.Message;
-
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+
 
 public class Dispatcher
 {
-    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(McLibReloaded.MOD_ID)
+    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(McLib.MOD_ID)
     {
         @Override
         public void register()
@@ -56,7 +52,7 @@ public class Dispatcher
     /**
      * Send message to players who are tracking given entity
      */
-    public static void sendToTracked(Entity entity, Message message)
+    public static void sendToTracked(Entity entity, IMessage message)
     {
         DISPATCHER.sendToTracked(entity, message);
     }
@@ -64,17 +60,17 @@ public class Dispatcher
     /**
      * Send message to given player
      */
-    public static void sendTo(Message message, Player player)
+    public static void sendTo(IMessage message, PlayerMP player)
     {
-        DISPATCHER.sendTo((Object) message, (ServerPlayer) player);
+        DISPATCHER.sendTo(message, player);
     }
 
     /**
      * Send message to the server
      */
-    public static void sendToServer(PacketConfirm packet)
+    public static void sendToServer(IMessage message)
     {
-        DISPATCHER.sendToServer((Message) packet);
+        DISPATCHER.sendToServer(message);
     }
 
     /**

@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import bryanthedragon.mclibreloaded.utils.ICopy;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NBTBase;
 
 import javax.annotation.Nullable;
 
@@ -234,14 +234,14 @@ public abstract class GenericBaseValue<T> extends Value
      * set the value based on the specified tag
      * @param tag the tag should be the value without the necessity to search for a key
      */
-    public abstract void valueFromNBT(Tag tag);
+    public abstract void valueFromNBT(NBTBase tag);
 
     /**
-     * @return the value as instance of a subclass of {@link net.minecraft.nbt.Tag}.
+     * @return the value as instance of a subclass of {@link net.minecraft.nbt.NBTBase}.
      *         It can also return null, depending on the implementation in the subclasses.
      */
     @Nullable
-    public abstract Tag valueToNBT();
+    public abstract NBTBase valueToNBT();
 
     /**
      * @param interpolation

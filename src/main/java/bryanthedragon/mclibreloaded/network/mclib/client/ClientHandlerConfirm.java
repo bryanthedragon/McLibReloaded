@@ -6,7 +6,12 @@ import bryanthedragon.mclibreloaded.network.ClientMessageHandler;
 import bryanthedragon.mclibreloaded.network.mclib.Dispatcher;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfirm;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
+
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.function.Consumer;
 
 public class ClientHandlerConfirm extends ClientMessageHandler<PacketConfirm>
 {
@@ -16,8 +21,8 @@ public class ClientHandlerConfirm extends ClientMessageHandler<PacketConfirm>
      * @param packet
      */
     @Override
-    @SideOnly(Dist.CLIENT)
-    public void run(LocalPlayer entityPlayerSP, PacketConfirm packet)
+    @OnlyIn(Dist.CLIENT)
+    public void run(PlayerSP PlayerSP, PacketConfirm packet)
     {
         switch(packet.gui)
         {

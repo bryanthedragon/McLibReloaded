@@ -109,7 +109,7 @@ public class GuiColorPicker extends GuiElement
                 return null;
             }
 
-            return new GuiSimpleContextMenu(Minecraft.getMinecraft())
+            return new GuiSimpleContextMenu(Minecraft.getInstance())
                 .action(Icons.FAVORITE, IKey.lang("mclib.gui.color.context.favorites.add"), () -> this.addToFavorites(this.recent.colors.get(index)));
         });
 
@@ -129,7 +129,7 @@ public class GuiColorPicker extends GuiElement
                 return null;
             }
 
-            return new GuiSimpleContextMenu(Minecraft.getMinecraft())
+            return new GuiSimpleContextMenu(Minecraft.getInstance())
                 .action(Icons.REMOVE, IKey.lang("mclib.gui.color.context.favorites.remove"), () -> this.removeFromFavorites(index));
         });
 

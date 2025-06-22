@@ -1,10 +1,11 @@
 package bryanthedragon.mclibreloaded.permissions;
 
 import io.netty.buffer.ByteBuf;
+import bryanthedragon.mclibreloaded.forge.permissions.DefaultPermissionLevel;
+import bryanthedragon.mclibreloaded.forge.permissions.PermissionAPI;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
 import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
-import net.minecraft.world.entity.player.Player;
-
+import net.minecraft.server.level.ServerPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class PermissionCategory implements IByteBufSerializable
 
     }
 
-    public boolean playerHasPermission(Player player)
+    public boolean playerHasPermission(ServerPlayer player)
     {
         return PermissionAPI.hasPermission(player, this.toString());
     }
@@ -84,7 +85,6 @@ public class PermissionCategory implements IByteBufSerializable
         return (this.parent != null ? this.parent + "." : "") + this.name;
     }
 
-    @SuppressWarnings("null")
     @Override
     public void fromBytes(ByteBuf buffer)
     {
@@ -103,7 +103,6 @@ public class PermissionCategory implements IByteBufSerializable
         }
     }
 
-    @SuppressWarnings("null")
     @Override
     public void toBytes(ByteBuf buffer)
     {
@@ -116,10 +115,5 @@ public class PermissionCategory implements IByteBufSerializable
         {
             category.toBytes(buffer);
         }
-    }
-
-    public String getName() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getName'");
     }
 }

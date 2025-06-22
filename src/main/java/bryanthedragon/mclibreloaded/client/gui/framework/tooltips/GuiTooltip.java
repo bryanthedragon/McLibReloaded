@@ -5,6 +5,9 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiConte
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
+import net.minecraft.client.gui.Gui;
+
+import java.util.List;
 
 public class GuiTooltip
 {

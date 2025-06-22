@@ -1,5 +1,6 @@
 package bryanthedragon.mclibreloaded.client;
 
+import javax.swing.text.JTextComponent.KeyBinding;
 import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiInventoryElement;
@@ -8,14 +9,8 @@ import bryanthedragon.mclibreloaded.client.gui.mclib.GuiDashboard;
 import bryanthedragon.mclibreloaded.config.values.ValueRL;
 import bryanthedragon.mclibreloaded.events.RemoveDashboardPanels;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class KeyboardHandler
 {
@@ -37,7 +32,7 @@ public class KeyboardHandler
         {
             GuiDashboard dashboard = GuiDashboard.get();
 
-            Minecraft.getMinecraft().displayGuiScreen(dashboard);
+            Minecraft.getInstance().displayGuiScreen(dashboard);
 
             if (GuiScreen.isCtrlKeyDown())
             {
@@ -53,13 +48,13 @@ public class KeyboardHandler
         {
             if (this.lastGuiScale == -1)
             {
-                this.lastGuiScale = Minecraft.getMinecraft().gameSettings.guiScale;
+                this.lastGuiScale = Minecraft.getInstance().gameSettings.guiScale;
 
                 int scale = McLib.userIntefaceScale.get();
 
                 if (scale > 0)
                 {
-                    Minecraft.getMinecraft().gameSettings.guiScale = scale;
+                    Minecraft.getInstance().gameSettings.guiScale = scale;
                 }
             }
         }
@@ -67,11 +62,11 @@ public class KeyboardHandler
         {
             if (this.lastGuiScale != -1)
             {
-                Minecraft.getMinecraft().gameSettings.guiScale = this.lastGuiScale;
+                Minecraft.getInstance().gameSettings.guiScale = this.lastGuiScale;
                 this.lastGuiScale = -1;
             }
 
-            if (Minecraft.getMinecraft().world == null)
+            if (Minecraft.getInstance().world == null)
             {
                 GuiDashboard.dashboard = null;
                 ValueRL.picker = null;

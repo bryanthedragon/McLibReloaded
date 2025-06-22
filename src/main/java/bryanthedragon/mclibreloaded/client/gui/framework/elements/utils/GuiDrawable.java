@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 
 import java.util.function.Consumer;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.IGuiElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 
@@ -46,16 +47,12 @@ public class GuiDrawable implements IGuiElement
     {}
 
     @Override
-    public void OnmouseReleased(GuiContext context) {
-
-    }
-
-    @Override
     public boolean keyTyped(GuiContext context)
     {
         return false;
     }
 
+    @Override
     public boolean canBeDrawn(Area viewport)
     {
         return true;

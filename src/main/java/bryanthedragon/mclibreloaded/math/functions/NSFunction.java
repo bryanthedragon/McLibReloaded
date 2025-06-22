@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.math.functions;
 
 import bryanthedragon.mclibreloaded.math.IValue;
+import bryanthedragon.mclibreloaded.math.Operation;
 
 /**
  * Function that expects number input arguments and outputs a string

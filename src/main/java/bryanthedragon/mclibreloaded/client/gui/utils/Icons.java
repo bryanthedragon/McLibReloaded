@@ -1,7 +1,7 @@
 package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import bryanthedragon.mclibreloaded.McLib;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class Icons
 {

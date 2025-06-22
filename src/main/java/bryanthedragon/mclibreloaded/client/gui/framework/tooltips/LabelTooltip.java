@@ -6,6 +6,7 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
+import net.minecraft.client.gui.Gui;
 
 import java.util.List;
 

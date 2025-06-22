@@ -13,6 +13,7 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiTog
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.Color;

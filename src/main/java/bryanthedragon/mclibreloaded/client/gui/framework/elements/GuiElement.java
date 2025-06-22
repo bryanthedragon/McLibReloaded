@@ -14,13 +14,15 @@ import bryanthedragon.mclibreloaded.client.gui.utils.resizers.Margin;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-@SideOnly(Dist.CLIENT)
-public abstract class GuiElement extends Gui implements IGuiElement
+@OnlyIn(Dist.CLIENT)
+public class GuiElement extends Gui implements IGuiElement
 {
     /**
      * Area of this element (i.e. position and size) 
@@ -563,7 +565,7 @@ public abstract class GuiElement extends Gui implements IGuiElement
 
             GuiElement parent = element.getParent();
 
-            if (parent instanceof GuiDelegateElement && ((GuiDelegateElement<?>) parent).delegate != element)
+            if (parent instanceof GuiDelegateElement && ((GuiDelegateElement) parent).delegate != element)
             {
                 return false;
             }
@@ -729,6 +731,4 @@ public abstract class GuiElement extends Gui implements IGuiElement
     {
         context.tooltip.draw(this.tooltip, context);
     }
-
-    public abstract void mouseReleased(GuiContext context);
 }

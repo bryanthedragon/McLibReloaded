@@ -6,9 +6,8 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
 import net.minecraft.client.gui.Gui;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 /**
  * Scrollable area
  * 
@@ -181,7 +180,7 @@ public class ScrollArea extends Area
 
     /* GUI code for easier manipulations */
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean mouseClicked(GuiContext context)
     {
         return this.mouseClicked(context.mouseX, context.mouseY);
@@ -216,7 +215,7 @@ public class ScrollArea extends Area
         return isInside;
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean mouseScroll(GuiContext context)
     {
         return this.mouseScroll(context.mouseX, context.mouseY, context.mouseWheel);
@@ -238,7 +237,7 @@ public class ScrollArea extends Area
         return isInside && (this.cancelScrollEdge || lastScroll != this.scroll);
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void mouseReleased(GuiContext context)
     {
         this.mouseReleased(context.mouseX, context.mouseY);
@@ -252,7 +251,7 @@ public class ScrollArea extends Area
         this.dragging = false;
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void drag(GuiContext context)
     {
         this.drag(context.mouseX, context.mouseY);
@@ -275,7 +274,7 @@ public class ScrollArea extends Area
     /**
      * This method is responsible for drawing a scroll bar 
      */
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void drawScrollbar()
     {
         int side = this.direction.getSide(this);

@@ -1,5 +1,7 @@
 package bryanthedragon.mclibreloaded.utils;
 
+import net.minecraft.client.renderer.GlStateManager;
+
 public class ColorUtils
 {
     public static final int HALF_BLACK = 0x88000000;

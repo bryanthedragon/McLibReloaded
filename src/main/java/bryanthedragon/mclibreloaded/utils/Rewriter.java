@@ -3,7 +3,7 @@ package bryanthedragon.mclibreloaded.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*
+/**
  * A Rewriter does a global substitution in the strings passed to its
  * 'rewrite' method. It uses the pattern supplied to its constructor, and is
  * like 'String.replaceAll' except for the fact that its replacement strings
@@ -18,10 +18,10 @@ import java.util.regex.Pattern;
  */
 public abstract class Rewriter
 {
-    private final Pattern pattern;
+    private Pattern pattern;
     private Matcher matcher;
 
-    /*
+    /**
      * Constructs a rewriter using the given regular expression; the syntax is
      * the same as for 'Pattern.compile'.
      */
@@ -30,7 +30,7 @@ public abstract class Rewriter
         this.pattern = Pattern.compile(regex);
     }
 
-    /*
+    /**
      * Returns the input subsequence captured by the given group during the
      * previous match operation.
      */
@@ -39,13 +39,13 @@ public abstract class Rewriter
         return matcher.group(i);
     }
 
-    /*
+    /**
      * Overridden to compute a replacement for each match. Use the method
      * 'group' to access the captured groups.
      */
     public abstract String replacement();
 
-    /*
+    /**
      * Returns the result of rewriting 'original' by invoking the method
      * 'replacement' for each match of the regular expression supplied to the
      * constructor.
@@ -53,7 +53,7 @@ public abstract class Rewriter
     public String rewrite(CharSequence original)
     {
         this.matcher = pattern.matcher(original);
-        StringBuilder result = new StringBuilder(original.length());
+        StringBuffer result = new StringBuffer(original.length());
         while (matcher.find())
         {
             matcher.appendReplacement(result, "");

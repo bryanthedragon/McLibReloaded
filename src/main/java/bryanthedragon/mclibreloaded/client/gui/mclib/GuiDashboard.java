@@ -16,7 +16,7 @@ public class GuiDashboard extends GuiAbstractDashboard
     {
         if (dashboard == null)
         {
-            dashboard = new GuiDashboard(Minecraft.getMinecraft());
+            dashboard = new GuiDashboard(Minecraft.getInstance());
         }
 
         return dashboard;

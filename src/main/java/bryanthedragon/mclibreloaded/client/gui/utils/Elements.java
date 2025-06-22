@@ -2,13 +2,12 @@ package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
-import bryanthedragon.mclibreloaded.client.gui.framework.tooltips.ITooltip;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class Elements
 {
     public static GuiElement row(Minecraft mc, int margin, GuiElement... elements)
@@ -53,15 +52,15 @@ public class Elements
 
     public static GuiLabel label(IKey label)
     {
-        return label(label, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
+        return label(label, Minecraft.getInstance().fontRenderer.FONT_HEIGHT);
     }
 
     public static GuiLabel label(IKey label, Icon leftIcon, Icon rightIcon)
     {
-        return label(label, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT, leftIcon, rightIcon);
+        return label(label, Minecraft.getInstance().fontRenderer.FONT_HEIGHT, leftIcon, rightIcon);
     }
 
-    public static GuiLabel label(ITooltip label, int height)
+    public static GuiLabel label(IKey label, int height)
     {
         return label(label, height, 0xffffff);
     }
@@ -78,7 +77,7 @@ public class Elements
 
     public static GuiLabel label(IKey label, int height, int color, Icon leftIcon, Icon rightIcon)
     {
-        GuiLabel element = new GuiLabel(Minecraft.getMinecraft(), label, color, leftIcon, rightIcon);
+        GuiLabel element = new GuiLabel(Minecraft.getInstance(), label, color, leftIcon, rightIcon);
 
         element.flex().h(height);
 

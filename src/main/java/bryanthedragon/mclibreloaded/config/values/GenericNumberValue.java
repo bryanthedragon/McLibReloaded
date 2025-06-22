@@ -3,6 +3,7 @@ package bryanthedragon.mclibreloaded.config.values;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
+
 import javax.annotation.Nonnull;
 
 /**

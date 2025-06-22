@@ -6,7 +6,6 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.IFocusedGuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.IGuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiContextMenu;
-import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiKeybinds;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import net.minecraft.client.Minecraft;
@@ -55,7 +54,7 @@ public class GuiContext implements IViewportStack
     {
         this.screen = screen;
         this.tooltip = new GuiTooltip();
-        this.keybinds = new GuiKeybinds(Minecraft.getMinecraft());
+        this.keybinds = new GuiKeybinds(Minecraft.getInstance());
         this.keybinds.setVisible(false);
     }
 

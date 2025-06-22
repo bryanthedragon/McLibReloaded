@@ -5,8 +5,8 @@ import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils.RotationOrder;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagByte;
 
 import javax.annotation.Nonnull;
 
@@ -69,22 +69,22 @@ public class ValueRotationOrder extends GenericValue<RotationOrder>
     }
 
     @Override
-    public void valueFromNBT(Tag tag)
+    public void valueFromNBT(NBTBase tag)
     {
-        if (tag instanceof ByteTag)
+        if (tag instanceof NBTTagByte)
         {
-            this.set(RotationOrder.values()[((ByteTag) tag).byteValue()]);
+            this.set(RotationOrder.values()[((NBTTagByte) tag).getByte()]);
         }
     }
 
     @Override
-    public Tag valueToNBT()
+    public NBTBase valueToNBT()
     {
-        return new ByteTag((byte) this.value.ordinal());
+        return new NBTTagByte((byte) this.value.ordinal());
     }
 
     @Override
-    public GenericBaseValue<RotationOrder> copy()
+    public ValueRotationOrder copy()
     {
         ValueRotationOrder clone = new ValueRotationOrder(this.id, this.defaultValue);
         clone.value = this.value;
@@ -107,13 +107,8 @@ public class ValueRotationOrder extends GenericValue<RotationOrder>
     @Override
     public RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
-        if (!(to.value instanceof RotationOrder))
-        {
-            return this.value;
-        }
-        else
-        {
-            return factor == 1F ? (RotationOrder) to.value : this.value;
-        }
+        if (!(to.value instanceof RotationOrder)) return this.value;
+
+        return factor == 1F ? (RotationOrder) to.value : this.value;
     }
 }

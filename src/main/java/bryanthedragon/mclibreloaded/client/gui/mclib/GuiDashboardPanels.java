@@ -10,10 +10,10 @@ import bryanthedragon.mclibreloaded.permissions.PermissionUtils;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("rawtypes")
 public class GuiDashboardPanels extends GuiPanelBase<GuiDashboardPanel>
 {
     public GuiDashboardPanels(Minecraft mc)
@@ -35,7 +35,7 @@ public class GuiDashboardPanels extends GuiPanelBase<GuiDashboardPanel>
 
             if (panel.getRequiredPermission() != null)
             {
-                PermissionUtils.hasPermission(Minecraft.getMinecraft().player, panel.getRequiredPermission(), task);
+                PermissionUtils.hasPermission(Minecraft.getInstance().player, panel.getRequiredPermission(), task);
             }
             else
             {

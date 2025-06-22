@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class GuiKeybinds extends GuiScrollElement
+public class GuiKeybinds extends GuiScrollElement
 {
     public Map<String, KeybindCategory> keybinds = new HashMap<String, KeybindCategory>();
 

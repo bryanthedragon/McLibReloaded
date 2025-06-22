@@ -3,8 +3,6 @@ package bryanthedragon.mclibreloaded.client.gui.utils;
 import java.io.File;
 import java.util.Map;
 
-import org.lwjgl.input.Keyboard;
-
 import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.Config;
@@ -12,8 +10,8 @@ import bryanthedragon.mclibreloaded.config.json.ConfigParser;
 import bryanthedragon.mclibreloaded.config.values.Value;
 import bryanthedragon.mclibreloaded.config.values.ValueInt;
 import bryanthedragon.mclibreloaded.utils.Keys;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.ModContainer;
+
 
 public class KeybindConfig extends Config
 {

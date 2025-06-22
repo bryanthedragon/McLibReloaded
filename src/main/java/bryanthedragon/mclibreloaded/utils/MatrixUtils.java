@@ -3,9 +3,8 @@ package bryanthedragon.mclibreloaded.utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.joml.Matrix4d;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -14,7 +13,7 @@ import javax.vecmath.*;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class MatrixUtils
 {
     /**
@@ -349,14 +348,14 @@ public class MatrixUtils
 
         parent.mul(parent, readModelViewDouble());
 
-        Entity renderViewEntity = Minecraft.getMinecraft().getRenderViewEntity();
+        Entity renderViewEntity = Minecraft.getInstance().getRenderViewEntity();
 
         Matrix4d cameraTrans = new Matrix4d();
 
         cameraTrans.setIdentity();
-        cameraTrans.m03 = Interpolations.lerp(renderViewEntity.lastTickPosX, renderViewEntity.posX, Minecraft.getMinecraft().getRenderPartialTicks());
-        cameraTrans.m13 = Interpolations.lerp(renderViewEntity.lastTickPosY, renderViewEntity.posY, Minecraft.getMinecraft().getRenderPartialTicks());
-        cameraTrans.m23 = Interpolations.lerp(renderViewEntity.lastTickPosZ, renderViewEntity.posZ, Minecraft.getMinecraft().getRenderPartialTicks());
+        cameraTrans.m03 = Interpolations.lerp(renderViewEntity.lastTickPosX, renderViewEntity.posX, Minecraft.getInstance().getRenderPartialTicks());
+        cameraTrans.m13 = Interpolations.lerp(renderViewEntity.lastTickPosY, renderViewEntity.posY, Minecraft.getInstance().getRenderPartialTicks());
+        cameraTrans.m23 = Interpolations.lerp(renderViewEntity.lastTickPosZ, renderViewEntity.posZ, Minecraft.getInstance().getRenderPartialTicks());
 
         parent.mul(cameraTrans, parent);
 

@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client;
 
-import bryanthedragon.mclibreloaded.McLibReloaded;
+import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
@@ -11,11 +11,10 @@ import bryanthedragon.mclibreloaded.utils.Keys;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.opengl.GlStateManager;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,7 +25,7 @@ import java.util.List;
  * 
  * This class is responsible for rendering a mouse pointer on the screen 
  */
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class InputRenderer
 {
     public static boolean disabledForFrame = false;
@@ -54,7 +53,7 @@ public class InputRenderer
 
         setupOrthoProjection(resolution);
 
-        McLibReloaded.EVENT_BUS.post(new RenderOverlayEvent.Pre(mc, resolution));
+        McLib.EVENT_BUS.post(new RenderOverlayEvent.Pre(mc, resolution));
     }
 
     /**
@@ -67,7 +66,7 @@ public class InputRenderer
 
         setupOrthoProjection(resolution);
 
-        McLibReloaded.EVENT_BUS.post(new RenderOverlayEvent.Post(mc, resolution));
+        McLib.EVENT_BUS.post(new RenderOverlayEvent.Post(mc, resolution));
     }
 
     /* Shift -6 and -8 to get it into the center */
@@ -112,7 +111,7 @@ public class InputRenderer
 
     public static void renderMouseWheel(int x, int y, int scroll, long current)
     {
-        int color = McLibReloaded.primaryColor.get();
+        int color = McLib.primaryColor.get();
 
         GuiDraw.drawDropShadow(x, y, x + 4, y + 16, 2, ColorUtils.HALF_BLACK + color, color);
         Gui.drawRect(x, y, x + 4, y + 16, 0xff111111);
@@ -159,7 +158,7 @@ public class InputRenderer
 
         this.renderMouse(x, y);
 
-        if (McLibReloaded.enableKeystrokeRendering.get())
+        if (McLib.enableKeystrokeRendering.get())
         {
             this.renderKeys(event.getGui(), x, y);
         }
@@ -176,12 +175,12 @@ public class InputRenderer
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableAlpha();
 
-        if (McLibReloaded.enableCursorRendering.get())
+        if (McLib.enableCursorRendering.get())
         {
             Icons.CURSOR.render(x, y);
         }
 
-        if (McLibReloaded.enableMouseButtonRendering.get())
+        if (McLib.enableMouseButtonRendering.get())
         {
             boolean left = Mouse.isButtonDown(0);
             boolean right = Mouse.isButtonDown(1);
@@ -229,7 +228,7 @@ public class InputRenderer
     {
         float lqx = Math.round(mouseX / (float) screen.width);
         float lqy = Math.round(mouseY / (float) screen.height);
-        int mode = McLibReloaded.keystrokeMode.get();
+        int mode = McLib.keystrokeMode.get();
 
         if (lqx == this.currentQX && lqy == this.currentQY)
         {
@@ -262,7 +261,7 @@ public class InputRenderer
         float qy = this.currentQY;
 
         int fy = qy > 0.5F ? 1 : -1;
-        int offset = McLibReloaded.keystrokeOffset.get();
+        int offset = McLib.keystrokeOffset.get();
         int mx = offset + (int) (qx * (screen.width - offset * 2));
         int my = offset + (int) (qy * (screen.height - 20 - offset * 2));
 
@@ -286,7 +285,7 @@ public class InputRenderer
                 int y = my + (int) (Interpolation.EXP_INOUT.interpolate(0, 1, key.getFactor()) * 50 * fy) + (key.i % 2 == 0 ? -1 : 0);
 
                 GuiDraw.drawDropShadow(x, y, x + 10 + key.width, y + 20, 4, 0x44000000, 0);
-                Gui.drawRect(x, y, x + 10 + key.width, y + 20, 0xff000000 + McLibReloaded.primaryColor.get());
+                Gui.drawRect(x, y, x + 10 + key.width, y + 20, 0xff000000 + McLib.primaryColor.get());
                 font.drawStringWithShadow(key.getLabel(), x + 5, y + 6, 0xffffff);
             }
         }
@@ -331,7 +330,7 @@ public class InputRenderer
                 return;
             }
 
-            offset = McLibReloaded.keystrokeOffset.get();
+            offset = McLib.keystrokeOffset.get();
             int x = last == null ? 0 : last.x + last.width + 5;
             PressedKey newKey = new PressedKey(key, x);
 
@@ -357,7 +356,7 @@ public class InputRenderer
     /**
      * Information about pressed key strokes
      */
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static class PressedKey
     {
         public static int INDEX = 0;

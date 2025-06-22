@@ -1,5 +1,13 @@
 package bryanthedragon.mclibreloaded.config;
 
+import com.google.common.base.Predicates;
+
+import io.netty.buffer.ByteBuf;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.json.ConfigParser;
 import bryanthedragon.mclibreloaded.config.values.Value;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
@@ -7,9 +15,9 @@ import bryanthedragon.mclibreloaded.network.mclib.Dispatcher;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfig;
 import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
 import bryanthedragon.mclibreloaded.utils.JsonUtils;
-import com.google.common.base.Predicates;
-import io.netty.buffer.ByteBuf;
+
 import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -67,31 +75,31 @@ public class Config implements IByteBufSerializable
 
     /* Translation string related methods */
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getTitleKey()
     {
         return this.id + ".config.title";
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getCategoryTitleKey(Value value)
     {
         return this.id + ".config." + value.getPath() + ".title";
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getCategoryTooltipKey(Value value)
     {
         return this.id + ".config." + value.getPath() + ".tooltip";
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getValueLabelKey(Value value)
     {
         return this.id + ".config." + value.getPath();
     }
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public String getValueCommentKey(Value value)
     {
         return this.id + ".config.comments." + value.getPath();
@@ -239,7 +247,7 @@ public class Config implements IByteBufSerializable
 
         for (Map.Entry<String, Value> entry : this.values.entrySet())
         {
-            ByteBufUtils.writeByteArray(buffer, entry.getKey().getBytes());
+            ByteBufUtils.writeUTF8String(buffer, entry.getKey());
 
             entry.getValue().toBytes(buffer);
         }

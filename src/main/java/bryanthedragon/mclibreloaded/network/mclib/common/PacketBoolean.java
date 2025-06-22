@@ -5,9 +5,7 @@ import io.netty.buffer.ByteBuf;
 public class PacketBoolean extends PacketAnswer<Boolean>
 {
     public PacketBoolean()
-    {
-
-    }
+    { }
 
     public PacketBoolean(int callbackID, boolean value)
     {

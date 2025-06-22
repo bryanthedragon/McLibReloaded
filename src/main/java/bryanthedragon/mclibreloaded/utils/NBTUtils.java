@@ -3,8 +3,14 @@ package bryanthedragon.mclibreloaded.utils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.handler.codec.EncoderException;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagList;
+
+import javax.vecmath.Vector3f;
 import java.io.IOException;
-import org.joml.Vector3f;
 
 /**
  * NBT utils 

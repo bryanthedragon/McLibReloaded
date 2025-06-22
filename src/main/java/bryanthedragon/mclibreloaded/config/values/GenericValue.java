@@ -1,8 +1,6 @@
 package bryanthedragon.mclibreloaded.config.values;
 
 import bryanthedragon.mclibreloaded.utils.ICopy;
-import bryanthedragon.mclibreloaded.utils.Interpolation;
-import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 
 /**
  * A Value container, providing an interface for dealing with
@@ -78,6 +76,4 @@ public abstract class GenericValue<T> extends GenericBaseValue<T>
 
         return !this.value.equals(this.defaultValue);
     }
-
-    public abstract MatrixUtils.RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor);
 }

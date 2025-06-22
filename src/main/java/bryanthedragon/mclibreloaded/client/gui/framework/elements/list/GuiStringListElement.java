@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import bryanthedragon.mclibreloaded.McLib;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 
 public class GuiStringListElement extends GuiListElement<String>
 {

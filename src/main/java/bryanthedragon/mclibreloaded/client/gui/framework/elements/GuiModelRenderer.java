@@ -1,28 +1,19 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
-import bryanthedragon.mclibreloaded.McLibReloaded;
+import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.utils.DummyEntity;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix3d;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 
@@ -34,12 +25,12 @@ import java.util.function.Consumer;
 public abstract class GuiModelRenderer extends GuiElement
 {
     private static boolean rendering;
-    private static final Vector3d vec = new Vector3d();
-    private static final Matrix3d mat = new Matrix3d();
+    private static Vector3d vec = new Vector3d();
+    private static Matrix3d mat = new Matrix3d();
     protected Matrix4d cameraMatrix = new Matrix4d();
 
-    protected LivingEntity entity;
-    protected BlockState block = Blocks.GRASS_BLOCK.defaultBlockState();
+    protected EntityLivingBase entity;
+    protected IBlockState block = Blocks.GRASS.getDefaultState();
 
     protected int timer;
     protected boolean dragging;
@@ -88,16 +79,12 @@ public abstract class GuiModelRenderer extends GuiElement
     {
         super(mc);
 
-        this.entity = new DummyEntity(mc.level);
-        this.entity.setYRot(0.0F);
-        this.entity.yRotO = 0.0F;
-        this.entity.setXRot(0.0F);
-        this.entity.xRotO = 0.0F;
-        this.entity.yHeadRot = 0.0F;
-        this.entity.yHeadRotO = 0.0F;
-        this.entity.yBodyRot = 0.0F;
-        this.entity.yBodyRotO = 0.0F;
-        this.entity.setOnGround(true);
+        this.entity = new DummyEntity(mc.world);
+        this.entity.rotationYaw = this.entity.prevRotationYaw = 0.0F;
+        this.entity.rotationPitch = this.entity.prevRotationPitch = 0.0F;
+        this.entity.rotationYawHead = this.entity.prevRotationYawHead = 0.0F;
+        this.entity.renderYawOffset = this.entity.prevRenderYawOffset = 0.0F;
+        this.entity.onGround = true;
         this.reset();
     }
 
@@ -129,7 +116,7 @@ public abstract class GuiModelRenderer extends GuiElement
         this.scale = scale;
     }
 
-    public LivingEntity getEntity()
+    public EntityLivingBase getEntity()
     {
         return this.entity;
     }
@@ -166,11 +153,11 @@ public abstract class GuiModelRenderer extends GuiElement
         {
             this.dragging = true;
             this.flight = false;
-            this.position = Screen.hasShiftDown() || context.mouseButton == 2;
+            this.position = GuiScreen.isShiftKeyDown() || context.mouseButton == 2;
             this.lastX = context.mouseX;
             this.lastY = context.mouseY;
 
-            if (Screen.hasControlDown())
+            if (GuiScreen.isCtrlKeyDown())
             {
                 this.tryPicking = true;
                 this.dragging = false;
@@ -220,9 +207,9 @@ public abstract class GuiModelRenderer extends GuiElement
             vec.set(0, 0, -this.scale);
             this.rotateVector(vec);
 
-            this.pos.x -= (float) vec.x;
-            this.pos.y -= (float) vec.y;
-            this.pos.z -= (float) vec.z;
+            this.pos.x -= vec.x;
+            this.pos.y -= vec.y;
+            this.pos.z -= vec.z;
         }
 
         super.mouseReleased(context);
@@ -233,8 +220,8 @@ public abstract class GuiModelRenderer extends GuiElement
     {
         if (this.dragging && !this.position)
         {
-            if (context.keyCode == GLFW.GLFW_KEY_W || context.keyCode == GLFW.GLFW_KEY_S || context.keyCode == GLFW.GLFW_KEY_A ||
-                    context.keyCode == GLFW.GLFW_KEY_D || context.keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || context.keyCode == GLFW.GLFW_KEY_SPACE)
+            if (context.keyCode == Keyboard.KEY_W || context.keyCode == Keyboard.KEY_S || context.keyCode == Keyboard.KEY_A ||
+                    context.keyCode == Keyboard.KEY_D || context.keyCode == Keyboard.KEY_LSHIFT || context.keyCode == Keyboard.KEY_SPACE)
             {
                 if (!this.flight)
                 {
@@ -243,9 +230,9 @@ public abstract class GuiModelRenderer extends GuiElement
                     vec.set(0, 0, -this.scale);
                     this.rotateVector(vec);
 
-                    this.pos.x += (float) vec.x;
-                    this.pos.y += (float) vec.y;
-                    this.pos.z += (float) vec.z;
+                    this.pos.x += vec.x;
+                    this.pos.y += vec.y;
+                    this.pos.z += vec.z;
                 }
 
                 return true;
@@ -296,56 +283,82 @@ public abstract class GuiModelRenderer extends GuiElement
      */
     protected void update()
     {
-        this.timer = this.mc.player != null ? this.mc.player.tickCount : this.timer + 1;
-        this.entity.tickCount = this.timer;
+        this.timer = this.mc.player != null ? this.mc.player.ticksExisted : this.timer + 1;
+        this.entity.ticksExisted = this.timer;
     }
 
     /**
      * Draw currently edited model
      */
-    private void drawModel(GuiContext context, PoseStack poseStack)
-{
-    this.setupViewport(context);
-    this.setupPosition(context);
-    this.setupEntity();
+    private void drawModel(GuiContext context)
+    {
+        this.setupViewport(context);
+        this.setupPosition(context);
+        this.setupEntity();
 
-    // Enable rendering states
-    RenderSystem.enableDepthTest();
-    RenderSystem.enableBlend();
-    RenderSystem.defaultBlendFunc();
-    RenderSystem.enableCull();
-    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        /* Enable rendering states */
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableDepth();
+        GlStateManager.disableCull();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-    // Setup transformations using PoseStack
-    poseStack.pushPose();
-    poseStack.translate(-this.temp.x, -this.temp.y, -this.temp.z);
-    poseStack.mulPose(Axis.XP.rotationDegrees(this.pitch));
-    poseStack.mulPose(Axis.YP.rotationDegrees(this.yaw));
-    this.cameraMatrix = MatrixUtils.readModelViewDouble(); // If you still need this
+        /* Setup transformations */
+        GlStateManager.pushMatrix();
+        GlStateManager.loadIdentity();
+        GlStateManager.rotate(this.pitch, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(this.yaw, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(-this.temp.x, -this.temp.y, -this.temp.z);
+        this.cameraMatrix = MatrixUtils.readModelViewDouble();
 
-    if (this.hideModel) {
-        RenderSystem.depthFunc(GL11.GL_NEVER);
+        /* Custom render settings */
+        if (this.hideModel)
+        {
+            GlStateManager.depthFunc(GL11.GL_NEVER);
+        }
+
+        /* Drawing begins */
+        this.drawGround();
+
+        if (this.beforeRender != null)
+        {
+            this.beforeRender.accept(context);
+        }
+
+        this.drawUserModel(context);
+
+        if (this.afterRender != null)
+        {
+            this.afterRender.accept(context);
+        }
+
+        /* Reset custom settings */
+        if (this.hideModel)
+        {
+            GlStateManager.depthFunc(GL11.GL_LEQUAL);
+        }
+
+        GlStateManager.popMatrix();
+
+        /* Disable rendering states */
+        GlStateManager.enableCull();
+        GlStateManager.disableDepth();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableAlpha();
+        RenderHelper.disableStandardItemLighting();
+
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
+        /* Return back to orthographic projection */
+        GlStateManager.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
+        GlStateManager.matrixMode(GL11.GL_PROJECTION);
+        GlStateManager.loadIdentity();
+        GlStateManager.ortho(0.0D, context.screen.width, context.screen.height, 0.0D, 1000.0D, 3000000.0D);
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
     }
-
-    this.drawGround();
-
-    if (this.beforeRender != null) this.beforeRender.accept(context);
-    this.drawUserModel(context, poseStack);
-    if (this.afterRender != null) this.afterRender.accept(context);
-
-    if (this.hideModel) {
-        RenderSystem.depthFunc(GL11.GL_LEQUAL);
-    }
-
-    poseStack.popPose();
-
-    // Reset rendering states
-    RenderSystem.enableDepthTest();
-    RenderSystem.disableCull();
-    RenderSystem.disableBlend();
-    RenderSystem.disableDepth();
-}
-
 
     protected void updatePosition(GuiContext context)
     {
@@ -372,9 +385,9 @@ public abstract class GuiModelRenderer extends GuiElement
                     vec.set(xx, yy, 0);
                     this.rotateVector(vec);
 
-                    x += (float) vec.x;
-                    y += (float) vec.y;
-                    z += (float) vec.z;
+                    x += vec.x;
+                    y += vec.y;
+                    z += vec.z;
 
                     this.pos.set(x, y, z);
                 }
@@ -393,46 +406,46 @@ public abstract class GuiModelRenderer extends GuiElement
         {
             float multiplier = 4F / Math.max(Minecraft.getDebugFPS(), 1);
 
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(),GLFW.GLFW_KEY_LEFT_CONTROL))
+            if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
             {
                 multiplier *= 5;
             }
-            else if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(),GLfW.GLFW_KEY_LMENU))
+            else if (Keyboard.isKeyDown(Keyboard.KEY_LMENU))
             {
                 multiplier *= 0.2F;
             }
 
             vec.set(0, 0, 0);
 
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_W))
+            if (Keyboard.isKeyDown(Keyboard.KEY_W))
             {
                 vec.z++;
             }
 
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_A))
+            if (Keyboard.isKeyDown(Keyboard.KEY_S))
             {
                 vec.z--;
             }
 
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_S))
+            if (Keyboard.isKeyDown(Keyboard.KEY_A))
             {
                 vec.x++;
             }
 
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_D))
+            if (Keyboard.isKeyDown(Keyboard.KEY_D))
             {
                 vec.x--;
             }
 
-            mat.rotateY((180 - this.yaw) / 180 * (float) Math.PI);
+            mat.rotY((180 - this.yaw) / 180 * (float) Math.PI);
             mat.transform(vec);
 
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE))
+            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
             {
                 vec.y++;
             }
 
-            if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT))
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
             {
                 vec.y--;
             }
@@ -442,9 +455,9 @@ public abstract class GuiModelRenderer extends GuiElement
                 vec.normalize();
             }
 
-            this.pos.x += (float) (vec.x * multiplier);
-            this.pos.y += (float) (vec.y * multiplier);
-            this.pos.z += (float) (vec.z * multiplier);
+            this.pos.x += vec.x * multiplier;
+            this.pos.y += vec.y * multiplier;
+            this.pos.z += vec.z * multiplier;
         }
     }
 
@@ -460,16 +473,16 @@ public abstract class GuiModelRenderer extends GuiElement
         vec.set(0, 0, -this.scale);
         this.rotateVector(vec);
 
-        this.temp.x += (float) vec.x;
-        this.temp.y += (float) vec.y;
-        this.temp.z += (float) vec.z;
+        this.temp.x += vec.x;
+        this.temp.y += vec.y;
+        this.temp.z += vec.z;
     }
 
     private void rotateVector(Vector3d vec)
     {
-        mat.rotateX(this.pitch / 180 * (float) Math.PI);
+        mat.rotX(this.pitch / 180 * (float) Math.PI);
         mat.transform(vec);
-        mat.rotateY((180 - this.yaw) / 180 * (float) Math.PI);
+        mat.rotY((180 - this.yaw) / 180 * (float) Math.PI);
         mat.transform(vec);
     }
 
@@ -478,7 +491,7 @@ public abstract class GuiModelRenderer extends GuiElement
         /* Changing projection mode to perspective. In order for this to
          * work, depth buffer must also be cleared. Thanks to Gegy for
          * pointing this out (depth buffer)! */
-        poseStack.clear(GL11.GL_DEPTH_BUFFER_BIT);
+        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 
         float rx = (float) Math.ceil(mc.displayWidth / (double) context.screen.width);
         float ry = (float) Math.ceil(mc.displayHeight / (double) context.screen.height);
@@ -488,11 +501,11 @@ public abstract class GuiModelRenderer extends GuiElement
         int vw = this.fullScreen ? this.mc.displayWidth : (int) (this.area.w * rx);
         int vh = this.fullScreen ? this.mc.displayHeight : (int) (this.area.h * ry);
 
-        poseStack.viewport(vx, vy, vw, vh);
-        poseStack.matrixMode(GL11.GL_PROJECTION);
-        poseStack.loadIdentity();
+        GlStateManager.viewport(vx, vy, vw, vh);
+        GlStateManager.matrixMode(GL11.GL_PROJECTION);
+        GlStateManager.loadIdentity();
         Project.gluPerspective(this.fov, (float) vw / (float) vh, 0.05F, 1000);
-        poseStack.matrixMode(GL11.GL_MODELVIEW);
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
     }
 
     protected void setupEntity()
@@ -515,10 +528,7 @@ public abstract class GuiModelRenderer extends GuiElement
     /**
      * Draw your model here 
      */
-    protected void drawUserModel(GuiContext context, PoseStack poseStack)
-    {
-
-    }
+    protected abstract void drawUserModel(GuiContext context);
 
     /**
      * IMPORTANT: this method should be called manually by the subclass right
@@ -545,7 +555,7 @@ public abstract class GuiModelRenderer extends GuiElement
 
         if (this.hideModel)
         {
-            poseStack.depthFunc(GL11.GL_LEQUAL);
+            GlStateManager.depthFunc(GL11.GL_LEQUAL);
         }
 
         GL11.glColorMask(false, false, false, false);
@@ -554,7 +564,7 @@ public abstract class GuiModelRenderer extends GuiElement
 
         if (this.hideModel)
         {
-            poseStack.depthFunc(GL11.GL_NEVER);
+            GlStateManager.depthFunc(GL11.GL_NEVER);
         }
 
         ByteBuffer buffer = ByteBuffer.allocateDirect(1);
@@ -579,9 +589,7 @@ public abstract class GuiModelRenderer extends GuiElement
      * Here you should draw your own things into stencil
      */
     protected void drawForStencil(GuiContext context)
-    {
-
-    }
+    {}
 
     protected String getStencilValue(int value)
     {
@@ -594,16 +602,16 @@ public abstract class GuiModelRenderer extends GuiElement
      */
     protected void drawGround()
     {
-        if (McLibReloaded.enableGridRendering.get())
+        if (McLib.enableGridRendering.get())
         {
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
 
             GL11.glLineWidth(3);
-            poseStack.disableTexture2D();
-            poseStack.enableAlpha();
-            poseStack.enableBlend();
-            poseStack.disableLighting();
+            GlStateManager.disableTexture2D();
+            GlStateManager.enableAlpha();
+            GlStateManager.enableBlend();
+            GlStateManager.disableLighting();
             buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
             for (int x = 0; x <= 10; x ++)
@@ -636,8 +644,8 @@ public abstract class GuiModelRenderer extends GuiElement
 
             tessellator.draw();
 
-            poseStack.enableLighting();
-            poseStack.enableTexture2D();
+            GlStateManager.enableLighting();
+            GlStateManager.enableTexture2D();
         }
         else
         {
@@ -645,13 +653,13 @@ public abstract class GuiModelRenderer extends GuiElement
 
             this.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-            poseStack.pushMatrix();
-            poseStack.translate(0, -0.5F, 0);
-            poseStack.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
-            poseStack.translate(-0.5F, -0.5F, 0.5F);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0, -0.5F, 0);
+            GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.translate(-0.5F, -0.5F, 0.5F);
             renderer.renderBlockBrightness(this.block, 1.0F);
-            poseStack.translate(0.0F, 0.0F, 1.0F);
-            poseStack.popMatrix();
+            GlStateManager.translate(0.0F, 0.0F, 1.0F);
+            GlStateManager.popMatrix();
         }
     }
 }

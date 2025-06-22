@@ -2,8 +2,7 @@ package bryanthedragon.mclibreloaded.utils.resources;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Texture location
@@ -15,7 +14,7 @@ public class TextureLocation extends ResourceLocation
 {
     public TextureLocation(String domain, String path)
     {
-        super(domain, path);
+        super();
 
         this.set(domain, path);
     }

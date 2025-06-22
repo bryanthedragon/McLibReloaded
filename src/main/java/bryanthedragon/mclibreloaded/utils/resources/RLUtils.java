@@ -5,14 +5,9 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import bryanthedragon.mclibreloaded.McLib;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.SimpleResource;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,12 +24,12 @@ import java.util.List;
 public class RLUtils
 {
     private static List<IResourceTransformer> transformers = new ArrayList<IResourceTransformer>();
-    private static ResourceLocation pixel = new ResourceLocation("mclib:textures/pixel.png");
+    private static ResourceLocation pixel = new ResourceLocation("mclib:textures/pixel.png", null);
 
     /**
      * Get stream for multi resource location 
      */
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static IResource getStreamForMultiskin(MultiResourceLocation multi) throws IOException
     {
         if (multi.children.isEmpty())
@@ -48,7 +43,7 @@ public class RLUtils
             {
                 MultiskinThread.add(multi);
 
-                return Minecraft.getMinecraft().getResourceManager().getResource(pixel);
+                return Minecraft.getInstance().getResourceManager().getResource(pixel);
             }
             else
             {
@@ -74,7 +69,7 @@ public class RLUtils
         transformers.add(transformer);
     }
 
-    public static ResourceLocation create(String path)
+    public static TextureLocation create(String path)
     {
         for (IResourceTransformer transformer : transformers)
         {
@@ -84,7 +79,7 @@ public class RLUtils
         return new TextureLocation(path);
     }
 
-    public static ResourceLocation create(String domain, String path)
+    public static TextureLocation create(String domain, String path)
     {
         for (IResourceTransformer transformer : transformers)
         {

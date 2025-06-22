@@ -1,27 +1,28 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
 import com.google.common.base.Predicate;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.ITextColoring;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.values.ValueString;
 import bryanthedragon.mclibreloaded.utils.Patterns;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 /**
  * GUI text element
  * 
  * This element is a wrapper for the text field class
  */
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, ITextColoring
 {
     public static final Predicate<String> FILENAME_PREDICATE = (s) -> Patterns.FILENAME.matcher(s).find();
@@ -91,15 +92,12 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
         this.field.setCursorPositionZero();
     }
 
-    @Override
     public void setEntryValue(int id, boolean value)
     {}
 
-    @Override
     public void setEntryValue(int id, float value)
     {}
 
-    @Override
     public void setEntryValue(int id, String value)
     {
         if (this.callback != null)
@@ -108,13 +106,11 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
         }
     }
 
-    @Override
     public void setColor(int color, boolean shadow)
     {
         this.field.setTextColor(color);
     }
 
-    @Override
     public void resize()
     {
         super.resize();
@@ -133,7 +129,6 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
         }
     }
 
-    @Override
     public boolean mouseClicked(GuiContext context)
     {
         if (super.mouseClicked(context))
@@ -153,7 +148,6 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
         return context.mouseButton == 0 && this.area.isInside(context);
     }
 
-    @Override
     public boolean keyTyped(GuiContext context)
     {
         if (this.isFocused())
@@ -175,7 +169,6 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
         return this.field.textboxKeyTyped(context.typedChar, context.keyCode) || super.keyTyped(context);
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         this.field.drawTextBox();

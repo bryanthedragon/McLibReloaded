@@ -1,50 +1,90 @@
 package bryanthedragon.mclibreloaded.network;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.behavior.EntityTracker;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.event.CustomizeGuiOverlayEvent.DebugText.Side;
 import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.SimpleChannel;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
-public abstract class AbstractDispatcher {
-    private final SimpleChannel dispatcher;
-    private int packetId = 0;
+/**
+ * Network dispatcher
+ *
+ * @author Ernio (Ernest Sadowski)
+ */
+public abstract class AbstractDispatcher
+{
+    private final SimpleNetworkWrapper dispatcher;
+    private byte nextPacketID;
 
-    public AbstractDispatcher(String modID) {
-        this.dispatcher = NetworkRegistry.ChannelBuilder
-            .named(new ResourceLocation(modID, "main"))
-            .networkProtocolVersion(() -> "1")
-            .clientAcceptedVersions(s -> true)
-            .serverAcceptedVersions(s -> true)
-            .simpleChannel();
-    }
-
-    public SimpleChannel get() {
-        return dispatcher;
-    }
-
-    // Your new register method:
-    public <MSG> void register(Class<MSG> messageClass, Function<MSG, ?> encoder, Function<?, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> handler, Dist dist) {
-        dispatcher.messageBuilder(messageClass, packetId++, dist)
-        .encoder(encoder)
-        .decoder(decoder)
-        .consumer(handler)
-        .add();
-    }
-
-    public void register(Class<?> packet, Class<?> handler, Dist dist)
+    public AbstractDispatcher(String modID)
     {
-        // Implement the registration logic that binds packet and handler to the channel,
-        // handles client/server distinction using Dist,
-        // and assigns incrementing packet IDs.
-        dispatcher.messageBuilder(packet, packetId++, dist)
-            .encoder(encoder)
-            .decoder(decoder)
-            .consumer(handler)
-            .add();
+        this.dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(modID);
     }
 
+    public SimpleNetworkWrapper get()
+    {
+        return this.dispatcher;
+    }
+
+    /**
+     * Here you supposed to register packets to handlers 
+     */
+    public abstract void register();
+
+    /**
+     * Send message to players who are tracking given entity
+     */
+    public void sendToTracked(Entity entity, IMessage message)
+    {
+        EntityTracker tracker = ((WorldServer) entity.world).getEntityTracker();
+
+        for (Player player : tracker.getTrackingPlayers(entity))
+        {
+            this.dispatcher.sendTo(message, (PlayerMP) player);
+        }
+    }
+
+    /**
+     * Send message to given player
+     */
+    public void sendTo(IMessage message, PlayerMP player)
+    {
+        this.dispatcher.sendTo(message, player);
+    }
+
+    /**
+     * Send message to all players
+     * @param message
+     */
+    public void sendToAll(IMessage message)
+    {
+        this.dispatcher.sendToAll(message);
+    }
+
+    /**
+     * Send message to all players around the given point
+     * @param message
+     * @param point The {@link NetworkRegistry.TargetPoint} around which to send
+     */
+    public void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point)
+    {
+        this.dispatcher.sendToAllAround(message, point);
+    }
+
+    /**
+     * Send message to the server
+     */
+    public void sendToServer(IMessage message)
+    {
+        this.dispatcher.sendToServer(message);
+    }
+
+    /**
+     * Register given message with given message handler on a given side
+     */
+    public <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)
+    {
+        this.dispatcher.registerMessage(handler, message, this.nextPacketID++, side);
+    }
 }

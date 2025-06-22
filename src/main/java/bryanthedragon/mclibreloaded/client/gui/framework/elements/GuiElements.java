@@ -2,6 +2,7 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +28,14 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
      */
     protected boolean visible = true;
 
+    /**
+     * Parent of this elements collection
+     */
+    private GuiElement parent;
+
     public GuiElements(GuiElement parent)
     {
-        /**
-         * Parent of this elements collection
-         */
+        this.parent = parent;
     }
 
     public void clear()
@@ -162,12 +166,7 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
     }
 
     @Override
-    public void mouseReleased(GuiContext context) {
-
-    }
-
-    @Override
-    public void OnmouseReleased(GuiContext context)
+    public void mouseReleased(GuiContext context)
     {
         for (int i = this.elements.size() - 1; i >= 0; i--)
         {
@@ -197,15 +196,12 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
     }
 
     @Override
-    public boolean canBeDrawn(Area viewport) {
-        return false;
-    }
-
-    public boolean BeDrawn(Area viewport)
+    public boolean canBeDrawn(Area viewport)
     {
         return true;
     }
 
+    @Override
     public void draw(GuiContext context)
     {
         for (T element : this.elements)

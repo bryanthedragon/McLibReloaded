@@ -1,5 +1,6 @@
 package bryanthedragon.mclibreloaded.core.transformers;
 
+import bryanthedragon.mclibreloaded.utils.coremod.ClassMethodTransformer;
 import bryanthedragon.mclibreloaded.utils.coremod.ClassTransformer;
 import bryanthedragon.mclibreloaded.utils.coremod.CoreClassTransformer;
 import org.objectweb.asm.Opcodes;

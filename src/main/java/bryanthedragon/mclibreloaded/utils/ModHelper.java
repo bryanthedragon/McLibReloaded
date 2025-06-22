@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import net.minecraftforge.fml.ModContainer;
+
+import bryanthedragon.mclibreloaded.forge.fml.common.Loader;
+import bryanthedragon.mclibreloaded.forge.fml.common.ModContainer;
 
 public class ModHelper
 {
@@ -26,9 +28,7 @@ public class ModHelper
             jar = URLDecoder.decode(jar, StandardCharsets.UTF_8.name());
         }
         catch (UnsupportedEncodingException e)
-        {
-            
-        }
+        {}
 
         File jarFile = new File(jar);
 

@@ -6,6 +6,7 @@ import bryanthedragon.mclibreloaded.client.gui.utils.ScrollArea;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollDirection;
 import bryanthedragon.mclibreloaded.client.gui.utils.resizers.AutomaticResizer;
 import bryanthedragon.mclibreloaded.client.gui.utils.resizers.ChildResizer;
+import bryanthedragon.mclibreloaded.client.gui.utils.resizers.Flex;
 import bryanthedragon.mclibreloaded.client.gui.utils.resizers.IResizer;
 import bryanthedragon.mclibreloaded.client.gui.utils.resizers.Margin;
 

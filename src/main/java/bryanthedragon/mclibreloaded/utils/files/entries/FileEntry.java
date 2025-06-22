@@ -1,10 +1,9 @@
 package bryanthedragon.mclibreloaded.utils.files.entries;
 
+import net.minecraft.util.ResourceLocation;
 
 import java.io.File;
 import java.util.Objects;
-
-import net.minecraft.resources.ResourceLocation;
 
 public class FileEntry extends AbstractEntry
 {

@@ -1,40 +1,43 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 
 public class EntityUtils
 {
+    @OnlyIn(Dist.CLIENT)
     public static GameType getGameMode()
     {
         return getGameMode(Minecraft.getInstance().player);
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static GameType getGameMode(Player player)
     {
-        PlayerInfo info = getNetworkInfo(player);
-        return info == null ? GameType.SURVIVAL : info.getGameMode();
+        NetworkPlayerInfo networkplayerinfo = EntityUtils.getNetworkInfo(player);
+
+        return networkplayerinfo == null ? GameType.SURVIVAL : networkplayerinfo.getGameType();
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static boolean isAdventureMode(Player player)
     {
-        PlayerInfo info = getNetworkInfo(player);
-        return info != null && info.getGameMode() == GameType.ADVENTURE;
-    }
-    public static boolean IsCreativeMode(Player player)
-    {
-        PlayerInfo info = getNetworkInfo(player);
-        return info != null && info.getGameMode() == GameType.CREATIVE;
+        NetworkPlayerInfo info = getNetworkInfo(player);
+
+        return info != null && info.getGameType() == GameType.ADVENTURE;
     }
 
-    public static PlayerInfo getNetworkInfo(Player player)
+    @OnlyIn(Dist.CLIENT)
+    public static NetworkPlayerInfo getNetworkInfo(Player player)
     {
-        ClientPacketListener connection = Minecraft.getInstance().getConnection();
-        if (connection == null) return null;
+        NetHandlerPlayClient connection = Minecraft.getInstance().getConnection();
 
-        return connection.getPlayerInfo(player.getUUID());
+        if (connection == null)
+        {
+            return null;
+        }
+
+        return connection.getPlayerInfo(player.getGameProfile().getId());
     }
 }

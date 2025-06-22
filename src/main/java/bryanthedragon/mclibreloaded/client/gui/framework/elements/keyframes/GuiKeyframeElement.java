@@ -332,7 +332,7 @@ public abstract class GuiKeyframeElement extends GuiElement
         this.drawCursor(context);
 
         /* Draw graph of the keyframe channel */
-        GlStateManager.glLineWidth(Minecraft.getMinecraft().gameSettings.guiScale * 1.5F);
+        GlStateManager.glLineWidth(Minecraft.getInstance().gameSettings.guiScale * 1.5F);
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

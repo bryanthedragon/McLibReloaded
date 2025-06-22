@@ -1,20 +1,26 @@
 package bryanthedragon.mclibreloaded.client.gui.framework;
 
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.IViewport;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.IViewportStack;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
-import bryanthedragon.mclibreloaded.client.gui.utils.resizers.IResizer;
+
 import net.minecraft.client.Minecraft;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import java.io.IOException;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Base class for GUI screens using this framework
  */
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiBase extends GuiScreen
 {
     private static GuiContext current;
@@ -36,7 +42,7 @@ public class GuiBase extends GuiScreen
         this.context.font = this.context.mc.fontRenderer;
 
         this.root = new GuiRootElement(this.context.mc);
-        this.root.markContainer().flex().relative((IResizer) this.viewport).wh(1F, 1F);
+        this.root.markContainer().flex().relative(this.viewport).wh(1F, 1F);
         this.root.keys().register(IKey.lang("mclib.gui.keys.list"), Keyboard.KEY_F9, () -> this.context.keybinds.toggleVisible());
 
         this.context.keybinds.flex().relative(this.viewport).wh(0.5F, 1F);
@@ -50,6 +56,7 @@ public class GuiBase extends GuiScreen
      * @param <T>
      * @return null if GuiBase.screen or GuiBase.screen.root is null or if the children List is empty.
      */
+    @Nullable
     public static <T> List<T> getCurrentChildren(Class<T> clazz)
     {
         if (GuiBase.getCurrent() != null && GuiBase.getCurrent().screen != null && GuiBase.getCurrent().screen.root != null)
@@ -62,13 +69,11 @@ public class GuiBase extends GuiScreen
         return null;
     }
 
-    @Override
     public void updateScreen()
     {
         this.context.tick += 1;
     }
 
-    @Override
     public void initGui()
     {
         current = this.context;
@@ -89,13 +94,11 @@ public class GuiBase extends GuiScreen
     protected void viewportSet()
     {}
 
-    @Override
     public void onGuiClosed()
     {
         current = null;
     }
 
-    @Override
     public void handleMouseInput() throws IOException
     {
         int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
@@ -113,7 +116,6 @@ public class GuiBase extends GuiScreen
         this.mouseScrolled(x, y, scroll);
     }
 
-    @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
         this.context.setMouse(mouseX, mouseY, mouseButton);
@@ -138,7 +140,6 @@ public class GuiBase extends GuiScreen
         }
     }
 
-    @Override
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
         this.context.setMouse(mouseX, mouseY, state);
@@ -151,7 +152,6 @@ public class GuiBase extends GuiScreen
         }
     }
 
-    @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         this.context.setKey(typedChar, keyCode);
@@ -199,11 +199,10 @@ public class GuiBase extends GuiScreen
         this.closeScreen();
     }
 
-    @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.context.setMouse(mouseX, mouseY);
-        this.context.partialTicks = Minecraft.getMinecraft().getRenderPartialTicks();
+        this.context.partialTicks = Minecraft.getInstance().getRenderPartialTicks();
 
         if (this.root.isVisible())
         {
@@ -228,23 +227,13 @@ public class GuiBase extends GuiScreen
             super(mc);
         }
 
-        @Override
-        public void mouseReleased(GuiContext context) {
 
-        }
-
-        @Override
-        public void OnmouseReleased(GuiContext context) {
-
-        }
-
-        @Override
         public void apply(IViewportStack stack)
         {
             stack.pushViewport(this.area);
         }
 
-        @Override
+
         public void unapply(IViewportStack stack)
         {
             stack.popViewport();

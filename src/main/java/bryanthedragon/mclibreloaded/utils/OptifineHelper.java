@@ -1,11 +1,14 @@
 package bryanthedragon.mclibreloaded.utils;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-/*
-* A class that uses reflection to access functionalities of the Optifine mod
-*/
+/**
+ * A class that uses reflection to access functionalities of the Optifine mod
+ */
 public class OptifineHelper
 {
     private static ReflectionElement<Field> shadowPass = new ReflectionElement<>();
@@ -13,15 +16,13 @@ public class OptifineHelper
     private static ReflectionElement<Method> nextEntity = new ReflectionElement<>();
     private static ReflectionElement<Method> nextBlockEntity = new ReflectionElement<>();
 
-    /*
-    * Checks whether Optifine is currently rendering shadow map. Thanks to
-    * MiaoNLI for suggesting how to do it!
-    */
+    /**
+     * Checks whether Optifine is currently rendering shadow map. Thanks to
+     * MiaoNLI for suggesting how to do it!
+     */
     public static boolean isOptifineShadowPass()
     {
-        /* 
-        * only check once for isShadowPass Field to avoid too many reflection calls 
-        */
+        /* only check once for isShadowPass Field to avoid too many reflection calls */
         if (!shadowPass.checked)
         {
             try
@@ -32,9 +33,7 @@ public class OptifineHelper
                 }
             }
             catch (Exception e)
-            {
-
-            }
+            {}
 
             shadowPass.checked = true;
         }
@@ -46,18 +45,16 @@ public class OptifineHelper
                 return (boolean) shadowPass.element.get(null);
             }
             catch (Exception e)
-            {
-
-            }
+            {}
         }
 
         return false;
     }
 
-    /*
-    * Invokes net.optifine.shaders.Shaders.nextEntity(Entity) when Optifine is present
-    * @param entity
-    */
+    /**
+     * Invokes net.optifine.shaders.Shaders.nextEntity(Entity) when Optifine is present
+     * @param entity
+     */
     public static void nextEntity(Entity entity)
     {
         if (!nextEntity.checked)
@@ -70,9 +67,7 @@ public class OptifineHelper
                 }
             }
             catch (Exception var1)
-            { 
-                
-            }
+            { }
 
             nextEntity.checked = true;
         }
@@ -84,15 +79,14 @@ public class OptifineHelper
                 nextEntity.element.invoke(null, entity);
             }
             catch (Exception e)
-            { 
-
-            }
+            { }
         }
     }
-    /*
-    * Invokes net.optifine.shaders.Shaders.nextBlockEntity(TileEntity) when Optifine is present
-    * @param tileEntity
-    */
+
+    /**
+     * Invokes net.optifine.shaders.Shaders.nextBlockEntity(TileEntity) when Optifine is present
+     * @param tileEntity
+     */
     public static void nextBlockEntity(TileEntity tileEntity)
     {
         if (!nextBlockEntity.checked)
@@ -105,9 +99,7 @@ public class OptifineHelper
                 }
             }
             catch (Exception e)
-            { 
-
-            }
+            { }
 
             nextBlockEntity.checked = true;
         }
@@ -119,15 +111,13 @@ public class OptifineHelper
                 nextBlockEntity.element.invoke(null, tileEntity);
             }
             catch (Exception e)
-            { 
-
-            }
+            { }
         }
     }
 
-    /*
-    * @return true if the Shaders Class was found i.e. not equal to null
-    */
+    /**
+     * @return true if the Shaders Class was found i.e. not equal to null
+     */
     private static boolean findShadersClass()
     {
         /* only check once if Optifine is there - avoid too many reflection calls*/
@@ -146,9 +136,7 @@ public class OptifineHelper
         return shadersClass.element != null;
     }
 
-    /* 
-    * avoid too many reflection calls by saving whether it was checked 
-    */
+    /* avoid too many reflection calls by saving whether it was checked */
     private static class ReflectionElement<T>
     {
         private T element;

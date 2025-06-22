@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
-import bryanthedragon.mclibreloaded.McLibReloaded;
+import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiIconElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
@@ -9,9 +9,11 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
 import bryanthedragon.mclibreloaded.client.gui.utils.Keybind;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
+import bryanthedragon.mclibreloaded.client.gui.utils.resizers.Flex.Measure;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +160,7 @@ public class GuiPanelBase<T extends GuiElement> extends GuiElement
             {
                 Area area = this.buttons.elements.get(i).area;
 
-                Gui.drawRect(area.x - 2, area.y - 2, area.ex() + 2, area.ey() + 2, 0xaa000000 + McLibReloaded.primaryColor.get());
+                Gui.drawRect(area.x - 2, area.y - 2, area.ex() + 2, area.ey() + 2, 0xaa000000 + McLib.primaryColor.get());
             }
         }
     }

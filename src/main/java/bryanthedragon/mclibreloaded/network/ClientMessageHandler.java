@@ -1,9 +1,10 @@
 package bryanthedragon.mclibreloaded.network;
 
-import com.mojang.brigadier.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.entity.PlayerSP;
+import net.minecraft.entity.player.PlayerMP;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * This class passes operation from Netty to Minecraft (Client) Thread. Also
@@ -12,13 +13,14 @@ import net.minecraft.world.entity.player.Player;
  *
  * @author Ernio (Ernest Sadowski)
  */
-public abstract class ClientMessageHandler<T extends Message> extends AbstractMessageHandler<T>
+public abstract class ClientMessageHandler<T extends IMessage> extends AbstractMessageHandler<T>
 {
-    public abstract void run(final LocalPlayer player, final T message);
+    @OnlyIn(Dist.CLIENT)
+    public abstract void run(final PlayerSP player, final T message);
 
     @Override
-
-    public Message handleClientMessage(final T message)
+    @OnlyIn(Dist.CLIENT)
+    public IMessage handleClientMessage(final T message)
     {
         Minecraft.getInstance().addScheduledTask(new Runnable()
         {
@@ -33,7 +35,7 @@ public abstract class ClientMessageHandler<T extends Message> extends AbstractMe
     }
 
     @Override
-    public final Message handleServerMessage(final Player player, final T message)
+    public final IMessage handleServerMessage(final PlayerMP player, final T message)
     {
         return null;
     }

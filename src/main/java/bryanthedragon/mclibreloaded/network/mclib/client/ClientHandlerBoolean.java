@@ -9,4 +9,11 @@ import bryanthedragon.mclibreloaded.network.mclib.common.PacketBoolean;
 public class ClientHandlerBoolean extends AbstractClientHandlerAnswer<PacketBoolean>
 {
 
+    @Override
+    public void run(PlayerSP player, PacketBoolean message) 
+    {
+        // TODO Auto-generated method stub
+        this.handleAnswer(player, message);
+    }
+
 }

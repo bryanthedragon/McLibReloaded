@@ -15,9 +15,12 @@ import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
 import bryanthedragon.mclibreloaded.config.values.IConfigGuiProvider;
 import bryanthedragon.mclibreloaded.config.values.Value;
 import bryanthedragon.mclibreloaded.config.values.ValueInt;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.ModContainer;
+import net.minecraft.client.resources.language.I18n;
+
+import net.minecraftforge.fml.ModContainer;
+
 
 public class ModKeybinds extends Value
 {

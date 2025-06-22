@@ -1,7 +1,5 @@
 package bryanthedragon.mclibreloaded.config.values;
 
-import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
-import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
@@ -11,11 +9,18 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiKeybi
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrackpadElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
 import bryanthedragon.mclibreloaded.client.gui.utils.Elements;
+import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.KeyParser;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
+import net.minecraft.nbt.NBTTagInt;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -83,7 +88,7 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
         return this.subtype(Subtype.COMBOKEY);
     }
 
-    public ValueInt modes(IKey lang, IKey langed, IKey... labels)
+    public ValueInt modes(IKey... labels)
     {
         this.labels = new ArrayList<IKey>();
         Collections.addAll(this.labels, labels);
@@ -110,7 +115,7 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
     }
 
     @Override
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiElement element = new GuiElement(mc);
@@ -313,7 +318,7 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
         MODES
     }
 
-    public MatrixUtils.RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
+    public Integer interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
         if (!(to.value instanceof Integer)) return this.value;
 

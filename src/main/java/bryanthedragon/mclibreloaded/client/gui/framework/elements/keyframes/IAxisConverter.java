@@ -2,8 +2,8 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.keyframes;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrackpadElement;
 import bryanthedragon.mclibreloaded.utils.keyframes.Keyframe;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface IAxisConverter
 {
@@ -13,9 +13,9 @@ public interface IAxisConverter
 
     public double to(double x);
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateField(GuiTrackpadElement element);
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean forceInteger(Keyframe keyframe, Selection selection, boolean forceInteger);
 }

@@ -1,20 +1,18 @@
 package bryanthedragon.mclibreloaded.config;
 
-import bryanthedragon.mclibreloaded.client.gui.utils.ValueColors;
-import bryanthedragon.mclibreloaded.config.values.ValueBoolean;
-import bryanthedragon.mclibreloaded.config.values.ValueInt;
 import bryanthedragon.mclibreloaded.config.values.Value;
+import bryanthedragon.mclibreloaded.config.values.ValueBoolean;
 import bryanthedragon.mclibreloaded.config.values.ValueDouble;
 import bryanthedragon.mclibreloaded.config.values.ValueFloat;
+import bryanthedragon.mclibreloaded.config.values.ValueInt;
+import bryanthedragon.mclibreloaded.config.values.ValueRL;
 import bryanthedragon.mclibreloaded.config.values.ValueString;
 import net.minecraft.resources.ResourceLocation;
-
-
 import java.io.File;
 
 public class ConfigBuilder
 {
-    private final Config config;
+    private Config config;
     private Value category;
 
     public ConfigBuilder(String id, File file)
@@ -40,7 +38,7 @@ public class ConfigBuilder
         return this;
     }
 
-    public ConfigBuilder register(ValueColors value)
+    public ConfigBuilder register(Value value)
     {
         this.category.addSubValue(value);
         value.setConfig(this.config);
@@ -120,9 +118,9 @@ public class ConfigBuilder
         return value;
     }
 
-    public ValueString getRL(String id, ResourceLocation defaultValue)
+    public ValueRL getRL(String id, ResourceLocation defaultValue)
     {
-        ValueString value = new ValueString(id);
+        ValueRL value = new ValueRL(id, defaultValue);
 
         this.register(value);
 

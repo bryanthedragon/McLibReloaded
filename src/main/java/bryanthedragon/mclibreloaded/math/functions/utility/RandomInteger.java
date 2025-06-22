@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.math.functions.utility;
 
 import bryanthedragon.mclibreloaded.math.IValue;
+import bryanthedragon.mclibreloaded.math.functions.Function;
 
 public class RandomInteger extends Random
 {

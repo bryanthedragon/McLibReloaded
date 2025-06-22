@@ -1,7 +1,16 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.util.ResourceLocation;
+import bryanthedragon.mclibreloaded.forge.fml.client.FMLClientHandler;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
+import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
@@ -81,6 +90,7 @@ public class ReflectionUtils
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static boolean registerResourcePack(IResourcePack pack)
     {
         try
@@ -122,9 +132,7 @@ public class ReflectionUtils
                 SHADOW_PASS = clazz.getDeclaredField("isShadowPass");
             }
             catch (Exception e)
-            {
-
-            }
+            {}
 
             SHADOW_PASS_CHECK = true;
         }

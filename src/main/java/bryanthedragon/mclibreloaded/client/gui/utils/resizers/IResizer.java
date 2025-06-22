@@ -2,8 +2,8 @@ package bryanthedragon.mclibreloaded.client.gui.utils.resizers;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface IResizer
 {
@@ -13,10 +13,10 @@ public interface IResizer
 
     public void postApply(Area area);
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void add(GuiElement parent, GuiElement child);
 
-    @SideOnly(Dist.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void remove(GuiElement parent, GuiElement child);
 
     public int getX();

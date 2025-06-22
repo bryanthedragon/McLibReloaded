@@ -2,8 +2,10 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public interface IGuiElement
 {
     /**
@@ -35,8 +37,6 @@ public interface IGuiElement
      * Mouse was released
      */
     public void mouseReleased(GuiContext context);
-
-    void OnmouseReleased(GuiContext context);
 
     /**
      * Key was typed
