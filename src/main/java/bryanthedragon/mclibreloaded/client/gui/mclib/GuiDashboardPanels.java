@@ -8,10 +8,15 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.permissions.PermissionUtils;
 import bryanthedragon.mclibreloaded.utils.Direction;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
 import java.util.function.Consumer;
+
+import org.lwjgl.glfw.GLFW;
+
+import com.mojang.blaze3d.platform.InputConstants;
 
 @SuppressWarnings("rawtypes")
 public class GuiDashboardPanels extends GuiPanelBase<GuiDashboardPanel>
@@ -91,16 +96,16 @@ public class GuiDashboardPanels extends GuiPanelBase<GuiDashboardPanel>
 
         switch (size)
         {
-            case 1: return Keyboard.KEY_NUMPAD0;
-            case 2: return Keyboard.KEY_NUMPAD1;
-            case 3: return Keyboard.KEY_NUMPAD2;
-            case 4: return Keyboard.KEY_NUMPAD3;
-            case 5: return Keyboard.KEY_NUMPAD4;
-            case 6: return Keyboard.KEY_NUMPAD5;
-            case 7: return Keyboard.KEY_NUMPAD6;
-            case 8: return Keyboard.KEY_NUMPAD7;
-            case 9: return Keyboard.KEY_NUMPAD8;
-            case 10: return Keyboard.KEY_NUMPAD9;
+            case 1: return InputConstants.KEY_NUMPAD0;
+            case 2: return InputConstants.KEY_NUMPAD1;
+            case 3: return InputConstants.KEY_NUMPAD2;
+            case 4: return InputConstants.KEY_NUMPAD3;
+            case 5: return InputConstants.KEY_NUMPAD4;
+            case 6: return InputConstants.KEY_NUMPAD5;
+            case 7: return InputConstants.KEY_NUMPAD6;
+            case 8: return InputConstants.KEY_NUMPAD7;
+            case 9: return InputConstants.KEY_NUMPAD8;
+            case 10: return InputConstants.KEY_NUMPAD9;
         }
 
         return -1;

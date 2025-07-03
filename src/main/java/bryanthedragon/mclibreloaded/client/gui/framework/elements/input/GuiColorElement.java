@@ -8,8 +8,8 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.values.ValueInt;
 import bryanthedragon.mclibreloaded.utils.Direction;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.function.Consumer;
 
@@ -131,7 +131,7 @@ public class GuiColorElement extends GuiElement
         {
             this.area.draw(0xff000000);
 
-            GlStateManager.color(1, 1, 1);
+            RenderSystem.color(1, 1, 1);
             this.picker.drawRect(this.area.x + 1, this.area.y + 1, this.area.ex() - 1, this.area.ey() - 1);
 
             padding = 1;

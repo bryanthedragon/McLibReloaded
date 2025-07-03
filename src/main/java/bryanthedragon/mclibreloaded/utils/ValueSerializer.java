@@ -2,15 +2,22 @@ package bryanthedragon.mclibreloaded.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.config.values.GenericBaseValue;
 import bryanthedragon.mclibreloaded.config.values.GenericValue;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
 import bryanthedragon.mclibreloaded.network.INBTSerializable;
-import net.minecraft.nbt.NBTBase;
+
 import net.minecraft.nbt.CompoundTag;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A Serializer for GenericValue instances.
@@ -196,6 +203,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
     /**
      * @throws IllegalArgumentException when the path of the value is already registered.
      */
+    @SuppressWarnings("unchecked")
     protected <T> Value<T> poolValue(GenericBaseValue<T> value)
     {
         String key = value.getPath();
@@ -284,9 +292,8 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         }
     }
 
-    /**
-     * Calls {@link GenericBaseValue#valueFromNBT(NBTBase)}
-     */
+
+    @SuppressWarnings("null")
     @Override
     public void fromNBT(CompoundTag tag)
     {
@@ -296,9 +303,9 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
             GenericBaseValue<?> value = packet.value;
             String key = entry.getKey();
 
-            if (tag.hasKey(key))
+            if (tag.contains(key))
             {
-                value.valueFromNBT(tag.getTag(key));
+                value.valueFromNBT(tag.put(key, value.valueToNBT()));
             }
         }
     }
@@ -307,6 +314,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
      * Calls {@link GenericBaseValue#valueToNBT()}. Only serializes the value if it has changed.
      * Serializes always, if the value has been registered with alwaysWrite flag true.
      */
+    @SuppressWarnings({ "rawtypes", "null" })
     @Override
     public CompoundTag toNBT(CompoundTag tag)
     {
@@ -320,7 +328,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
                 continue;
             }
 
-            tag.setTag(entry.getKey(), value.valueToNBT());
+            tag.put(entry.getKey(), value.valueToNBT());
         }
 
         return tag;
@@ -330,6 +338,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
      * Calls {@link GenericBaseValue#valueToJSON()}. Only serialize the value if it has changed.
      * Serializes always, if the value has been registered with alwaysWrite flag true.
      */
+    @SuppressWarnings("rawtypes")
     public JsonElement toJSON()
     {
         JsonObject jsonRoot = new JsonObject();
@@ -411,6 +420,8 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
     /**
      * Interpolates values with matching paths from the provided serializer to this and then sets the values to this.
      * @param from
+     * @param factor
+     * @param interpolation
      */
     public void interpolateFrom(Interpolation interpolation, ValueSerializer from, float factor)
     {
@@ -463,12 +474,13 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         private String json;
         private boolean jsonAlwaysWrite;
         private boolean copyable = true;
-        private GenericBaseValue<T> value;
-        private ValueSerializer serializer;
+        private final GenericBaseValue<T> value;
+        private final ValueSerializer serializer;
 
-        public Value(GenericBaseValue<T> value, ValueSerializer serializer)
+        @SuppressWarnings("unchecked")
+        public Value(bryanthedragon.mclibreloaded.config.values.Value value, ValueSerializer serializer)
         {
-            this.value = value;
+            this.value = (GenericBaseValue<T>) value;
             this.serializer = serializer;
         }
 

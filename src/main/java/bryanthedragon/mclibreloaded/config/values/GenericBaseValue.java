@@ -1,10 +1,13 @@
 package bryanthedragon.mclibreloaded.config.values;
 
 import com.google.gson.JsonElement;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.utils.ICopy;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
-import net.minecraft.nbt.NBTBase;
+
+import net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 
@@ -31,8 +34,7 @@ import javax.annotation.Nullable;
  * @param <T> the datatype of the values in this value container
  * @author Christian F (Chryfi)
  */
-public abstract class GenericBaseValue<T> extends Value
-{
+public abstract class GenericBaseValue<T> extends Value {
     protected T value;
     protected T serverValue;
 
@@ -52,6 +54,7 @@ public abstract class GenericBaseValue<T> extends Value
      * @return reference to {@link #value}, or if the {@link #serverValue} != null return {@link #serverValue}.
      *         If the generic datatype is instance of {@link ICopy}, the return value will be copied.
      */
+    @SuppressWarnings("unchecked")
     public T get()
     {
         if (this.serverValue == null)
@@ -85,6 +88,7 @@ public abstract class GenericBaseValue<T> extends Value
      * This method calls {@link #saveLater()}
      * @param value
      */
+    @SuppressWarnings("unchecked")
     public void set(T value)
     {
         if (value == null)
@@ -107,7 +111,7 @@ public abstract class GenericBaseValue<T> extends Value
     }
 
     /**
-     * @return the default value that this type produces when not being initialised.
+     * @return the default value that this type produces when not being initialized.
      *         This is used in {@link #set(T)}, for example, to avoid null values for primitive datatype wrappers.
      */
     protected T getNullValue()
@@ -121,6 +125,7 @@ public abstract class GenericBaseValue<T> extends Value
      * @param value if the specified object is not null and assignable to the generic type T,
      *             the value be set, using the {@link #set(Object)} method.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void setValue(Object value)
     {
@@ -151,12 +156,6 @@ public abstract class GenericBaseValue<T> extends Value
 
 
     /**
-     * @return a deep copy of this object
-     */
-    @Override
-    public abstract GenericBaseValue<T> copy();
-
-    /**
      * Copy the {@link #value} from the specified object to this object.
      * @param origin the origin that should be copied from
      */
@@ -169,6 +168,7 @@ public abstract class GenericBaseValue<T> extends Value
      * @return true if this object's {@link #value} equals the specified object's {@link #value}, using {@link #equals(Object)}.
      *         Or if the specified object or its value and this.value are both null.
      */
+    @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object obj)
     {
@@ -234,14 +234,14 @@ public abstract class GenericBaseValue<T> extends Value
      * set the value based on the specified tag
      * @param tag the tag should be the value without the necessity to search for a key
      */
-    public abstract void valueFromNBT(NBTBase tag);
+    public abstract void valueFromNBT(Tag tag);
 
     /**
-     * @return the value as instance of a subclass of {@link net.minecraft.nbt.NBTBase}.
+     * @return the value as instance of a subclass of {@link net.minecraft.nbt.Tag}.
      *         It can also return null, depending on the implementation in the subclasses.
      */
     @Nullable
-    public abstract NBTBase valueToNBT();
+    public abstract Tag valueToNBT();
 
     /**
      * @param interpolation

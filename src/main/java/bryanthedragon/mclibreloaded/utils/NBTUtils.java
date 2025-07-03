@@ -3,13 +3,9 @@ package bryanthedragon.mclibreloaded.utils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.handler.codec.EncoderException;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTSizeTracker;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagList;
 
-import javax.vecmath.Vector3f;
+import net.minecraft.nbt.CompoundTag;
+
 import java.io.IOException;
 
 /**
@@ -17,7 +13,7 @@ import java.io.IOException;
  */
 public class NBTUtils
 {
-    public static void readFloatList(NBTTagList list, float[] array)
+    public static void readFloatList(ListTag list, float[] array)
     {
         int count = Math.min(array.length, list.tagCount());
 
@@ -27,7 +23,7 @@ public class NBTUtils
         }
     }
 
-    public static NBTTagList writeFloatList(NBTTagList list, float[] array)
+    public static ListTag writeFloatList(ListTag list, float[] array)
     {
         for (int i = 0; i < array.length; i++)
         {
@@ -37,7 +33,7 @@ public class NBTUtils
         return list;
     }
 
-    public static void readFloatList(NBTTagList list, Vector3f vector)
+    public static void readFloatList(ListTag list, Vector3f vector)
     {
         if (list.tagCount() != 3)
         {
@@ -49,7 +45,7 @@ public class NBTUtils
         vector.z = list.getFloatAt(2);
     }
 
-    public static NBTTagList writeFloatList(NBTTagList list, Vector3f vector)
+    public static ListTag writeFloatList(ListTag list, Vector3f vector)
     {
         list.appendTag(new NBTTagFloat(vector.x));
         list.appendTag(new NBTTagFloat(vector.y));

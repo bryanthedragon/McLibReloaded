@@ -31,6 +31,7 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
     /**
      * Parent of this elements collection
      */
+    @SuppressWarnings("unused")
     private GuiElement parent;
 
     public GuiElements(GuiElement parent)
@@ -94,6 +95,7 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     public void add(T... elements)
     {
         for (T element : elements)

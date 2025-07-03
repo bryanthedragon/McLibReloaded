@@ -1,90 +1,63 @@
 package bryanthedragon.mclibreloaded.network;
 
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.Connection;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.behavior.EntityTracker;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.CustomizeGuiOverlayEvent.DebugText.Side;
-import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
 
+import javax.naming.Context;
 
-/**
- * Network dispatcher
- *
- * @author Ernio (Ernest Sadowski)
- */
-public abstract class AbstractDispatcher
-{
-    private final SimpleNetworkWrapper dispatcher;
-    private byte nextPacketID;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-    public AbstractDispatcher(String modID)
-    {
-        this.dispatcher = NetworkRegistry.INSTANCE.newSimpleChannel(modID);
+public abstract class AbstractDispatcher {
+    private static final int PROTOCOL_VERSION = 1;
+    protected final Channel channel;
+    private int nextPacketID = 0;
+
+    public AbstractDispatcher(String modID) {
+        this.channel = ChannelBuilder
+            .named(ResourceLocation.parse(modID + ":network"))
+            .networkProtocolVersion(PROTOCOL_VERSION)
+            .clientAcceptedVersions(Channel.VersionTest.exact(PROTOCOL_VERSION))
+            .serverAcceptedVersions(Channel.VersionTest.exact(PROTOCOL_VERSION))
+            .optional() // Needed if packets are optional (mod doesn't have to exist on both sides)
+            .simpleChannel(); // Returns a Channel<Object>
     }
 
-    public SimpleNetworkWrapper get()
-    {
-        return this.dispatcher;
-    }
-
-    /**
-     * Here you supposed to register packets to handlers 
-     */
+    /** Register all your packets in your concrete subclass here. */
     public abstract void register();
 
-    /**
-     * Send message to players who are tracking given entity
-     */
-    public void sendToTracked(Entity entity, IMessage message)
-    {
-        EntityTracker tracker = ((WorldServer) entity.world).getEntityTracker();
+    /** Register a single packet type. */
+    public <MSG> void registerMessage(
+            Class<MSG> messageType,
+            BiConsumer<MSG, FriendlyByteBuf> encoder,
+            Function<FriendlyByteBuf, MSG> decoder,
+            BiConsumer<MSG, Context> handler
+    ) {
+        channel.messageBuilder(messageType)
+            .encoder(encoder)
+            .decoder(decoder)
+            .consumer(handler)
+            .add();
+    }
 
-        for (Player player : tracker.getTrackingPlayers(entity))
-        {
-            this.dispatcher.sendTo(message, (PlayerMP) player);
+    public void sendToServer(Object message, Connection connection) {
+        channel.send(message, connection);
+    }
+
+    public void sendTo(Object message, ServerPlayer player) {
+        channel.send(message, player.connection.getConnection()); // raw Netty connection
+    }
+
+    public void sendToTracked(Entity entity, Object message) {
+        for (ServerPlayer player : entity.level().getServer().getPlayerList().getPlayers()) {
+            if (player.level() == entity.level() && player.hasLineOfSight(entity)) {
+                sendTo(message, player);
+            }
         }
-    }
-
-    /**
-     * Send message to given player
-     */
-    public void sendTo(IMessage message, PlayerMP player)
-    {
-        this.dispatcher.sendTo(message, player);
-    }
-
-    /**
-     * Send message to all players
-     * @param message
-     */
-    public void sendToAll(IMessage message)
-    {
-        this.dispatcher.sendToAll(message);
-    }
-
-    /**
-     * Send message to all players around the given point
-     * @param message
-     * @param point The {@link NetworkRegistry.TargetPoint} around which to send
-     */
-    public void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point)
-    {
-        this.dispatcher.sendToAllAround(message, point);
-    }
-
-    /**
-     * Send message to the server
-     */
-    public void sendToServer(IMessage message)
-    {
-        this.dispatcher.sendToServer(message);
-    }
-
-    /**
-     * Register given message with given message handler on a given side
-     */
-    public <REQ extends IMessage, REPLY extends IMessage> void register(Class<REQ> message, Class<? extends IMessageHandler<REQ, REPLY>> handler, Side side)
-    {
-        this.dispatcher.registerMessage(handler, message, this.nextPacketID++, side);
     }
 }

@@ -3,6 +3,7 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.Scale;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollDirection;
+
 import net.minecraft.client.Minecraft;
 
 public class GuiCanvas extends GuiElement

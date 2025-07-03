@@ -1,10 +1,9 @@
 package bryanthedragon.mclibreloaded.network;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.PlayerSP;
-import net.minecraft.entity.player.PlayerMP;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import bryanthedragon.mclibreloaded.network.AbstractMessageHandler;
 
 /**
  * This class passes operation from Netty to Minecraft (Client) Thread. Also

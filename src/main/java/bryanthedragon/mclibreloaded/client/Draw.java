@@ -1,8 +1,6 @@
 package bryanthedragon.mclibreloaded.client;
 
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import org.lwjgl.opengl.GL11;
 
 public class Draw

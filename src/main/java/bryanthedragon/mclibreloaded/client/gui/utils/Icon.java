@@ -54,22 +54,22 @@ public class Icon
         x -= ax * this.w;
         y -= ay * this.h;
 
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
+        RenderSystem.enableAlpha();
+        RenderSystem.enableBlend();
         Minecraft.getInstance().renderEngine.bindTexture(this.location);
         GuiDraw.drawBillboard(x, y, this.x, this.y, this.w, this.h, this.textureW, this.textureH);
-        GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
+        RenderSystem.disableBlend();
+        RenderSystem.disableAlpha();
     }
 
     @OnlyIn(Dist.CLIENT)
     public void renderArea(int x, int y, int w, int h)
     {
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
+        RenderSystem.enableAlpha();
+        RenderSystem.enableBlend();
         Minecraft.getInstance().renderEngine.bindTexture(this.location);
         GuiDraw.drawRepeatBillboard(x, y, w, h, this.x, this.y, this.w, this.h, this.textureW, this.textureH);
-        GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
+        RenderSystem.disableBlend();
+        RenderSystem.disableAlpha();
     }
 }

@@ -15,11 +15,6 @@ import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 public class GuiGraphPanel extends GuiDashboardPanel<GuiDashboard>
@@ -202,8 +197,8 @@ public class GuiGraphPanel extends GuiDashboardPanel<GuiDashboard>
                 this.font.drawString(coordinate, mouseX + 2, y3 + 2, 0);
             }
 
-            GlStateManager.glLineWidth(4);
-            GlStateManager.disableTexture2D();
+            RenderSystem.glLineWidth(4);
+            RenderSystem.disableTexture2D();
             BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
             builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
@@ -232,7 +227,7 @@ public class GuiGraphPanel extends GuiDashboardPanel<GuiDashboard>
             }
 
             Tessellator.getInstance().draw();
-            GlStateManager.glLineWidth(1);
+            RenderSystem.glLineWidth(1);
         }
     }
 }

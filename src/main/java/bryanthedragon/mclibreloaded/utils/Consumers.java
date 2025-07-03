@@ -44,6 +44,11 @@ public class Consumers<C>
         }
     }
 
+    /**
+     * Registers a callback to this consumer manager and returns the unique id for the callback. If the callback is already registered, the id of the existing callback is returned.
+     * @param callback the callback to register
+     * @return the unique id associated with the given callback
+     */
     public int register(Consumer<C> callback)
     {
         if (!this.callbacks.containsValue(callback))

@@ -15,7 +15,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
+
+import org.lwjgl.glfw.GLFW;
 
 /**
  * GUI text element
@@ -152,13 +153,13 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
     {
         if (this.isFocused())
         {
-            if (context.keyCode == Keyboard.KEY_TAB)
+            if (context.keyCode == GLFW.GLFW_KEY_TAB)
             {
                 context.focus(this, -1, GuiScreen.isShiftKeyDown() ? -1 : 1);
 
                 return true;
             }
-            else if (context.keyCode == Keyboard.KEY_ESCAPE)
+            else if (context.keyCode == GLFW.GLFW_KEY_ESCAPE)
             {
                 context.unfocus();
 

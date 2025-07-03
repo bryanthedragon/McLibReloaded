@@ -5,6 +5,7 @@ import bryanthedragon.mclibreloaded.forge.permissions.DefaultPermissionLevel;
 import bryanthedragon.mclibreloaded.forge.permissions.PermissionAPI;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
 import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,15 @@ public class PermissionCategory implements IByteBufSerializable
 
     }
 
-    public boolean playerHasPermission(ServerPlayer player)
+    public boolean playerHasServerPermission(ServerPlayer player)
     {
-        return PermissionAPI.hasPermission(player, this.toString());
+        return PermissionAPI.hasServerPermission(player, this.toString());
     }
 
+    public boolean playerHasLocalPermission(LocalPlayer player)
+    {
+        return PermissionAPI.hasLocalPermission(player, this.toString());
+    }
     public void addChild(PermissionCategory category)
     {
         this.children.add(category);

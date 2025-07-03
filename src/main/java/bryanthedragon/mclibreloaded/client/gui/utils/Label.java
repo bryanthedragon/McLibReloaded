@@ -16,6 +16,7 @@ public class Label<T>
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public boolean equals(Object obj)
     {
         if (obj instanceof Label)

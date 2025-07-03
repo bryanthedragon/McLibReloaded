@@ -1,15 +1,10 @@
 package bryanthedragon.mclibreloaded.commands;
 
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,13 +58,12 @@ public abstract class SubCommandBase extends McCommandBase
         return "";
     }
 
-    @Override
-    public ITextComponent getUsageMessage(ICommandSender sender)
+    public Component getUsageMessage(CommandSourceStack sender)
     {
-        ITextComponent message = new TextComponentTranslation(this.getUsage(sender));
+        Component message = Component.translatable(this.getUsage(sender));
 
-        message.getStyle().setColor(TextFormatting.WHITE);
-        message.appendSibling(new TextComponentString("\n\n"));
+        message.getStyle().setColor(ChatFormatting.WHITE);
+        message.appendSibling(Component.literal(("\n\n")));
 
         int i = 0;
         int c = this.subcommands.size();
@@ -78,7 +72,7 @@ public abstract class SubCommandBase extends McCommandBase
         {
             String extra = i == c - 1 ? "" : "\n";
 
-            message.appendSibling(new TextComponentString(command.getProcessedSyntax() + extra));
+            message.appendSibling(Component.literal((command.getProcessedSyntax() + extra)));
 
             i += 1;
         }
@@ -89,7 +83,6 @@ public abstract class SubCommandBase extends McCommandBase
     /**
      * Delegate isUsernameIndex method to a subcommand
      */
-    @Override
     public boolean isUsernameIndex(String[] args, int index)
     {
         McCommandBase command = this.subcommands.get(args.length >= 1 ? args[0] : "");
@@ -108,7 +101,7 @@ public abstract class SubCommandBase extends McCommandBase
      * This method basically delegates the execution to the matched sub-command,
      * if the command was found, otherwise it shows usage message. */
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void execute(MinecraftServer server, CommandSourceStack sender, String[] args) throws CommandException
     {
         if (args.length < 1)
         {
@@ -132,8 +125,7 @@ public abstract class SubCommandBase extends McCommandBase
         }
     }
 
-    @Override
-    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void executeCommand(MinecraftServer server, CommandSourceStack sender, String[] args) throws CommandException
     {}
 
     /**
@@ -142,8 +134,7 @@ public abstract class SubCommandBase extends McCommandBase
      * This method is responsible for giving completions of this command (names
      * of sub-commands) or completions of sub-command.
      */
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, CommandSourceStack sender, String[] args, BlockPos pos)
     {
         if (args.length == 0)
         {

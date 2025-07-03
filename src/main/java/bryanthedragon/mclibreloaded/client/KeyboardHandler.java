@@ -4,13 +4,13 @@ import javax.swing.text.JTextComponent.KeyBinding;
 import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiInventoryElement;
-import bryanthedragon.mclibreloaded.client.gui.mclib.GuiAbstractDashboard;
 import bryanthedragon.mclibreloaded.client.gui.mclib.GuiDashboard;
 import bryanthedragon.mclibreloaded.config.values.ValueRL;
 import bryanthedragon.mclibreloaded.events.RemoveDashboardPanels;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 public class KeyboardHandler
 {
@@ -20,7 +20,7 @@ public class KeyboardHandler
 
     public KeyboardHandler()
     {
-        this.dashboard = new KeyBinding("key.mclib.dashboard", Keyboard.KEY_0, "key.mclib.category");
+        this.dashboard = new KeyBinding("key.mclib.dashboard", GLFW.GLFW_KEY_0, "key.mclib.category");
 
         ClientRegistry.registerKeyBinding(this.dashboard);
     }

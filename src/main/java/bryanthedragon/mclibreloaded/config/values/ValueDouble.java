@@ -87,7 +87,11 @@ public class ValueDouble extends GenericNumberValue<Double> implements IServerVa
             this.set(Double.parseDouble(value));
         }
         catch (Exception e)
-        {}
+        {
+            // If the value cannot be parsed, we return false
+            // This will cause the command to fail
+            return false;
+        }
 
         return false;
     }
@@ -151,7 +155,7 @@ public class ValueDouble extends GenericNumberValue<Double> implements IServerVa
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
         if (tag instanceof NBTPrimitive)
         {
@@ -160,7 +164,7 @@ public class ValueDouble extends GenericNumberValue<Double> implements IServerVa
     }
 
     @Override
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
         return new NBTTagDouble(this.value);
     }
@@ -176,8 +180,10 @@ public class ValueDouble extends GenericNumberValue<Double> implements IServerVa
 
     public Double interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
-        if (!(to.value instanceof Double)) return this.value;
-
+        if (!(to.value instanceof Double))
+        { 
+            return this.value;
+        }
         return interpolation.interpolate(this.value, (Double) to.value, factor);
     }
 }

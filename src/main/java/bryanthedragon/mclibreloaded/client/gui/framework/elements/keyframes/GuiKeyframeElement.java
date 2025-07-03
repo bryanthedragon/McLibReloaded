@@ -9,11 +9,9 @@ import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.keyframes.Keyframe;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeEasing;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -332,10 +330,10 @@ public abstract class GuiKeyframeElement extends GuiElement
         this.drawCursor(context);
 
         /* Draw graph of the keyframe channel */
-        GlStateManager.glLineWidth(Minecraft.getInstance().gameSettings.guiScale * 1.5F);
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.glLineWidth(Minecraft.getInstance().gameSettings.guiScale * 1.5F);
+        RenderSystem.disableTexture2D();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         this.drawGraph(context, context.mouseX, context.mouseY);
 
@@ -345,8 +343,8 @@ public abstract class GuiKeyframeElement extends GuiElement
             Gui.drawRect(this.lastX, this.lastY, context.mouseX, context.mouseY, 0x440088ff);
         }
 
-        GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
+        RenderSystem.disableBlend();
+        RenderSystem.enableTexture2D();
 
         GuiDraw.unscissor(context);
 

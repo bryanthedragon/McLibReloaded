@@ -313,11 +313,11 @@ public class ValueItemSlots extends GenericValue<ItemStack[]>
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
-        if (tag instanceof NBTTagList)
+        if (tag instanceof ListTag)
         {
-            NBTTagList items = (NBTTagList) tag;
+            ListTag items = (ListTag) tag;
 
             for (int i = 0; i < items.tagCount() && i < this.value.length; i++)
             {
@@ -327,9 +327,9 @@ public class ValueItemSlots extends GenericValue<ItemStack[]>
     }
 
     @Override
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
-        NBTTagList list = new NBTTagList();
+        ListTag list = new ListTag();
 
         for (int i = 0; i < this.value.length; i++)
         {

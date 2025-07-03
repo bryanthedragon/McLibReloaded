@@ -1,12 +1,10 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.PlayerSP;
-import net.minecraft.entity.player.PlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.UserListOpsEntry;
-import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
-import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class OpHelper
 {

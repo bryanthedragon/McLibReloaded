@@ -2,8 +2,9 @@ package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.google.common.collect.Lists;
-import net.minecraft.client.Minecraft;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 /**

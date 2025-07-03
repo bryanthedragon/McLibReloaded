@@ -3,7 +3,7 @@ package bryanthedragon.mclibreloaded.core;
 import java.util.Map;
 
 @Name("McLib core mod")
-@MCVersion("1.12.2")
+@MCVersion("1.21.5")
 @SortingIndex(1)
 public class McLibCM implements IFMLLoadingPlugin
 {
@@ -27,7 +27,9 @@ public class McLibCM implements IFMLLoadingPlugin
 
 
     public void injectData(Map<String, Object> data)
-    {}
+    {
+        data.put("mcLibVersion", "1.0");
+    }
 
 
     public String getAccessTransformerClass()

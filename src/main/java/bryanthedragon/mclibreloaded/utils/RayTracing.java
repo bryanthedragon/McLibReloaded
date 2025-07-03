@@ -1,10 +1,8 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import com.google.common.base.Predicate;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+
+import net.minecraft.world.entity.Entity;
 
 import javax.annotation.Nullable;
 import java.util.List;

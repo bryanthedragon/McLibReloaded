@@ -1,7 +1,9 @@
 package bryanthedragon.mclibreloaded.config.values;
 
 import com.google.gson.JsonElement;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrackpadElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
@@ -9,7 +11,9 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Elements;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
+
 import net.minecraft.client.Minecraft;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -46,7 +50,8 @@ public class ValueFloat extends GenericNumberValue<Float> implements IServerValu
     }
 
     @Override
-    protected Float numberToValue(Number number) {
+    protected Float numberToValue(Number number) 
+    {
         return number.floatValue();
     }
 
@@ -78,7 +83,7 @@ public class ValueFloat extends GenericNumberValue<Float> implements IServerValu
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
         if (tag instanceof NBTPrimitive)
         {
@@ -87,7 +92,7 @@ public class ValueFloat extends GenericNumberValue<Float> implements IServerValu
     }
 
     @Override
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
         return new NBTTagFloat(this.value);
     }
@@ -174,7 +179,10 @@ public class ValueFloat extends GenericNumberValue<Float> implements IServerValu
 
     public Float interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
-        if (!(to.value instanceof Float)) return this.value;
+        if (!(to.value instanceof Float))
+        { 
+            return this.value;
+        }
 
         return interpolation.interpolate(this.value, (Float) to.value, factor);
     }

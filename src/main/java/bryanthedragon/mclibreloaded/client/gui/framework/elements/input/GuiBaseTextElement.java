@@ -4,9 +4,9 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.IFocusedGuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.utils.Color;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
-import org.lwjgl.input.Keyboard;
+
 
 public abstract class GuiBaseTextElement extends GuiElement implements IFocusedGuiElement
 {

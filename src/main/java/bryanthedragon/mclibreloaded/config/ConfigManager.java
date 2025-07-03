@@ -85,7 +85,10 @@ public class ConfigManager
             return value;
         }
         catch (Exception e)
-        {}
+        {
+            e.printStackTrace();
+            return null;
+        }
 
         return null;
     }

@@ -63,6 +63,7 @@ public class KeyframeChannel implements IByteBufSerializable
     /**
      * Calculate the value at given tick
      */
+    @SuppressWarnings("null")
     public double interpolate(float ticks)
     {
         if (this.keyframes.isEmpty())

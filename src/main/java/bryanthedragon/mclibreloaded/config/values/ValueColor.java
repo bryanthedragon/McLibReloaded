@@ -2,13 +2,11 @@ package bryanthedragon.mclibreloaded.config.values;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.nbt.NBTTagInt;
 
 import javax.annotation.Nullable;
 
@@ -84,7 +82,7 @@ public class ValueColor extends GenericValue<Color>
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
         if (tag instanceof NBTTagInt)
         {
@@ -94,7 +92,7 @@ public class ValueColor extends GenericValue<Color>
 
     @Nullable
     @Override
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
         return new NBTTagInt(this.value.getRGBAColor());
     }

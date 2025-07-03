@@ -1,6 +1,5 @@
 package bryanthedragon.mclibreloaded.client.gui.utils.keys;
 
-import net.minecraft.client.resources.I18n;
 
 public class LangKey implements IKey
 {

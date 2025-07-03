@@ -7,14 +7,13 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
+
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -118,13 +117,13 @@ public class GuiDraw
         float g2 = (endColor >> 8 & 255) / 255.0F;
         float b2 = (endColor & 255) / 255.0F;
 
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.disableTexture2D();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlpha();
+        RenderSystem.tryBlendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE, RenderSystem.DestFactor.ZERO);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
-        Tessellator tessellator = Tessellator.getInstance();
+        Tessellator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
@@ -135,10 +134,10 @@ public class GuiDraw
 
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlpha();
+        RenderSystem.enableTexture2D();
     }
 
     public static void drawVerticalGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
@@ -161,11 +160,11 @@ public class GuiDraw
         float g2 = (endColor >> 8 & 255) / 255.0F;
         float b2 = (endColor & 255) / 255.0F;
 
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.disableTexture2D();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlpha();
+        RenderSystem.tryBlendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE, RenderSystem.DestFactor.ZERO);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -178,10 +177,10 @@ public class GuiDraw
 
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlpha();
+        RenderSystem.enableTexture2D();
     }
 
     public static void drawBillboard(int x, int y, int u, int v, int w, int h, int textureW, int textureH)
@@ -293,7 +292,7 @@ public class GuiDraw
      */
     public static void drawOutlinedIcon(Icon icon, int x, int y, int color, float ax, float ay)
     {
-        GlStateManager.color(0, 0, 0, 1);
+        RenderSystem.color(0, 0, 0, 1);
         icon.render(x - 1, y, ax, ay);
         icon.render(x + 1, y, ax, ay);
         icon.render(x, y - 1, ax, ay);
@@ -337,11 +336,11 @@ public class GuiDraw
         float g2 = (shadow >> 8 & 255) / 255.0F;
         float b2 = (shadow & 255) / 255.0F;
 
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.disableTexture2D();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlpha();
+        RenderSystem.tryBlendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE, RenderSystem.DestFactor.ZERO);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -380,10 +379,10 @@ public class GuiDraw
 
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlpha();
+        RenderSystem.enableTexture2D();
     }
 
     public static void drawDropCircleShadow(int x, int y, int radius, int segments, int opaque, int shadow)
@@ -397,11 +396,11 @@ public class GuiDraw
         float g2 = (shadow >> 8 & 255) / 255.0F;
         float b2 = (shadow & 255) / 255.0F;
 
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.disableTexture2D();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlpha();
+        RenderSystem.tryBlendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE, RenderSystem.DestFactor.ZERO);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -419,10 +418,10 @@ public class GuiDraw
 
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlpha();
+        RenderSystem.enableTexture2D();
     }
 
     public static void drawDropCircleShadow(int x, int y, int radius, int offset, int segments, int opaque, int shadow)
@@ -443,11 +442,11 @@ public class GuiDraw
         float g2 = (shadow >> 8 & 255) / 255.0F;
         float b2 = (shadow & 255) / 255.0F;
 
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.disableTexture2D();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlpha();
+        RenderSystem.tryBlendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE, RenderSystem.DestFactor.ZERO);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -481,10 +480,10 @@ public class GuiDraw
 
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlpha();
+        RenderSystem.enableTexture2D();
     }
 
     public static int drawMultiText(FontRenderer font, String text, int x, int y, int color, int width)
@@ -541,9 +540,9 @@ public class GuiDraw
         ResourceLocation background = McLib.backgroundImage.get();
         int color = McLib.backgroundColor.get();
 
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        RenderSystem.enableAlpha();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         if (background == null)
         {
@@ -553,7 +552,7 @@ public class GuiDraw
         {
             Minecraft.getInstance().renderEngine.bindTexture(background);
             ColorUtils.bindColor(color);
-            GlStateManager.enableAlpha();
+            RenderSystem.enableAlpha();
             GuiDraw.drawBillboard(x, y, 0, 0, width, height, width, height);
         }
     }

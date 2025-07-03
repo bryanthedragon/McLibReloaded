@@ -15,10 +15,10 @@ import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import bryanthedragon.mclibreloaded.utils.resources.FilteredResourceLocation;
 import bryanthedragon.mclibreloaded.utils.shaders.Shader;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
+
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -247,8 +247,8 @@ public class GuiMultiSkinEditor extends GuiCanvasEditor
                 if (child == this.picker.currentFRL)
                 {
                     Gui.drawRect(area.x, area.y, area.ex(), area.ey(), 0x44ff0000);
-                    GlStateManager.enableBlend();
-                    GlStateManager.enableAlpha();
+                    RenderSystem.enableBlend();
+                    RenderSystem.enableAlpha();
                 }
 
                 ColorUtils.bindColor(child.color);
@@ -263,9 +263,9 @@ public class GuiMultiSkinEditor extends GuiCanvasEditor
                     GL20.glUniform4f(uColor, ColorUtils.COLOR.r, ColorUtils.COLOR.g, ColorUtils.COLOR.b, ColorUtils.COLOR.a);
                 }
 
-                GlStateManager.setActiveTexture(GL13.GL_TEXTURE5);
+                RenderSystem.setActiveTexture(GL13.GL_TEXTURE5);
                 this.mc.renderEngine.bindTexture(Icons.ICONS);
-                GlStateManager.setActiveTexture(GL13.GL_TEXTURE0);
+                RenderSystem.setActiveTexture(GL13.GL_TEXTURE0);
 
                 GuiDraw.drawBillboard(area.x, area.y, 0, 0, area.w, area.h, area.w, area.h);
 

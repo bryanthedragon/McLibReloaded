@@ -3,6 +3,7 @@ package bryanthedragon.mclibreloaded.utils;
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,6 +12,12 @@ import java.io.ObjectOutputStream;
 
 public class ByteBufUtils
 {
+    /**
+     * Writes an object to a ByteBuf by serializing it to a byte array and calling writeByteArray.
+     * @param to The ByteBuf to write the object to.
+     * @param object The object to write.
+     * @throws IOException If serialization fails.
+     */
     public static void writeObject(ByteBuf to, Object object)
     {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -30,6 +37,11 @@ public class ByteBufUtils
         writeByteArray(to, bos.toByteArray());
     }
 
+    /**
+     * Reads an object from a ByteBuf by deserializing a byte array using readByteArray.
+     * @param from The ByteBuf to read the object from.
+     * @return The deserialized object, or null if deserialization fails.
+     */
     @Nullable
     public static Object readObject(ByteBuf from)
     {
@@ -50,6 +62,12 @@ public class ByteBufUtils
         return result;
     }
 
+    /**
+     * Reads a byte array from a ByteBuf. The array length is read from the buffer as an int, and then the specified
+     * number of bytes are read from the buffer and returned as a byte array.
+     * @param from The ByteBuf to read the byte array from.
+     * @return The read byte array.
+     */
     public static byte[] readByteArray(ByteBuf from)
     {
         int size = from.readInt();
@@ -62,6 +80,12 @@ public class ByteBufUtils
         return array;
     }
 
+    /**
+     * Writes a byte array to a ByteBuf. The array length is written to the buffer as an int,
+     * followed by the bytes of the array itself.
+     * @param to The ByteBuf to write the byte array to.
+     * @param array The byte array to write.
+     */
     public static void writeByteArray(ByteBuf to, byte[] array)
     {
         to.writeInt(array.length);

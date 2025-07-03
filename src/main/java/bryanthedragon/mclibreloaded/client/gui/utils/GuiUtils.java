@@ -3,8 +3,10 @@ package bryanthedragon.mclibreloaded.client.gui.utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
+
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -28,48 +30,48 @@ public class GuiUtils
     {
         float factor = 0.0625F;
 
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 50.0F);
-        GlStateManager.scale((-scale), scale, scale);
-        GlStateManager.rotate(45.0F, -1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(45.0F, 0.0F, -1.0F, 0.0F);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+        RenderSystem.enableColorMaterial();
+        RenderSystem.pushMatrix();
+        RenderSystem.translate(x, y, 50.0F);
+        RenderSystem.scale((-scale), scale, scale);
+        RenderSystem.rotate(45.0F, -1.0F, 0.0F, 0.0F);
+        RenderSystem.rotate(45.0F, 0.0F, -1.0F, 0.0F);
+        RenderSystem.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        RenderSystem.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 
         RenderHelper.enableStandardItemLighting();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.disableCull();
+        RenderSystem.pushMatrix();
+        RenderSystem.disableCull();
 
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.scale(-1.0F, -1.0F, 1.0F);
-        GlStateManager.translate(0.0F, -1.501F, 0.0F);
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.scale(-1.0F, -1.0F, 1.0F);
+        RenderSystem.translate(0.0F, -1.501F, 0.0F);
 
-        GlStateManager.enableAlpha();
+        RenderSystem.enableAlpha();
 
         model.setLivingAnimations(player, 0, 0, 0);
         model.setRotationAngles(0, 0, player.ticksExisted, 0, 0, factor, player);
 
-        GlStateManager.enableDepth();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+        RenderSystem.enableDepth();
+        RenderSystem.color(1.0F, 1.0F, 1.0F, alpha);
 
         model.render(player, 0, 0, 0, 0, 0, factor);
 
-        GlStateManager.disableDepth();
+        RenderSystem.disableDepth();
 
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableAlpha();
-        GlStateManager.popMatrix();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.disableAlpha();
+        RenderSystem.popMatrix();
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
         RenderHelper.disableStandardItemLighting();
 
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        RenderSystem.disableTexture2D();
+        RenderSystem.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
     /**
@@ -81,27 +83,27 @@ public class GuiUtils
      */
     public static void drawEntityOnScreen(int posX, int posY, float scale, EntityLivingBase ent, float alpha)
     {
-        GlStateManager.enableDepth();
-        GlStateManager.disableBlend();
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(posX, posY, 100.0F);
-        GlStateManager.scale((-scale), scale, scale);
-        GlStateManager.rotate(45.0F, -1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(45.0F, 0.0F, -1.0F, 0.0F);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        RenderSystem.enableDepth();
+        RenderSystem.disableBlend();
+        RenderSystem.enableColorMaterial();
+        RenderSystem.pushMatrix();
+        RenderSystem.translate(posX, posY, 100.0F);
+        RenderSystem.scale((-scale), scale, scale);
+        RenderSystem.rotate(45.0F, -1.0F, 0.0F, 0.0F);
+        RenderSystem.rotate(45.0F, 0.0F, -1.0F, 0.0F);
+        RenderSystem.rotate(180.0F, 0.0F, 0.0F, 1.0F);
 
         boolean render = ent.getAlwaysRenderNameTag();
 
         if (ent instanceof EntityDragon)
         {
-            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+            RenderSystem.rotate(180.0F, 0.0F, 1.0F, 0.0F);
         }
 
         RenderHelper.enableStandardItemLighting();
 
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.color(1.0F, 1.0F, 1.0F, alpha);
 
         float f = ent.renderYawOffset;
         float f1 = ent.rotationYaw;
@@ -116,7 +118,7 @@ public class GuiUtils
         ent.prevRotationYawHead = ent.rotationYaw;
         ent.setAlwaysRenderNameTag(false);
 
-        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderSystem.translate(0.0F, 0.0F, 0.0F);
 
         RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
@@ -132,17 +134,17 @@ public class GuiUtils
 
         ent.setAlwaysRenderNameTag(render);
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
         RenderHelper.disableStandardItemLighting();
 
-        GlStateManager.disableRescaleNormal();
+        RenderSystem.disableRescaleNormal();
 
-        GlStateManager.disableBlend();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.disableDepth();
+        RenderSystem.disableBlend();
+        RenderSystem.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        RenderSystem.disableTexture2D();
+        RenderSystem.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        RenderSystem.disableDepth();
     }
 
     /**
@@ -153,11 +155,11 @@ public class GuiUtils
      */
     public static void drawEntityOnScreen(int posX, int posY, int scale, int mouseX, int mouseY, EntityLivingBase ent)
     {
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(posX, posY, 100.0F);
-        GlStateManager.scale((-scale), scale, scale);
-        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        RenderSystem.enableColorMaterial();
+        RenderSystem.pushMatrix();
+        RenderSystem.translate(posX, posY, 100.0F);
+        RenderSystem.scale((-scale), scale, scale);
+        RenderSystem.rotate(180.0F, 0.0F, 0.0F, 1.0F);
 
         float f = ent.renderYawOffset;
         float f1 = ent.rotationYaw;
@@ -171,7 +173,7 @@ public class GuiUtils
         ent.rotationYawHead = ent.rotationYaw;
         ent.prevRotationYawHead = ent.rotationYaw;
 
-        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderSystem.translate(0.0F, 0.0F, 0.0F);
 
         RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
@@ -185,12 +187,12 @@ public class GuiUtils
         ent.prevRotationYawHead = f3;
         ent.rotationYawHead = f4;
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
         RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        RenderSystem.disableTexture2D();
+        RenderSystem.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
 

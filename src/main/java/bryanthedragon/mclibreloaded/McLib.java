@@ -2,54 +2,40 @@ package bryanthedragon.mclibreloaded;
 
 import bryanthedragon.mclibreloaded.client.gui.utils.ValueColors;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
-import bryanthedragon.mclibreloaded.commands.CommandMcLib;
-import bryanthedragon.mclibreloaded.commands.CommandCheats;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
-import bryanthedragon.mclibreloaded.events.RegisterPermissionsEvent;
-import bryanthedragon.mclibreloaded.forge.permissions.DefaultPermissionLevel;
-import bryanthedragon.mclibreloaded.permissions.McLibPermissions;
-import bryanthedragon.mclibreloaded.config.ConfigBuilder;
 import bryanthedragon.mclibreloaded.config.values.ValueBoolean;
 import bryanthedragon.mclibreloaded.config.values.ValueInt;
 import bryanthedragon.mclibreloaded.config.values.ValueRL;
-import bryanthedragon.mclibreloaded.events.RegisterConfigEvent;
-import bryanthedragon.mclibreloaded.math.IValue;
-import bryanthedragon.mclibreloaded.math.MathBuilder;
-import bryanthedragon.mclibreloaded.math.Operation;
-import bryanthedragon.mclibreloaded.math.Operator;
-import bryanthedragon.mclibreloaded.math.Variable;
+import bryanthedragon.mclibreloaded.forge.permissions.DefaultPermissionLevel;
+import bryanthedragon.mclibreloaded.math.*;
+import bryanthedragon.mclibreloaded.permissions.McLibPermissions;
 import bryanthedragon.mclibreloaded.permissions.PermissionCategory;
 import bryanthedragon.mclibreloaded.permissions.PermissionFactory;
+import bryanthedragon.mclibreloaded.events.RegisterConfigEvent;
+import bryanthedragon.mclibreloaded.events.RegisterPermissionsEvent;
+
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.PayloadASM;
-import net.minecraftforge.client.event.CustomizeGuiOverlayEvent.DebugText.Side;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import bryanthedragon.mclibreloaded.forge.fml.common.Mod;
+import com.google.common.eventbus.EventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.eventbus.EventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
 
-/**
- * McLib mod
- * 
- * All it does is provides common code for McHorse's mods.
- */
-@Mod.EventBusSubscriber
-@Mod(modid = McLib.MOD_ID, name = "McLib", version = McLib.VERSION, updateJSON = "https://raw.githubusercontent.com/mchorse/mclib/1.12/version.json", value = "")
+@Mod(McLib.MOD_ID)
 public class McLib
 {
     public static final String MOD_ID = "mclib";
     public static final String VERSION = "%VERSION%";
 
     /* Proxies */
-    public static final String CLIENT_PROXY = "bryanthedragon.mclibreloaded.ClientProxy";
-    public static final String SERVER_PROXY = "bryanthedragon.mclibreloaded.CommonProxy";
+    public static final String CLIENT_PROXY = "mchorse.mclib.ClientProxy";
+    public static final String SERVER_PROXY = "mchorse.mclib.CommonProxy";
 
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = SERVER_PROXY)
-    public static CommonProxy proxy;
 
     public static final EventBus EVENT_BUS = new EventBus();
 
@@ -114,8 +100,8 @@ public class McLib
         enableGridRendering = builder.getBoolean("enable_grid_rendering", true);
         userIntefaceScale = builder.getInt("user_interface_scale", 2, 0, 4);
         tooltipStyle = builder.getInt("tooltip_style", 1).modes(
-            IKey.lang("mclib.tooltip_style.light"),
-            IKey.lang("mclib.tooltip_style.dark")
+                IKey.lang("mclib.tooltip_style.light"),
+                IKey.lang("mclib.tooltip_style.dark")
         );
         renderTranslateTextColors = builder.getBoolean("render_translation_text_colours", false);
 
@@ -130,11 +116,11 @@ public class McLib
         enableKeystrokeRendering = builder.getBoolean("enable_keystrokes_rendering", false);
         keystrokeOffset = builder.getInt("keystroke_offset", 10, 0, 20);
         keystrokeMode = builder.getInt("keystroke_position", 1).modes(
-            IKey.lang("mclib.keystrokes_position.auto"),
-            IKey.lang("mclib.keystrokes_position.bottom_left"),
-            IKey.lang("mclib.keystrokes_position.bottom_right"),
-            IKey.lang("mclib.keystrokes_position.top_right"),
-            IKey.lang("mclib.keystrokes_position.top_left")
+                IKey.lang("mclib.keystrokes_position.auto"),
+                IKey.lang("mclib.keystrokes_position.bottom_left"),
+                IKey.lang("mclib.keystrokes_position.bottom_right"),
+                IKey.lang("mclib.keystrokes_position.top_right"),
+                IKey.lang("mclib.keystrokes_position.top_left")
         );
 
         builder.getCategory().markClientSide();
@@ -174,37 +160,6 @@ public class McLib
         event.registerPermission(McLibPermissions.accessGui = new PermissionCategory("access_gui"));
 
         event.endMod();
-    }
-
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
-        proxy.preInit(event);
-
-        EVENT_BUS.register(this);
-    }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-        proxy.init(event);
-    }
-
-    @NetworkCheckHandler
-    public boolean checkModDependencies(Map<String, String> map, Side side)
-    {
-        return true;
-    }
-
-    @Mod.EventHandler
-    public void serverInit(FMLServerStartingEvent event)
-    {
-        if (event.getServer().isSinglePlayer())
-        {
-            event.registerServerCommand(new CommandCheats());
-        }
-
-        event.registerServerCommand(new CommandMcLib());
     }
 
     public static void main(String[] args) throws Exception

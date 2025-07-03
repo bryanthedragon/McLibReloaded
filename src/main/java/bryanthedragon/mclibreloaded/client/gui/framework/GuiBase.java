@@ -7,8 +7,11 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.IViewpor
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,11 +20,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.lwjgl.glfw.GLFW;
+
 /**
  * Base class for GUI screens using this framework
  */
 @OnlyIn(Dist.CLIENT)
-public class GuiBase extends GuiScreen
+public class GuiBase extends Screen
 {
     private static GuiContext current;
 
@@ -36,6 +41,7 @@ public class GuiBase extends GuiScreen
 
     public GuiBase()
     {
+        super(Component.literal("Your Screen Title"));
         current = this.context;
 
         this.context.mc = Minecraft.getInstance();
@@ -43,7 +49,7 @@ public class GuiBase extends GuiScreen
 
         this.root = new GuiRootElement(this.context.mc);
         this.root.markContainer().flex().relative(this.viewport).wh(1F, 1F);
-        this.root.keys().register(IKey.lang("mclib.gui.keys.list"), Keyboard.KEY_F9, () -> this.context.keybinds.toggleVisible());
+        this.root.keys().register(IKey.lang("mclib.gui.keys.list"), GLFW.GLFW_KEY_F9, () -> this.context.keybinds.toggleVisible());
 
         this.context.keybinds.flex().relative(this.viewport).wh(0.5F, 1F);
 
@@ -74,7 +80,7 @@ public class GuiBase extends GuiScreen
         this.context.tick += 1;
     }
 
-    public void initGui()
+    public void init()
     {
         current = this.context;
 
@@ -94,7 +100,7 @@ public class GuiBase extends GuiScreen
     protected void viewportSet()
     {}
 
-    public void onGuiClosed()
+    public void removed()
     {
         current = null;
     }
@@ -184,7 +190,7 @@ public class GuiBase extends GuiScreen
      */
     protected void closeScreen()
     {
-        this.mc.displayGuiScreen(null);
+        Minecraft.getInstance().setScreen(null);
 
         if (this.mc.currentScreen == null)
         {
@@ -199,25 +205,27 @@ public class GuiBase extends GuiScreen
         this.closeScreen();
     }
 
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+
+
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     {
+        this.renderBackground(poseStack);
         this.context.setMouse(mouseX, mouseY);
-        this.context.partialTicks = Minecraft.getInstance().getRenderPartialTicks();
+        this.context.partialTicks = partialTicks;
 
         if (this.root.isVisible())
         {
             this.context.reset();
             this.context.pushViewport(this.viewport);
 
-            this.root.draw(this.context);
+            this.root.draw(this.context, poseStack);
 
             this.context.popViewport();
-            this.context.drawTooltip();
-            this.context.postRenderCallbacks.forEach((element) ->
-            {
-                element.accept(this.context);
-            });
+            this.context.drawTooltip(poseStack);
+            this.context.postRenderCallbacks.forEach(element -> element.accept(this.context));
         }
+
+        super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
     public static class GuiRootElement extends GuiElement implements IViewport

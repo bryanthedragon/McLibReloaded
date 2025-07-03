@@ -1,18 +1,23 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import bryanthedragon.mclibreloaded.client.render.VertexBuilder;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+
+import org.joml.Matrix3d;
+import org.joml.Matrix4d;
+import org.joml.Matrix4f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+
 import javax.annotation.Nullable;
-import javax.vecmath.*;
 import java.nio.FloatBuffer;
 
 public class RenderingUtils
@@ -70,7 +75,7 @@ public class RenderingUtils
         double invSy = (scale.y != 0) ? 1 / scale.y : 0;
         double invSz = (scale.z != 0) ? 1 / scale.z : 0;
 
-        GlStateManager.scale(invSx, invSy, invSz);
+        RenderSystem.scale(invSx, invSy, invSz);
 
         float rotx = (float) -Math.toDegrees(rotation.x);
         float roty = (float) -Math.toDegrees(rotation.y);
@@ -79,39 +84,39 @@ public class RenderingUtils
         switch (rotationOrder)
         {
             case ZYX:
-                GlStateManager.rotate(rotz, 0, 0, 1);
-                GlStateManager.rotate(roty, 0, 1, 0);
-                GlStateManager.rotate(rotx, 1, 0, 0);
+                RenderSystem.rotate(rotz, 0, 0, 1);
+                RenderSystem.rotate(roty, 0, 1, 0);
+                RenderSystem.rotate(rotx, 1, 0, 0);
 
                 break;
             case XYZ:
-                GlStateManager.rotate(rotx, 1, 0, 0);
-                GlStateManager.rotate(roty, 0, 1, 0);
-                GlStateManager.rotate(rotz, 0, 0, 1);
+                RenderSystem.rotate(rotx, 1, 0, 0);
+                RenderSystem.rotate(roty, 0, 1, 0);
+                RenderSystem.rotate(rotz, 0, 0, 1);
 
                 break;
             case XZY:
-                GlStateManager.rotate(rotx, 1, 0, 0);
-                GlStateManager.rotate(rotz, 0, 0, 1);
-                GlStateManager.rotate(roty, 0, 1, 0);
+                RenderSystem.rotate(rotx, 1, 0, 0);
+                RenderSystem.rotate(rotz, 0, 0, 1);
+                RenderSystem.rotate(roty, 0, 1, 0);
 
                 break;
             case YZX:
-                GlStateManager.rotate(roty, 0, 1, 0);
-                GlStateManager.rotate(rotz, 0, 0, 1);
-                GlStateManager.rotate(rotx, 1, 0, 0);
+                RenderSystem.rotate(roty, 0, 1, 0);
+                RenderSystem.rotate(rotz, 0, 0, 1);
+                RenderSystem.rotate(rotx, 1, 0, 0);
 
                 break;
             case YXZ:
-                GlStateManager.rotate(roty, 0, 1, 0);
-                GlStateManager.rotate(rotx, 1, 0, 0);
-                GlStateManager.rotate(rotz, 0, 0, 1);
+                RenderSystem.rotate(roty, 0, 1, 0);
+                RenderSystem.rotate(rotx, 1, 0, 0);
+                RenderSystem.rotate(rotz, 0, 0, 1);
 
                 break;
             case ZXY:
-                GlStateManager.rotate(rotz, 0, 0, 1);
-                GlStateManager.rotate(rotx, 1, 0, 0);
-                GlStateManager.rotate(roty, 0, 1, 0);
+                RenderSystem.rotate(rotz, 0, 0, 1);
+                RenderSystem.rotate(rotx, 1, 0, 0);
+                RenderSystem.rotate(roty, 0, 1, 0);
 
                 break;
         }
@@ -192,31 +197,32 @@ public class RenderingUtils
         renderImage(image, scale, new Color(1F, 1F, 1F, 1F));
     }
 
+    @SuppressWarnings("deprecation")
     public static void renderImage(ResourceLocation image, float scale, Color color)
     {
         Minecraft.getInstance().renderEngine.bindTexture(image);
 
         boolean isCulling = GL11.glIsEnabled(GL11.GL_CULL_FACE);
 
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
+        RenderSystem.alphaFunc(GL11.GL_GREATER, 0);
+        RenderSystem.enableAlpha();
+        RenderSystem.enableBlend();
 
         if (ReflectionUtils.isOptifineShadowPass())
         {
-            GlStateManager.disableCull();
+            RenderSystem.disableCull();
         }
         else
         {
-            GlStateManager.enableCull();
+            RenderSystem.enableCull();
         }
 
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        GlStateManager.color(color.r, color.g, color.b, color.a);
+        RenderSystem.color(color.r, color.g, color.b, color.a);
 
         buffer.begin(GL11.GL_QUADS, VertexBuilder.getFormat(false, true, false, true));
 
@@ -229,7 +235,7 @@ public class RenderingUtils
         buffer.pos(-width, -height, 0.0F).tex(0, 1).normal(0.0F, 0.0F, 1.0F).endVertex();
         buffer.pos(width, -height, 0.0F).tex(1, 1).normal(0.0F, 0.0F, 1.0F).endVertex();
         buffer.pos(width, height, 0.0F).tex(1, 0).normal(0.0F, 0.0F, 1.0F).endVertex();
-        /* backface */
+        /* Backface */
         buffer.pos(width,height, 0.0F).tex(1, 0).normal(0.0F, 0.0F, -1.0F).endVertex();
         buffer.pos(width, -height, 0.0F).tex(1, 1).normal(0.0F, 0.0F, -1.0F).endVertex();
         buffer.pos(-width, -height, 0.0F).tex(0, 1).normal(0.0F, 0.0F, -1.0F).endVertex();
@@ -239,16 +245,16 @@ public class RenderingUtils
 
         if (isCulling)
         {
-            GlStateManager.enableCull();
+            RenderSystem.enableCull();
         }
         else
         {
-            GlStateManager.disableCull();
+            RenderSystem.disableCull();
         }
 
-        GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+        RenderSystem.disableBlend();
+        RenderSystem.disableAlpha();
+        RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F);
     }
 
     public static Matrix4f getFacingRotation(Facing facing, Vector3f position)
@@ -321,10 +327,7 @@ public class RenderingUtils
                 rotation.rotX((float) Math.toRadians(getPitch(direction) + 90));
                 transform.mul(rotation);
 
-                Vector3f cameraDir = new Vector3f(
-                        (float) (cX - position.x),
-                        (float) (cY - position.y),
-                        (float) (cZ - position.z));
+                Vector3f cameraDir = new Vector3f((float) (cX - position.x), (float) (cY - position.y), (float) (cZ - position.z));
 
                 Vector3f rotatedNormal = new Vector3f(0,0,1);
 
@@ -338,7 +341,10 @@ public class RenderingUtils
                 projectDir.scale(cameraDir.dot(direction));
                 cameraDir.sub(projectDir);
 
-                if (cameraDir.lengthSquared() < 1.0e-30) break;
+                if (cameraDir.lengthSquared() < 1.0e-30) 
+                {
+                    break;
+                }
 
                 cameraDir.normalize();
 

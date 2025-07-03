@@ -1,10 +1,11 @@
 package bryanthedragon.mclibreloaded.utils;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
  * A class that uses reflection to access functionalities of the Optifine mod
@@ -12,6 +13,7 @@ import java.lang.reflect.Method;
 public class OptifineHelper
 {
     private static ReflectionElement<Field> shadowPass = new ReflectionElement<>();
+    @SuppressWarnings("rawtypes")
     private static ReflectionElement<Class> shadersClass = new ReflectionElement<>();
     private static ReflectionElement<Method> nextEntity = new ReflectionElement<>();
     private static ReflectionElement<Method> nextBlockEntity = new ReflectionElement<>();
@@ -55,6 +57,7 @@ public class OptifineHelper
      * Invokes net.optifine.shaders.Shaders.nextEntity(Entity) when Optifine is present
      * @param entity
      */
+    @SuppressWarnings("unchecked")
     public static void nextEntity(Entity entity)
     {
         if (!nextEntity.checked)
@@ -84,10 +87,11 @@ public class OptifineHelper
     }
 
     /**
-     * Invokes net.optifine.shaders.Shaders.nextBlockEntity(TileEntity) when Optifine is present
-     * @param tileEntity
+     * Invokes net.optifine.shaders.Shaders.nextBlockEntity(BlockEntity) when Optifine is present
+     * @param BlockEntity
      */
-    public static void nextBlockEntity(TileEntity tileEntity)
+    @SuppressWarnings("unchecked")
+    public static void nextBlockEntity(BlockEntity BlockEntity)
     {
         if (!nextBlockEntity.checked)
         {
@@ -95,11 +99,14 @@ public class OptifineHelper
             {
                 if (findShadersClass())
                 {
-                    nextBlockEntity.element = shadersClass.element.getMethod("nextBlockEntity", TileEntity.class);
+                    nextBlockEntity.element = shadersClass.element.getMethod("nextBlockEntity", BlockEntity.class);
                 }
             }
             catch (Exception e)
-            { }
+            {
+                nextBlockEntity.element = null;
+                e.printStackTrace();
+            }
 
             nextBlockEntity.checked = true;
         }
@@ -108,10 +115,13 @@ public class OptifineHelper
         {
             try
             {
-                nextBlockEntity.element.invoke(null, tileEntity);
+                nextBlockEntity.element.invoke(null, BlockEntity);
             }
             catch (Exception e)
-            { }
+            { 
+                nextBlockEntity.element = null;
+                e.printStackTrace();
+            }
         }
     }
 
@@ -128,8 +138,10 @@ public class OptifineHelper
                 shadersClass.element = Class.forName("net.optifine.shaders.Shaders");
             }
             catch (Exception e)
-            { }
-
+            {
+                shadersClass.element = null;
+                e.printStackTrace();
+            }
             shadersClass.checked = true;
         }
 

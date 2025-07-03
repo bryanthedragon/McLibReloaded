@@ -11,8 +11,17 @@ package bryanthedragon.mclibreloaded.utils;
  */
 public interface ICopy<T>
 {
-    T copy();
+    T copier();
 
-    default void copy(T origin)
-    { }
+    default void copier(T origin)
+    { 
+        if (origin instanceof ICopy)
+        {
+            ((ICopy<?>) origin).copier();
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Cannot copy object of type " + origin.getClass().getName() + " without a public copy method.");
+        }
+    }
 }

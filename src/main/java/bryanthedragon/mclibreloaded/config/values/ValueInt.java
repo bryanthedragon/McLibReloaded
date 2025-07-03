@@ -1,7 +1,9 @@
 package bryanthedragon.mclibreloaded.config.values;
 
 import com.google.gson.JsonElement;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiCirculateElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiColorElement;
@@ -14,12 +16,11 @@ import bryanthedragon.mclibreloaded.client.gui.utils.keys.KeyParser;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagInt;
-import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
-import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -170,7 +171,7 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
         if (tag instanceof NBTPrimitive)
         {
@@ -179,7 +180,7 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
     }
 
     @Override
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
         return new NBTTagInt(this.value);
     }
@@ -320,8 +321,10 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
 
     public Integer interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
-        if (!(to.value instanceof Integer)) return this.value;
-
+        if (!(to.value instanceof Integer)) 
+        {
+            return this.value;
+        }
         return (int) interpolation.interpolate(this.value, (Integer) to.value, factor);
     }
 }

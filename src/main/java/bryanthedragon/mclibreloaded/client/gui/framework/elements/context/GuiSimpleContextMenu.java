@@ -7,11 +7,9 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
-import mchorse.mclib.utils.ColorUtils;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -151,7 +149,7 @@ public class GuiSimpleContextMenu extends GuiContextMenu
         {
             this.drawBackground(font, x, y, w, h, hover, selected);
 
-            GlStateManager.color(1, 1, 1, 1);
+            RenderSystem.color(1, 1, 1, 1);
             this.icon.render(x + 2, y + h / 2, 0, 0.5F);
             font.drawString(this.label.get(), x + 22, y + (h - font.FONT_HEIGHT) / 2 + 1, 0xffffff);
         }

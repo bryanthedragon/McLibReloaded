@@ -5,19 +5,15 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import javax.vecmath.Point2f;
-import javax.vecmath.Point3f;
-import javax.vecmath.Vector2f;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumType;
-import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumUsage;
 
 /**
  * Create a vertex format compatible with Optifine shaders.
@@ -211,14 +207,14 @@ public class VertexBuilder
 
         if (lenSquared > 0.0001F)
         {
-            x /= Math.sqrt(lenSquared);
-            y /= Math.sqrt(lenSquared);
-            z /= Math.sqrt(lenSquared);
+            x /= (float) Math.sqrt(lenSquared);
+            y /= (float) Math.sqrt(lenSquared);
+            z /= (float) Math.sqrt(lenSquared);
         }
 
         for (int i = 0; i < vertexCount; i++)
         {
-            byteBuf.put(baseIndex + vertexSize * i + normalOffset + 0, (byte) ((int) (x * 0x7F) & 0xFF));
+            byteBuf.put(baseIndex + vertexSize * i + normalOffset, (byte) ((int) (x * 0x7F) & 0xFF));
             byteBuf.put(baseIndex + vertexSize * i + normalOffset + 1, (byte) ((int) (y * 0x7F) & 0xFF));
             byteBuf.put(baseIndex + vertexSize * i + normalOffset + 2, (byte) ((int) (z * 0x7F) & 0xFF));
         }
@@ -261,9 +257,9 @@ public class VertexBuilder
 
         byteBuf.position(pos);
 
-        Point3f v0 = new Point3f();
-        Point3f v1 = new Point3f();
-        Point3f v2 = new Point3f();
+        Vector3f v0 = new Vector3f();
+        Vector3f v1 = new Vector3f();
+        Vector3f v2 = new Vector3f();
 
         v0.x = floatBuf.get(baseIndex + vertexSize * 0 + 0);
         v0.y = floatBuf.get(baseIndex + vertexSize * 0 + 1);
@@ -313,17 +309,17 @@ public class VertexBuilder
         int uvOffset = builder.getVertexFormat().getUvOffsetById(0) / 4;
         int tangentOffset = velocityAttrib == -1 ? 10 : 11;
 
-        Point2f uv0 = new Point2f();
-        Point2f uv1 = new Point2f();
-        Point2f uv2 = new Point2f();
+        Vector2f uv0 = new Vector2f();
+        Vector2f uv1 = new Vector2f();
+        Vector2f uv2 = new Vector2f();
 
-        uv0.x = floatBuf.get(baseIndex + vertexSize * 0 + uvOffset + 0);
-        uv0.y = floatBuf.get(baseIndex + vertexSize * 0 + uvOffset + 1);
+        uv0.x = floatBuf.get(baseIndex + vertexSize + uvOffset);
+        uv0.y = floatBuf.get(baseIndex + vertexSize + uvOffset + 1);
 
-        uv1.x = floatBuf.get(baseIndex + vertexSize * 1 + uvOffset + 0);
-        uv1.y = floatBuf.get(baseIndex + vertexSize * 1 + uvOffset + 1);
+        uv1.x = floatBuf.get(baseIndex + vertexSize + uvOffset);
+        uv1.y = floatBuf.get(baseIndex + vertexSize + uvOffset + 1);
 
-        uv2.x = floatBuf.get(baseIndex + vertexSize * 2 + uvOffset + 0);
+        uv2.x = floatBuf.get(baseIndex + vertexSize * 2 + uvOffset);
         uv2.y = floatBuf.get(baseIndex + vertexSize * 2 + uvOffset + 1);
 
         Vector2f duv1 = new Vector2f();
@@ -360,7 +356,7 @@ public class VertexBuilder
             binormal.normalize();
         }
 
-        int packedNormal = intBuf.get(baseIndex + vertexSize * 0 + normalOffset);
+        int packedNormal = intBuf.get(baseIndex + vertexSize + normalOffset);
         Vector3f normal = new Vector3f();
 
         normal.x = (byte) packedNormal;
@@ -392,7 +388,7 @@ public class VertexBuilder
 
         for (int i = 0; i < vertexCount; i++)
         {
-            intBuf.put(baseIndex + vertexSize * i + tangentOffset + 0, p1);
+            intBuf.put(baseIndex + vertexSize * i + tangentOffset, p1);
             intBuf.put(baseIndex + vertexSize * i + tangentOffset + 1, p2);
         }
     }
@@ -400,11 +396,11 @@ public class VertexBuilder
     /**
      * Used for Emoticons
      */
-    public static Vector4f calcTangent(Point3f[] vertices, Point2f[] uvs, Vector3f normal)
+    public static Vector4f calcTangent(Vector3f[] vertices, Vector2f[] uvs, Vector3f normal)
     {
-        Point3f v0 = vertices[0];
-        Point3f v1 = vertices[1];
-        Point3f v2 = vertices[2];
+        Vector3f v0 = vertices[0];
+        Vector3f v1 = vertices[1];
+        Vector3f v2 = vertices[2];
 
         Vector3f e1 = new Vector3f();
         Vector3f e2 = new Vector3f();
@@ -412,9 +408,9 @@ public class VertexBuilder
         e1.sub(v1, v0);
         e2.sub(v2, v0);
 
-        Point2f uv0 = uvs[0];
-        Point2f uv1 = uvs[1];
-        Point2f uv2 = uvs[2];
+        Vector2f uv0 = uvs[0];
+        Vector2f uv1 = uvs[1];
+        Vector2f uv2 = uvs[2];
 
         Vector2f duv1 = new Vector2f();
         Vector2f duv2 = new Vector2f();
@@ -512,7 +508,7 @@ public class VertexBuilder
     /**
      * attribute vec3 at_velocity;<br>
      * 
-     * Hope it could work in future.<br>
+     * Hope it could work in the future.<br>
      * 
      * Please call this method after endVertex for each <b>vertex</b>.
      */

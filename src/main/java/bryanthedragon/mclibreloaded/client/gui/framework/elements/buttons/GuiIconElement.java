@@ -1,11 +1,10 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+
 
 import java.util.function.Consumer;
 

@@ -6,14 +6,20 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.utils.DummyEntity;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
+
 import net.minecraft.client.Minecraft;
+
 import org.joml.Matrix3d;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
+
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import com.mojang.blaze3d.opengl.GlStateManager;
+
+import com.mojang.blaze3d.opengl.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
 
@@ -220,8 +226,8 @@ public abstract class GuiModelRenderer extends GuiElement
     {
         if (this.dragging && !this.position)
         {
-            if (context.keyCode == Keyboard.KEY_W || context.keyCode == Keyboard.KEY_S || context.keyCode == Keyboard.KEY_A ||
-                    context.keyCode == Keyboard.KEY_D || context.keyCode == Keyboard.KEY_LSHIFT || context.keyCode == Keyboard.KEY_SPACE)
+            if (context.keyCode == GLFW.GLFW.KEY_W || context.keyCode == GLFW.GLFW_KEY_S || context.keyCode == GLFW.GLFW_KEY_A ||
+                    context.keyCode == GLFW.GLFW_KEY_D || context.keyCode == GLFW.GLFW_KEY_LSHIFT || context.keyCode == GLFW.GLFW_KEY_SPACE)
             {
                 if (!this.flight)
                 {
@@ -298,24 +304,24 @@ public abstract class GuiModelRenderer extends GuiElement
 
         /* Enable rendering states */
         RenderHelper.enableStandardItemLighting();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.enableDepth();
-        GlStateManager.disableCull();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableAlpha();
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableDepth();
+        RenderSystem.disableCull();
+        RenderSystem.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         /* Setup transformations */
-        GlStateManager.pushMatrix();
-        GlStateManager.loadIdentity();
-        GlStateManager.rotate(this.pitch, 1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(this.yaw, 0.0F, 1.0F, 0.0F);
-        GlStateManager.translate(-this.temp.x, -this.temp.y, -this.temp.z);
+        RenderSystem.pushMatrix();
+        RenderSystem.loadIdentity();
+        RenderSystem.rotate(this.pitch, 1.0F, 0.0F, 0.0F);
+        RenderSystem.rotate(this.yaw, 0.0F, 1.0F, 0.0F);
+        RenderSystem.translate(-this.temp.x, -this.temp.y, -this.temp.z);
         this.cameraMatrix = MatrixUtils.readModelViewDouble();
 
         /* Custom render settings */
         if (this.hideModel)
         {
-            GlStateManager.depthFunc(GL11.GL_NEVER);
+            RenderSystem.depthFunc(GL11.GL_NEVER);
         }
 
         /* Drawing begins */
@@ -336,28 +342,28 @@ public abstract class GuiModelRenderer extends GuiElement
         /* Reset custom settings */
         if (this.hideModel)
         {
-            GlStateManager.depthFunc(GL11.GL_LEQUAL);
+            RenderSystem.depthFunc(GL11.GL_LEQUAL);
         }
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
         /* Disable rendering states */
-        GlStateManager.enableCull();
-        GlStateManager.disableDepth();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableAlpha();
+        RenderSystem.enableCull();
+        RenderSystem.disableDepth();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.disableAlpha();
         RenderHelper.disableStandardItemLighting();
 
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        RenderSystem.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        RenderSystem.disableTexture2D();
+        RenderSystem.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
         /* Return back to orthographic projection */
-        GlStateManager.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
-        GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GlStateManager.loadIdentity();
-        GlStateManager.ortho(0.0D, context.screen.width, context.screen.height, 0.0D, 1000.0D, 3000000.0D);
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+        RenderSystem.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
+        RenderSystem.matrixMode(GL11.GL_PROJECTION);
+        RenderSystem.loadIdentity();
+        RenderSystem.ortho(0.0D, context.screen.width, context.screen.height, 0.0D, 1000.0D, 3000000.0D);
+        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }
 
     protected void updatePosition(GuiContext context)
@@ -406,33 +412,33 @@ public abstract class GuiModelRenderer extends GuiElement
         {
             float multiplier = 4F / Math.max(Minecraft.getDebugFPS(), 1);
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+            if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
             {
                 multiplier *= 5;
             }
-            else if (Keyboard.isKeyDown(Keyboard.KEY_LMENU))
+            else if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_MENU))
             {
                 multiplier *= 0.2F;
             }
 
             vec.set(0, 0, 0);
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_W))
+            if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_W))
             {
                 vec.z++;
             }
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_S))
+            if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_S))
             {
                 vec.z--;
             }
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_A))
+            if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_A))
             {
                 vec.x++;
             }
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_D))
+            if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_D))
             {
                 vec.x--;
             }
@@ -440,12 +446,12 @@ public abstract class GuiModelRenderer extends GuiElement
             mat.rotY((180 - this.yaw) / 180 * (float) Math.PI);
             mat.transform(vec);
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+            if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_SPACE))
             {
                 vec.y++;
             }
 
-            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+            if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
             {
                 vec.y--;
             }
@@ -491,7 +497,7 @@ public abstract class GuiModelRenderer extends GuiElement
         /* Changing projection mode to perspective. In order for this to
          * work, depth buffer must also be cleared. Thanks to Gegy for
          * pointing this out (depth buffer)! */
-        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT);
 
         float rx = (float) Math.ceil(mc.displayWidth / (double) context.screen.width);
         float ry = (float) Math.ceil(mc.displayHeight / (double) context.screen.height);
@@ -501,11 +507,11 @@ public abstract class GuiModelRenderer extends GuiElement
         int vw = this.fullScreen ? this.mc.displayWidth : (int) (this.area.w * rx);
         int vh = this.fullScreen ? this.mc.displayHeight : (int) (this.area.h * ry);
 
-        GlStateManager.viewport(vx, vy, vw, vh);
-        GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GlStateManager.loadIdentity();
+        RenderSystem.viewport(vx, vy, vw, vh);
+        RenderSystem.matrixMode(GL11.GL_PROJECTION);
+        RenderSystem.loadIdentity();
         Project.gluPerspective(this.fov, (float) vw / (float) vh, 0.05F, 1000);
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
     }
 
     protected void setupEntity()
@@ -555,7 +561,7 @@ public abstract class GuiModelRenderer extends GuiElement
 
         if (this.hideModel)
         {
-            GlStateManager.depthFunc(GL11.GL_LEQUAL);
+            RenderSystem.depthFunc(GL11.GL_LEQUAL);
         }
 
         GL11.glColorMask(false, false, false, false);
@@ -564,7 +570,7 @@ public abstract class GuiModelRenderer extends GuiElement
 
         if (this.hideModel)
         {
-            GlStateManager.depthFunc(GL11.GL_NEVER);
+            RenderSystem.depthFunc(GL11.GL_NEVER);
         }
 
         ByteBuffer buffer = ByteBuffer.allocateDirect(1);
@@ -608,10 +614,10 @@ public abstract class GuiModelRenderer extends GuiElement
             BufferBuilder buffer = tessellator.getBuffer();
 
             GL11.glLineWidth(3);
-            GlStateManager.disableTexture2D();
-            GlStateManager.enableAlpha();
-            GlStateManager.enableBlend();
-            GlStateManager.disableLighting();
+            RenderSystem.disableTexture2D();
+            RenderSystem.enableAlpha();
+            RenderSystem.enableBlend();
+            RenderSystem.disableLighting();
             buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
             for (int x = 0; x <= 10; x ++)
@@ -644,8 +650,8 @@ public abstract class GuiModelRenderer extends GuiElement
 
             tessellator.draw();
 
-            GlStateManager.enableLighting();
-            GlStateManager.enableTexture2D();
+            RenderSystem.enableLighting();
+            RenderSystem.enableTexture2D();
         }
         else
         {
@@ -653,13 +659,13 @@ public abstract class GuiModelRenderer extends GuiElement
 
             this.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(0, -0.5F, 0);
-            GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.translate(-0.5F, -0.5F, 0.5F);
+            RenderSystem.pushMatrix();
+            RenderSystem.translate(0, -0.5F, 0);
+            RenderSystem.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+            RenderSystem.translate(-0.5F, -0.5F, 0.5F);
             renderer.renderBlockBrightness(this.block, 1.0F);
-            GlStateManager.translate(0.0F, 0.0F, 1.0F);
-            GlStateManager.popMatrix();
+            RenderSystem.translate(0.0F, 0.0F, 1.0F);
+            RenderSystem.popMatrix();
         }
     }
 }

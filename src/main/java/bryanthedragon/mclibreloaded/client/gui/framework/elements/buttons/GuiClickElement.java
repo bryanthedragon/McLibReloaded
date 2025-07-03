@@ -3,9 +3,8 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.GuiUtils;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
 
 import java.util.function.Consumer;
 
