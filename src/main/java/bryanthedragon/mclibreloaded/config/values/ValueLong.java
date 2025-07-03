@@ -1,7 +1,6 @@
 package bryanthedragon.mclibreloaded.config.values;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 
 import io.netty.buffer.ByteBuf;
 
@@ -11,9 +10,7 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel
 import bryanthedragon.mclibreloaded.client.gui.utils.Elements;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
-import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
-import bryanthedragon.mclibreloaded.utils.MathUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -86,7 +83,7 @@ public class ValueLong extends GenericNumberValue<Long> implements IServerValue,
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
         if (tag instanceof NBTPrimitive)
         {
@@ -95,7 +92,7 @@ public class ValueLong extends GenericNumberValue<Long> implements IServerValue,
     }
 
     @Override
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
         return new NBTTagLong(this.value);
     }

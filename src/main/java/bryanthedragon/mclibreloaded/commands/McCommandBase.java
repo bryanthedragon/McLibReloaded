@@ -1,16 +1,14 @@
 package bryanthedragon.mclibreloaded.commands;
 
 import com.google.common.collect.ImmutableList;
+
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+
 
 import java.util.List;
 
@@ -40,15 +38,15 @@ public abstract class McCommandBase extends CommandBase
         return processSyntax(this.getSyntax());
     }
 
-    public ITextComponent getUsageMessage(ICommandSender sender)
+    public Component getUsageMessage(CommandSourceStack sender)
     {
-        ITextComponent message = new TextComponentTranslation(this.getProcessedSyntax());
+        Component message = Component.translatable(this.getProcessedSyntax());
 
-        message.getStyle().setColor(TextFormatting.WHITE);
+        message.getStyle().setColor(ChatFormatting.WHITE);
 
         return message
-            .appendSibling(new TextComponentString("\n\n"))
-            .appendSibling(new TextComponentTranslation(this.getUsage(sender)));
+            .appendSibling(Component.literal(("\n\n")))
+            .appendSibling(Component.translatable(this.getUsage(sender)));
     }
 
     /**
@@ -59,8 +57,7 @@ public abstract class McCommandBase extends CommandBase
         return 0;
     }
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void execute(MinecraftServer server, CommandSourceStack sender, String[] args) throws CommandException
     {
         if (args.length >= 1 && args[0].equals("-h"))
         {
@@ -90,5 +87,5 @@ public abstract class McCommandBase extends CommandBase
     /**
      * Execute the command's task
      */
-    public abstract void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException;
+    public abstract void executeCommand(MinecraftServer server, CommandSourceStack sender, String[] args) throws CommandException;
 }

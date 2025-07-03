@@ -1,6 +1,5 @@
 package bryanthedragon.mclibreloaded.utils;
 
-import net.minecraft.util.math.MathHelper;
 
 /**
  * Interpolation methods
@@ -25,7 +24,7 @@ public class Interpolations
     /**
      * Special interpolation method for interpolating yaw. The problem with yaw,
      * is that it may go in the "wrong" direction when having, for example,
-     * -170 (as a) and 170 (as b) degress or other way around (170 and -170).
+     * -170 (as a) and 170 (as b) degrees or other way around (170 and -170).
      *
      * This interpolation method fixes this problem.
      */
@@ -223,7 +222,7 @@ public class Interpolations
     /**
      * Special interpolation method for interpolating yaw. The problem with yaw,
      * is that it may go in the "wrong" direction when having, for example,
-     * -170 (as a) and 170 (as b) degress or other way around (170 and -170).
+     * -170 (as a) and 170 (as b) degrees or other way around (170 and -170).
      *
      * This interpolation method fixes this problem.
      */

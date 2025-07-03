@@ -2,7 +2,9 @@ package bryanthedragon.mclibreloaded.config.values;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
@@ -11,9 +13,9 @@ import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
 import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
-import bryanthedragon.mclibreloaded.utils.MatrixUtils;
-import bryanthedragon.mclibreloaded.utils.resources.RLUtils;
+
 import net.minecraft.client.Minecraft;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -67,18 +69,18 @@ public class ValueString extends GenericValue<String> implements IServerValue, I
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
-        if (tag instanceof NBTTagString)
+        if (tag instanceof StringTag)
         {
-            this.set(((NBTTagString) tag).getString());
+            this.set(((StringTag) tag).getString());
         }
     }
 
     @Override
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
-        return new NBTTagString(this.value == null ? "" : this.value);
+        return new StringTag(this.value == null ? "" : this.value);
     }
 
     @Override
@@ -157,8 +159,10 @@ public class ValueString extends GenericValue<String> implements IServerValue, I
     @Override
     public String interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
-        if (!(to.value instanceof String)) return this.value;
-
+        if (!(to.value instanceof String)) 
+        {
+            return this.value;
+        }
         return factor == 1F ? (String) to.value : this.value;
     }
 }

@@ -14,6 +14,7 @@ public class CompoundUndo <T> implements IUndo<T>
     private List<IUndo<T>> undos = new ArrayList<IUndo<T>>();
     private boolean mergable = true;
 
+    @SuppressWarnings("unchecked")
     public CompoundUndo(IUndo<T>... undos)
     {
         for (IUndo<T> undo : undos)
@@ -27,6 +28,11 @@ public class CompoundUndo <T> implements IUndo<T>
         }
     }
 
+    /**
+     * Get all the undos in this compound undo
+     *
+     * @return All undos in this compound undo
+     */
     public List<IUndo<T>> getUndos()
     {
         return this.undos;
@@ -34,6 +40,9 @@ public class CompoundUndo <T> implements IUndo<T>
 
     /**
      * Get first undo matching given class
+     *
+     * @param clazz The class to look for
+     * @return The first undo matching the given class, or null if none
      */
     public IUndo<T> getFirst(Class<? extends IUndo<T>> clazz)
     {
@@ -56,6 +65,9 @@ public class CompoundUndo <T> implements IUndo<T>
 
     /**
      * Get last undo matching given class
+     *
+     * @param clazz The class to look for
+     * @return The last undo matching the given class, or null if none
      */
     public IUndo<T> getLast(Class<? extends IUndo<T>> clazz)
     {
@@ -76,6 +88,12 @@ public class CompoundUndo <T> implements IUndo<T>
         return null;
     }
 
+    /**
+     * Check if this compound undo has at least one undo of the given class
+     *
+     * @param clazz The class to look for
+     * @return true if this compound undo contains at least one undo of the given class, false otherwise
+     */
     public boolean has(Class<? extends IUndo<T>> clazz)
     {
         for (IUndo<T> undo : this.undos)
@@ -89,6 +107,11 @@ public class CompoundUndo <T> implements IUndo<T>
         return false;
     }
 
+    /**
+     * Mark this compound undo as unmergable.
+     *
+     * @return This compound undo instance after marking as unmergable.
+     */
     @Override
     public IUndo<T> noMerging()
     {
@@ -97,6 +120,17 @@ public class CompoundUndo <T> implements IUndo<T>
         return this;
     }
 
+    /**
+     * Check if this compound undo is mergeable with given undo
+     *
+     * Two compound undos are mergeable if they contain the same number of undos, and each
+     * undo in the first compound undo is mergeable with the corresponding undo in the
+     * second compound undo. If this compound undo has been marked as unmergable, then
+     * this method always returns false.
+     *
+     * @param undo The compound undo to check
+     * @return true if this compound undo is mergeable with given undo, false otherwise
+     */
     @Override
     public boolean isMergeable(IUndo<T> undo)
     {
@@ -118,6 +152,15 @@ public class CompoundUndo <T> implements IUndo<T>
         return false;
     }
 
+    /**
+     * Merge the current compound undo with the given compound undo.
+     *
+     * This method takes each undo operation in the current compound undo
+     * and merges it with the corresponding undo operation in the given compound undo,
+     * provided they are mergeable.
+     *
+     * @param undo The compound undo to merge with
+     */
     @Override
     public void merge(IUndo<T> undo)
     {
@@ -135,6 +178,12 @@ public class CompoundUndo <T> implements IUndo<T>
         }
     }
 
+    /**
+     * Undo the changes done to the given context in the reverse order
+     * in which they were added to this compound undo.
+     *
+     * @param context The context to which the undos should be applied
+     */
     @Override
     public void undo(T context)
     {
@@ -144,6 +193,12 @@ public class CompoundUndo <T> implements IUndo<T>
         }
     }
 
+    /**
+     * Redo the changes done to the given context in the order in which
+     * they were added to this compound undo.
+     *
+     * @param context The context to which the redos should be applied
+     */
     @Override
     public void redo(T context)
     {

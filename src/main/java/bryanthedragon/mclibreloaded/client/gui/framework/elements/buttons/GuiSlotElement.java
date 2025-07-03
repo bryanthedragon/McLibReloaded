@@ -12,15 +12,11 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.network.mclib.Dispatcher;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketDropItem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
 
@@ -178,8 +174,8 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
 
         if (this.stack.isEmpty() && this.slot != 0)
         {
-            GlStateManager.enableAlpha();
-            GlStateManager.color(1, 1, 1, 1);
+            RenderSystem.enableAlpha();
+            RenderSystem.color(1, 1, 1, 1);
 
             if (this.slot == 1)
             {
@@ -208,7 +204,7 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
         {
             RenderHelper.enableGUIStandardItemLighting();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-            GlStateManager.enableDepth();
+            RenderSystem.enableDepth();
 
             GuiInventoryElement.drawItemStack(this.stack, x, y, null);
 
@@ -217,7 +213,7 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
                 context.tooltip.set(context, this);
             }
 
-            GlStateManager.disableDepth();
+            RenderSystem.disableDepth();
             RenderHelper.disableStandardItemLighting();
         }
 
@@ -234,6 +230,6 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
 
         GuiInventoryElement.drawItemTooltip(this.stack, this.mc.player, this.font, context.mouseX, context.mouseY);
 
-        GlStateManager.disableLighting();
+        RenderSystem.disableLighting();
     }
 }

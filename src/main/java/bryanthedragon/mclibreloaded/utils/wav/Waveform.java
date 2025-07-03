@@ -1,15 +1,18 @@
 package bryanthedragon.mclibreloaded.utils.wav;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import com.mojang.blaze3d.opengl.GlStateManager;
-import com.mojang.blaze3d.platform.TextureUtil;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
+import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.GpuTexture;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +26,20 @@ public class Waveform
 {
     public float[] average;
     public float[] maximum;
-
+    private final List<DynamicTexture> dynamicTextures = new ArrayList<>();
     private List<WaveformSprite> sprites = new ArrayList<WaveformSprite>();
     private int w;
     private int h;
     private int pixelsPerSecond;
 
+    /**
+     * Generates a waveform for the given audio data and renders it as a texture.
+     * 
+     * @param data the audio data to generate a waveform for
+     * @param pixelsPerSecond the number of pixels per second to generate the waveform for
+     * @param height the height of the waveform
+     * @throws IllegalStateException if the audio data is not 16-bit
+     */
     public void generate(Wave data, int pixelsPerSecond, int height)
     {
         if (data.getBytesPerSample() != 2)
@@ -40,23 +51,31 @@ public class Waveform
         this.render();
     }
 
-    public void render()
+    private final List<ResourceLocation> textureLocations = new ArrayList<>();
+
+    /**
+     * Generates a waveform for the given audio data and renders it as a texture.
+     * 
+     * This method is expensive and should be called sparingly. It will delete all
+     * existing sprites and textures.
+     * 
+     * @since 1.0
+     */
+    public void render() 
     {
         this.delete();
 
-        int maxTextureSize = GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE) / 2;
+        int maxTextureSize = 16384;  // Hard-coded or query via caps if needed
         int count = (int) Math.ceil(this.w / (double) maxTextureSize);
         int offset = 0;
 
-        for (int t = 0; t < count; t++)
+        for (int t = 0; t < count; t++) 
         {
-            int texture = GlStateManager.generateTexture();
             int width = Math.min(this.w - offset, maxTextureSize);
 
-            BufferedImage image = new BufferedImage(width, this.h, BufferedImage.TYPE_INT_ARGB);
-            Graphics g = image.getGraphics();
+            NativeImage image = new NativeImage(NativeImage.Format.RGBA, width, this.h, true);
 
-            for (int i = offset, j = 0, c = Math.min(offset + width, this.average.length); i < c; i++, j++)
+            for (int i = offset, j = 0, c = Math.min(offset + width, this.average.length); i < c; i++, j++) 
             {
                 float average = this.average[i];
                 float maximum = this.maximum[i];
@@ -64,26 +83,55 @@ public class Waveform
                 int maxHeight = (int) (maximum * this.h);
                 int avgHeight = (int) (average * (this.h - 1)) + 1;
 
-                if (avgHeight > 0)
+                if (avgHeight > 0) 
                 {
-                    g.setColor(java.awt.Color.WHITE);
-                    g.drawRect(j, this.h / 2 - maxHeight / 2, 1, maxHeight);
-                    g.setColor(java.awt.Color.LIGHT_GRAY);
-                    g.drawRect(j, this.h / 2 - avgHeight / 2, 1, avgHeight);
+                    int center = this.h / 2;
+
+                    int yStartMax = center - maxHeight / 2;
+                    int yEndMax = yStartMax + maxHeight;
+                    for (int y = yStartMax; y < yEndMax; y++) 
+                    {
+                        if (y >= 0 && y < this.h) 
+                        {
+                            image.setPixelABGR(j, y, 0xFFFFFFFF);
+                        }
+                    }
+
+                    int yStartAvg = center - avgHeight / 2;
+                    int yEndAvg = yStartAvg + avgHeight;
+                    for (int y = yStartAvg; y < yEndAvg; y++) 
+                    {
+                        if (y >= 0 && y < this.h) 
+                        {
+                            image.setPixelABGR(j, y, 0xFFD3D3D3);
+                        }
+                    }
                 }
             }
 
-            g.dispose();
+            // Wrap in DynamicTexture
+            String namespace = "mclibreloaded";
+            String path = "waveform/" + System.nanoTime();
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, path);
 
-            TextureUtil.uploadTextureImage(texture, image);
-            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+            DynamicTexture dynTex = new DynamicTexture(() -> "waveform", image);
+            this.dynamicTextures.add(dynTex);
+            
+            Minecraft.getInstance().getTextureManager().register(id, dynTex);
 
-            this.sprites.add(new WaveformSprite(texture, width));
-
-            offset += maxTextureSize;
+            this.sprites.add(new WaveformSprite(id, width));
+            this.textureLocations.add(id);
         }
     }
 
+    /**
+     * Populates the waveform data by calculating the average and maximum amplitude
+     * values for each pixel column based on the provided audio data.
+     *
+     * @param data the audio data to process
+     * @param pixelsPerSecond the number of pixels representing each second of audio
+     * @param height the height of the waveform to generate
+     */
     public void populate(Wave data, int pixelsPerSecond, int height)
     {
         this.pixelsPerSecond = pixelsPerSecond;
@@ -126,50 +174,108 @@ public class Waveform
         }
     }
 
-    public void delete()
+    /**
+     * Deletes all of the textures and sprites created by this waveform generator.
+     * This should be called when the waveform is no longer needed to free up
+     * OpenGL resources.
+     */
+    public void delete() 
     {
-        for (WaveformSprite sprite : this.sprites)
+        for (DynamicTexture tex : this.dynamicTextures) 
         {
-            GlStateManager._deleteTexture(sprite.texture);
+            tex.close(); // This safely deletes the OpenGL texture
         }
+    this.dynamicTextures.clear();
+    this.textureLocations.clear();
+    this.sprites.clear();
+}
 
-        this.sprites.clear();
-    }
-
+    /**
+     * Returns true if this waveform generator has been populated with audio data
+     * and false otherwise.
+     * 
+     * @return true if this waveform generator has been populated with audio data
+     *         and false otherwise
+     */
     public boolean isCreated()
     {
         return !this.sprites.isEmpty();
     }
 
+    /**
+     * Returns the number of pixels per second of audio data that this waveform generator
+     * will render. This is the number of pixels that will be generated for each second of
+     * audio data. A higher value will result in a more detailed waveform, but will also
+     * result in a larger texture.
+     * 
+     * @return the number of pixels per second of audio data that this waveform generator
+     *         will render
+     */
     public int getPixelsPerSecond()
     {
         return this.pixelsPerSecond;
     }
 
+    /**
+     * Returns the width of this waveform in pixels.
+     * 
+     * @return the width of this waveform in pixels
+     */
     public int getWidth()
     {
         return this.w;
     }
 
+    /**
+     * Returns the height of this waveform in pixels.
+     * 
+     * @return the height of this waveform in pixels
+     */
     public int getHeight()
     {
         return this.h;
     }
 
+    /**
+     * Returns a list of all the sprites generated by this waveform generator.
+     * 
+     * @return a list of all the sprites generated by this waveform generator
+     */
     public List<WaveformSprite> getSprites()
     {
         return this.sprites;
     }
 
+    /**
+     * Draws the waveform at the specified position with the given UV coordinates, width,
+     * and height using the default height of the waveform.
+     * 
+     * @param x the x-coordinate where the waveform will be drawn
+     * @param y the y-coordinate where the waveform will be drawn
+     * @param u the U texture coordinate
+     * @param v the V texture coordinate
+     * @param w the width of the drawn waveform
+     * @param h the height of the drawn waveform
+     */
     public void draw(int x, int y, int u, int v, int w, int h)
     {
-        draw(x, y, u, v, w, h, this.h);
+        drawer(x, y, u, v, w, h, this.h);
     }
 
+
     /**
-     * Draw the waveform out of multiple sprites of desired cropped region
+     * Draws the waveform at the specified position with the given UV coordinates, width,
+     * and height with the specified height of the waveform.
+     * 
+     * @param x the x-coordinate where the waveform will be drawn
+     * @param y the y-coordinate where the waveform will be drawn
+     * @param u the U texture coordinate
+     * @param v the V texture coordinate
+     * @param w the width of the drawn waveform
+     * @param h the height of the drawn waveform
+     * @param height the height of the waveform
      */
-    public void draw(int x, int y, int u, int v, int w, int h, int height)
+    public void drawer(int x, int y, int u, int v, int w, int h, int height)
     {
         int offset = 0;
 
@@ -190,7 +296,12 @@ public class Waveform
 
             int so = offset - u;
 
-            GlStateManager._bindTexture(sprite.texture);
+            GpuTexture gpuTex = getGpuTexture(sprite.texture);
+            if (gpuTex != null) 
+            {
+                RenderSystem.setShaderTexture(0, gpuTex);
+            }
+
             GuiDraw.drawBillboard(x, y, u, v, Math.min(w, so), h, sw, height);
 
             x += so;
@@ -198,14 +309,35 @@ public class Waveform
             w -= so;
         }
     }
+    
+    /**
+     * Retrieves a GpuTexture from a TextureManager by a given ResourceLocation
+     * 
+     * @param location the ResourceLocation of the texture to retrieve
+     * @return the GpuTexture at the given location, or null if it couldn't be found
+     */
+    private GpuTexture getGpuTexture(ResourceLocation location) 
+    {
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+        AbstractTexture tex = textureManager.getTexture(location);
+        if (tex == null) 
+        {
+            // handle error or fallback
+            return null;
+        }
+        // AbstractTexture has a protected field 'texture' of type GpuTexture; 
+        // If it’s not accessible, you may need reflection or a public getter
+        return tex.getTexture(); // <-- in Mojang mappings, getTexture() returns GpuTexture
+    }
+
 
     @OnlyIn(Dist.CLIENT)
-    public static class WaveformSprite
+    public static class WaveformSprite 
     {
-        public final int texture;
+        public final ResourceLocation texture;
         public final int width;
 
-        public WaveformSprite(int texture, int width)
+        public WaveformSprite(ResourceLocation texture, int width) 
         {
             this.texture = texture;
             this.width = width;

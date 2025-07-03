@@ -4,12 +4,18 @@ import java.lang.reflect.Field;
 
 public class BetterLightsHelper
 {
+    @SuppressWarnings("rawtypes")
     private static ReflectionElement<Class> betterLightsClass = new ReflectionElement<>();
     private static ReflectionElement<Field> shadowPass = new ReflectionElement<>();
 
+
     /**
-     * Checks whether BetterLights is currently rendering shadow map.
+     * Checks whether BetterLights is currently rendering shadow map. Thanks to
+     * BetterLights mod author for suggesting how to do it!
+     *
+     * @return true if BetterLights is currently rendering shadow map, false otherwise
      */
+    @SuppressWarnings("rawtypes")
     public static boolean isBetterLightsShadowPass()
     {
         /* only check once for isShadowPass Field to avoid too many reflection calls */
@@ -23,7 +29,10 @@ public class BetterLightsHelper
                 shadowPass.element.setAccessible(true);
             }
             catch (Exception e)
-            {}
+            {
+                shadowPass.element = null;
+                e.printStackTrace();
+            }
 
             shadowPass.checked = true;
         }
@@ -35,17 +44,29 @@ public class BetterLightsHelper
                 return (boolean) shadowPass.element.get(null);
             }
             catch (Exception e)
-            {}
+            {
+                e.printStackTrace();
+            }
         }
 
         return false;
     }
 
+    /**
+     * @return true if the BetterLights mod is loaded, false otherwise
+     */
     public static boolean isBetterLightsLoaded()
     {
         return findBetterLightsClass();
     }
 
+    /**
+     * Checks if the BetterLights class is available by attempting to load
+     * the "dz.betterlights.BetterLightsMod" class using reflection.
+     * This method only performs the check once to minimize reflection calls.
+     * 
+     * @return true if the BetterLights class is successfully found, false otherwise
+     */
     private static boolean findBetterLightsClass()
     {
         /* only check once if Optifine is there - avoid too many reflection calls*/
@@ -56,7 +77,10 @@ public class BetterLightsHelper
                 betterLightsClass.element = Class.forName("dz.betterlights.BetterLightsMod");
             }
             catch (Exception e)
-            { }
+            { 
+                betterLightsClass.element = null;
+                e.printStackTrace();
+            }
 
             betterLightsClass.checked = true;
         }
@@ -64,7 +88,7 @@ public class BetterLightsHelper
         return betterLightsClass.element != null;
     }
 
-    /* avoid too many reflection calls by saving whether it was checked */
+
     private static class ReflectionElement<T>
     {
         private T element;

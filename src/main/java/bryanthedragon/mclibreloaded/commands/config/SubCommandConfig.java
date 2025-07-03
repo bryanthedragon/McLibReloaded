@@ -5,6 +5,8 @@ import bryanthedragon.mclibreloaded.commands.SubCommandBase;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
 import bryanthedragon.mclibreloaded.config.values.Value;
 
+import net.minecraft.commands.CommandSourceStack;
+
 public class SubCommandConfig extends SubCommandBase
 {
     public static Value get(String id) throws CommandException
@@ -37,7 +39,7 @@ public class SubCommandConfig extends SubCommandBase
         return "config";
     }
 
-    public String getUsage(ICommandSender sender)
+    public String getUsage(CommandSourceStack sender)
     {
         return "mclib.commands.mclib.config.help";
     }

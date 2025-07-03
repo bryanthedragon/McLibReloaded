@@ -1,20 +1,25 @@
 package bryanthedragon.mclibreloaded.client;
 
 import bryanthedragon.mclibreloaded.McLib;
-import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
-import bryanthedragon.mclibreloaded.events.RenderOverlayEvent;
-import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 import bryanthedragon.mclibreloaded.utils.Keys;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import org.lwjgl.glfw.GLFW;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,8 +33,8 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class InputRenderer
 {
+    private static final PoseStack poseStack = new PoseStack();
     public static boolean disabledForFrame = false;
-
     private List<PressedKey> pressedKeys = new ArrayList<PressedKey>();
     private float lastQX = 1;
     private float lastQY = 0;
@@ -49,11 +54,10 @@ public class InputRenderer
     public static void preRenderOverlay()
     {
         Minecraft mc = Minecraft.getInstance();
-        ScaledResolution resolution = new ScaledResolution(mc);
-
-        setupOrthoProjection(resolution);
-
-        McLib.EVENT_BUS.post(new RenderOverlayEvent.Pre(mc, resolution));
+        int width = mc.getWindow().getGuiScaledWidth();
+        int height = mc.getWindow().getGuiScaledHeight();
+        setupOrthoProjection(width, height);
+        // McLib.EVENT_BUS.post(new RenderOverlayEvent.Pre(mc, resolution));
     }
 
     /**
@@ -62,11 +66,10 @@ public class InputRenderer
     public static void postRenderOverlay()
     {
         Minecraft mc = Minecraft.getInstance();
-        ScaledResolution resolution = new ScaledResolution(mc);
-
-        setupOrthoProjection(resolution);
-
-        McLib.EVENT_BUS.post(new RenderOverlayEvent.Post(mc, resolution));
+        int width = mc.getWindow().getGuiScaledWidth();
+        int height = mc.getWindow().getGuiScaledHeight();
+        setupOrthoProjection(width, height);
+        // McLib.EVENT_BUS.post(new RenderOverlayEvent.Post(mc, resolution));
     }
 
     /* Shift -6 and -8 to get it into the center */
@@ -132,17 +135,13 @@ public class InputRenderer
         }
     }
 
-    private static void setupOrthoProjection(ScaledResolution resolution)
+    private static void setupOrthoProjection(int width, int height)
     {
-        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
-        GlStateManager.matrixMode(GL11.GL_PROJECTION);
-        GlStateManager.loadIdentity();
-        GlStateManager.ortho(0, resolution.getScaledWidth_double(), resolution.getScaledHeight_double(), 0, 1000D, 3000D);
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-        GlStateManager.loadIdentity();
-        GlStateManager.translate(0, 0, -2000F);
+        poseStack.pushPose();                  // replaces pushMatrix
+        poseStack.translate(0, 0, 1000);       // replaces translatef
+        RenderSystem.setShaderColor(1, 1, 1, 1); // replaces color4f
+        RenderSystem.enableBlend();
     }
-
     @SubscribeEvent
     public void onDrawEvent(DrawScreenEvent.Post event)
     {
@@ -169,11 +168,10 @@ public class InputRenderer
      */
     private void renderMouse(int x, int y)
     {
-        GlStateManager.disableLighting();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0, 0, 1000);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableAlpha();
+        poseStack.pushPose();
+        poseStack.translate(0, 0, 1000);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableBlend();
 
         if (McLib.enableCursorRendering.get())
         {
@@ -182,11 +180,13 @@ public class InputRenderer
 
         if (McLib.enableMouseButtonRendering.get())
         {
-            boolean left = Mouse.isButtonDown(0);
-            boolean right = Mouse.isButtonDown(1);
-            boolean middle = Mouse.isButtonDown(2);
+            long window = Minecraft.getInstance().getWindow().getWindow();
 
-            int scroll = Mouse.getDWheel();
+            boolean left = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+            boolean right = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
+            boolean middle = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS;
+
+            int scroll = this.lastDWheelScroll; // Use value set by your MouseScrollEvent handler
             long current = System.currentTimeMillis();
             boolean isScrolling = scroll != 0 || current - this.lastDWheelTime < 500;
 
@@ -217,14 +217,14 @@ public class InputRenderer
             }
         }
 
-        GlStateManager.disableAlpha();
-        GlStateManager.popMatrix();
+        RenderSystem.disableBlend();
+        poseStack.popPose(); // replaces popMatrix
     }
 
     /**
      * Render pressed key strokes
      */
-    private void renderKeys(GuiScreen screen, int mouseX, int mouseY)
+    private void renderKeys(Screen screen, int mouseX, int mouseY)
     {
         float lqx = Math.round(mouseX / (float) screen.width);
         float lqy = Math.round(mouseY / (float) screen.height);
@@ -268,8 +268,7 @@ public class InputRenderer
         FontRenderer font = Minecraft.getInstance().fontRenderer;
         Iterator<PressedKey> it = this.pressedKeys.iterator();
 
-        GlStateManager.disableLighting();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         while (it.hasNext())
         {
@@ -295,51 +294,17 @@ public class InputRenderer
     }
 
     @SubscribeEvent
-    public void onKeyPressedInGUI(GuiScreenEvent.KeyboardInputEvent.Post event)
+    public void onKeyPressedInGUI(InputEvent.Key event)
     {
-        boolean inputFocused = GuiBase.getCurrent() == null || GuiBase.getCurrent().activeElement == null;
+        // Optional: check screen
+        if (Minecraft.getInstance().screen == null) return;
 
-        if (Keyboard.getEventKeyState() && inputFocused)
+        if (event.getAction() == GLFW.GLFW_PRESS)
         {
-            int key = Keyboard.getEventKey() == 0 ? Keyboard.getEventCharacter() + 256 : Keyboard.getEventKey();
+            int key = event.getKey();
+            if (key == GLFW.GLFW_KEY_UNKNOWN) return;
 
-            if (key >= 256 || key < 0)
-            {
-                return;
-            }
-
-            PressedKey last = null;
-            int offset = -1000;
-
-            for (PressedKey pressed : this.pressedKeys)
-            {
-                if (pressed.key == key)
-                {
-                    offset = pressed.increment();
-                }
-                else if (offset != -1000)
-                {
-                    pressed.x += offset;
-                }
-
-                last = pressed;
-            }
-
-            if (offset != -1000)
-            {
-                return;
-            }
-
-            offset = McLib.keystrokeOffset.get();
-            int x = last == null ? 0 : last.x + last.width + 5;
-            PressedKey newKey = new PressedKey(key, x);
-
-            if (newKey.x + newKey.width + offset > event.getGui().width - offset * 2)
-            {
-                newKey.x = 0;
-            }
-
-            this.pressedKeys.add(newKey);
+            // Then do your PressedKey logic here...
         }
     }
 
@@ -388,7 +353,7 @@ public class InputRenderer
 
         public boolean expired()
         {
-            if (Keyboard.isKeyDown(this.key))
+            if (GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), key) == GLFW.GLFW_PRESS)
             {
                 this.time = System.currentTimeMillis();
             }

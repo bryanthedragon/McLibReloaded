@@ -14,15 +14,15 @@ import bryanthedragon.mclibreloaded.math.MathBuilder;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
 import bryanthedragon.mclibreloaded.utils.Timer;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.function.Consumer;
@@ -342,7 +342,7 @@ public class GuiTrackpadElement extends GuiBaseTextElement
 
             if (this.area.isInside(context))
             {
-                if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+                if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
                 {
                     this.setValueAndNotify(Math.round(this.value));
 
@@ -421,31 +421,31 @@ public class GuiTrackpadElement extends GuiBaseTextElement
 
         if (this.isFocused())
         {
-            if (context.keyCode == Keyboard.KEY_UP)
+            if (context.keyCode == GLFW.GLFW_KEY_UP)
             {
                 this.setValueAndNotify(this.value + this.getValueModifier());
 
                 return true;
             }
-            else if (context.keyCode == Keyboard.KEY_DOWN)
+            else if (context.keyCode == GLFW.GLFW_KEY_DOWN)
             {
                 this.setValueAndNotify(this.value - this.getValueModifier());
 
                 return true;
             }
-            else if (context.keyCode == Keyboard.KEY_TAB)
+            else if (context.keyCode == GLFW.GLFW_KEY_TAB)
             {
                 context.focus(this, -1, GuiScreen.isShiftKeyDown() ? -1 : 1);
 
                 return true;
             }
-            else if (context.keyCode == Keyboard.KEY_ESCAPE)
+            else if (context.keyCode == GLFW.GLFW_KEY_ESCAPE)
             {
                 context.unfocus();
 
                 return true;
             }
-            else if (context.keyCode == Keyboard.KEY_RETURN && GuiScreen.isAltKeyDown())
+            else if (context.keyCode == GLFW.GLFW_KEY_ENTER && GuiScreen.isAltKeyDown())
             {
                 try
                 {
@@ -512,17 +512,17 @@ public class GuiTrackpadElement extends GuiBaseTextElement
 
         if (McLib.enableTrackpadIncrements.get())
         {
-            GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
+            RenderSystem.alphaFunc(GL11.GL_GREATER, 0);
             this.plusOne.draw(plus ? 0x22ffffff : 0x0affffff, padding);
             this.minusOne.draw(minus ? 0x22ffffff : 0x0affffff, padding);
-            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+            RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F);
 
-            GlStateManager.enableBlend();
+            RenderSystem.enableBlend();
             ColorUtils.bindColor(minus ? 0xffffffff : 0x80ffffff);
             Icons.MOVE_LEFT.render(x + 5, y + (h - 16) / 2);
             ColorUtils.bindColor(plus ? 0xffffffff : 0x80ffffff);
             Icons.MOVE_RIGHT.render(x + w - 13, y + (h - 16) / 2);
-            GlStateManager.disableBlend();
+            RenderSystem.disableBlend();
         }
 
         int width = MathUtils.clamp(this.font.getStringWidth(this.field.getText()), 0, w - 16);
@@ -602,15 +602,15 @@ public class GuiTrackpadElement extends GuiBaseTextElement
     {
         double value = this.normal;
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
+        if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT))
         {
             value = this.strong;
         }
-        else if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+        else if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
         {
             value = this.increment;
         }
-        else if (Keyboard.isKeyDown(Keyboard.KEY_LMENU))
+        else if (Keyboard.isKeyDown(GLFW.GLFW_KEY_LEFT_ALT))
         {
             value = this.weak;
         }

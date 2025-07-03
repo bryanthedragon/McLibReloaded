@@ -1,6 +1,5 @@
 package bryanthedragon.mclibreloaded.utils.resources;
 
-import net.minecraft.util.ResourceLocation;
 
 public interface IResourceTransformer
 {

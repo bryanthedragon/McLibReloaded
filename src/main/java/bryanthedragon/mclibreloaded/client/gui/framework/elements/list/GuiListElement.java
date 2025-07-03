@@ -13,9 +13,10 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollArea;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollDirection;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
+
 
 /**
  * Abstract GUI list element

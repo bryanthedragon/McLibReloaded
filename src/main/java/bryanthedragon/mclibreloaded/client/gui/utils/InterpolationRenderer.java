@@ -1,18 +1,16 @@
 package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import com.google.common.collect.ImmutableList;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.framework.tooltips.styles.TooltipStyle;
 import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.IInterpolation;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
+
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -57,11 +55,11 @@ public class InterpolationRenderer
 
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.glLineWidth(2F);
+        RenderSystem.color(1F, 1F, 1F, 1F);
+        RenderSystem.disableTexture2D();
+        RenderSystem.enableAlpha();
+        RenderSystem.enableBlend();
+        RenderSystem.glLineWidth(2F);
 
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
@@ -86,7 +84,7 @@ public class InterpolationRenderer
 
         Tessellator.getInstance().draw();
 
-        GlStateManager.glLineWidth(3F);
+        RenderSystem.glLineWidth(3F);
         builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
         for (int i = 1; i <= iterations; i++)
@@ -107,7 +105,7 @@ public class InterpolationRenderer
 
         Tessellator.getInstance().draw();
 
-        GlStateManager.enableTexture2D();
+        RenderSystem.enableTexture2D();
 
         context.font.drawString("A", x + 14, (int)(y + h - 10 - padding / 2) + 4, font);
         context.font.drawString("B", x + w - 19, (int)(y + 20 + padding / 2) - context.font.FONT_HEIGHT - 4, font);

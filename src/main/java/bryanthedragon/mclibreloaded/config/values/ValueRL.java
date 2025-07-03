@@ -128,14 +128,14 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
         this.set(RLUtils.create(tag));
     }
 
     @Override
     @Nullable
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
         return RLUtils.writeNbt(this.value);
     }
@@ -243,8 +243,10 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
     @Override
     public ResourceLocation interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
-        if (!(to.value instanceof ResourceLocation)) return RLUtils.clone(this.value);
-
+        if (!(to.value instanceof ResourceLocation)) 
+        {
+            return RLUtils.clone(this.value);
+        }
         return factor == 1F ? RLUtils.clone((ResourceLocation) to.value) : RLUtils.clone(this.value);
     }
 }

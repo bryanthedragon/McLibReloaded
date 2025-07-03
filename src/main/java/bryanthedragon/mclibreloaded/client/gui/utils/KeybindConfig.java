@@ -3,6 +3,8 @@ package bryanthedragon.mclibreloaded.client.gui.utils;
 import java.io.File;
 import java.util.Map;
 
+import org.lwjgl.glfw.GLFW;
+
 import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.Config;
@@ -10,6 +12,7 @@ import bryanthedragon.mclibreloaded.config.json.ConfigParser;
 import bryanthedragon.mclibreloaded.config.values.Value;
 import bryanthedragon.mclibreloaded.config.values.ValueInt;
 import bryanthedragon.mclibreloaded.utils.Keys;
+
 import net.minecraftforge.fml.ModContainer;
 
 
@@ -26,7 +29,7 @@ public class KeybindConfig extends Config
 
     public void addKeybind(Keybind key)
     {
-        if (Keys.getMainKey(key.keyCode) == Keyboard.KEY_ESCAPE)
+        if (Keys.getMainKey(key.keyCode) == GLFW.GLFW_KEY_ESCAPE)
         {
             return;
         }

@@ -22,8 +22,11 @@ public class LatencyTimer implements IByteBufSerializable
         this.startTime = System.currentTimeMillis();
     }
 
+
     /**
-     * Sets the endTime, if it has not been set yet, to the current system time in milliseconds.
+     * Sets the endTime to the current system time, if it has not been set before.
+     * This method should be called after sending a packet to the server or client
+     * to store the time it took to send the packet.
      */
     public void finish()
     {
@@ -44,6 +47,11 @@ public class LatencyTimer implements IByteBufSerializable
         return Math.abs((this.endTime != 0) ? (this.endTime - this.startTime) : (System.currentTimeMillis() - this.startTime));
     }
 
+    /**
+     * Reads the startTime and endTime from the given ByteBuf.
+     * This method is used for deserialization of the LatencyTimer object.
+     * @param buf the ByteBuf that contains the data to read from
+     */
     @Override
     public void fromBytes(ByteBuf buf)
     {
@@ -53,6 +61,11 @@ public class LatencyTimer implements IByteBufSerializable
         timer.endTime = buf.readLong();
     }
 
+    /**
+     * Writes the startTime and endTime to the given ByteBuf.
+     * This method is used for serialization of the LatencyTimer object.
+     * @param buf the ByteBuf that the data should be written to
+     */
     @Override
     public void toBytes(ByteBuf buf)
     {

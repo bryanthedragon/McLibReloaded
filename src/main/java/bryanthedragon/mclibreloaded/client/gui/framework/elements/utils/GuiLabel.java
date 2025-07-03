@@ -4,9 +4,9 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.GuiGraphics;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -152,45 +152,41 @@ public class GuiLabel extends GuiElement implements ITextColoring
     {
         return this.backgroundColor == null ? this.background : this.backgroundColor.get();
     }
-
-    @Override
-    public void draw(GuiContext context)
+    
+    public void draw(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
         int offset = 3;
         int leftIconW = this.leftIcon != null ? this.leftIcon.getW() : 0;
         int rightIconW = this.rightIcon != null ? this.rightIcon.getW() : 0;
-        int textWidth = this.font.getStringWidth(this.label.get());
+        int textWidth = this.font.width(this.label.get());
         int width = textWidth + rightIconW + leftIconW;
         int x0 = this.area.x(this.anchorX, width);
-        int x1 = x0 + width;
-        int y = this.area.y(this.anchorY, this.font.FONT_HEIGHT);
+        int y = this.area.y(this.anchorY, this.font.lineHeight);
 
         int xText = x0 + leftIconW;
 
-        int a = this.getColor() >> 24 & 0xff;
+        int bgColor = this.getColor();
+        int alpha = (bgColor >> 24) & 0xff;
 
-        if (a != 0)
+        if (alpha != 0)
         {
-            Gui.drawRect(x0, y - offset, x1 + 2 * offset, y + font.FONT_HEIGHT, this.getColor());
-
+            guiGraphics.fill(x0 - offset, y - offset, x0 + width + 2 * offset, y + this.font.lineHeight, bgColor);
             x0 += offset;
             xText += offset;
         }
 
-        GlStateManager.color(1,1,1,1);
-
         if (this.leftIcon != null)
         {
-            this.leftIcon.render(x0, y, 0.5F, 0.5F);
+            this.leftIcon.render(guiGraphics, x0, y, 0.5F, 0.5F);
         }
 
         if (this.rightIcon != null)
         {
-            this.rightIcon.render(xText + textWidth, y, 0.5F, 0.5F);
+            this.rightIcon.render(guiGraphics, xText + textWidth, y, 0.5F, 0.5F);
         }
 
-        this.font.drawString(this.label.get(), xText, y, this.color, this.textShadow);
+        guiGraphics.drawString(this.font, this.label.get(), xText, y, this.color, this.textShadow);
 
-        super.draw(context);
+        super.draw(guiGraphics, mouseX, mouseY, partialTicks);
     }
 }

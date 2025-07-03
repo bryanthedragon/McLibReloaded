@@ -5,11 +5,13 @@ import bryanthedragon.mclibreloaded.commands.McCommandBase;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
 import bryanthedragon.mclibreloaded.config.Config;
 import bryanthedragon.mclibreloaded.config.values.Value;
-import net.minecraft.command.ICommandSender;
+
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +29,7 @@ public abstract class SubCommandConfigBase extends McCommandBase
         return McLib.l10n;
     }
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
+    public List<String> getTabCompletions(MinecraftServer server, CommandSourceStack sender, String[] args, @Nullable BlockPos targetPos)
     {
         if (args.length == 1)
         {

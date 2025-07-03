@@ -13,7 +13,6 @@ public class McLibCMClassTransformer extends CoreClassTransformer
     private EntityRendererTransformer entityRenderer = new EntityRendererTransformer();
     private PacketBufferTransformer packetBuffer = new PacketBufferTransformer();
 
-    @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass)
     {
         if (checkName(name, "cev", "net.minecraft.client.resources.SimpleReloadableResourceManager"))

@@ -14,12 +14,10 @@ import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -58,11 +56,11 @@ public class GuiColorPicker extends GuiElement
 
     public static void drawAlphaPreviewQuad(int x1, int y1, int x2, int y2, Color color)
     {
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.disableTexture2D();
+        RenderSystem.enableBlend();
+        RenderSystem.enableAlpha();
+        RenderSystem.tryBlendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE, RenderSystem.DestFactor.ZERO);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
@@ -75,10 +73,10 @@ public class GuiColorPicker extends GuiElement
         vertexbuffer.pos(x2, y2, 0).color(color.r, color.g, color.b, color.a).endVertex();
         tessellator.draw();
 
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.enableTexture2D();
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.disableBlend();
+        RenderSystem.disableAlpha();
+        RenderSystem.enableTexture2D();
     }
 
     public GuiColorPicker(Minecraft mc, Consumer<Integer> callback)

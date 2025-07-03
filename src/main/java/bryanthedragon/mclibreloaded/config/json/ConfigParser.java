@@ -24,6 +24,7 @@ public class ConfigParser
         return object;
     }
 
+    @SuppressWarnings("deprecation")
     public static boolean fromJson(Config config, File file)
     {
         if (!file.exists())

@@ -3,7 +3,7 @@ package bryanthedragon.mclibreloaded.commands;
 import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.commands.config.SubCommandConfig;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.commands.CommandSourceStack;
 
 public class CommandMcLib extends SubCommandBase
 {
@@ -12,14 +12,12 @@ public class CommandMcLib extends SubCommandBase
         this.add(new SubCommandConfig());
     }
 
-    @Override
     public String getName()
     {
         return "mclib";
     }
 
-    @Override
-    public String getUsage(ICommandSender sender)
+    public String getUsage(CommandSourceStack sender)
     {
         return "mclib.commands.mclib.help";
     }

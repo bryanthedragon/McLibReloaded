@@ -49,4 +49,9 @@ public class GuiDashboardPanel <T extends GuiAbstractDashboard> extends GuiEleme
 
     public void close()
     {}
+
+    public int getRequiredOpLevel() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRequiredOpLevel'");
+    }
 }

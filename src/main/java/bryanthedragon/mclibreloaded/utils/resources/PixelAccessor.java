@@ -6,6 +6,13 @@ public enum PixelAccessor
 {
     BYTE()
     {
+        /**
+         * Retrieves the color at the specified index in the pixel array.
+         *
+         * @param pixels the pixels object
+         * @param index the index of the pixel in the array
+         * @param color the color object to store the color in
+         */
         @Override
         public void get(Pixels pixels, int index, Color color)
         {
@@ -27,6 +34,13 @@ public enum PixelAccessor
             color.r = ((int) pixels.pixelBytes[index + offset] & 0xff) / 255F;
         }
 
+        /**
+         * Sets the color at the specified index in the pixel array.
+         *
+         * @param pixels the pixels object containing the pixel data
+         * @param index the index of the pixel in the array
+         * @param color the color object containing the color values to set
+         */
         @Override
         public void set(Pixels pixels, int index, Color color)
         {
@@ -46,6 +60,13 @@ public enum PixelAccessor
     },
     INT()
     {
+        /**
+         * Retrieves the color at the specified index in the pixel array.
+         *
+         * @param pixels the pixels object
+         * @param index the index of the pixel in the array
+         * @param color the color object to store the color in
+         */
         @Override
         public void get(Pixels pixels, int index, Color color)
         {
@@ -62,6 +83,13 @@ public enum PixelAccessor
             color.a = a / 255F;
         }
 
+        /**
+         * Sets the color at the specified index in the pixel array.
+         *
+         * @param pixels the pixels object containing the pixel data
+         * @param index the index of the pixel in the array
+         * @param color the color object containing the color values to set
+         */
         @Override
         public void set(Pixels pixels, int index, Color color)
         {

@@ -5,20 +5,18 @@ import bryanthedragon.mclibreloaded.commands.SubCommandBase;
 import bryanthedragon.mclibreloaded.config.ConfigManager;
 import bryanthedragon.mclibreloaded.config.values.IServerValue;
 import bryanthedragon.mclibreloaded.config.values.Value;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
+
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 
 public class SubCommandConfigSet extends SubCommandConfigBase
 {
-    @Override
     public String getName()
     {
         return "set";
     }
 
-    @Override
-    public String getUsage(ICommandSender sender)
+    public String getUsage(CommandSourceStack sender)
     {
         return "mclib.commands.mclib.config.set";
     }
@@ -35,8 +33,7 @@ public class SubCommandConfigSet extends SubCommandConfigBase
         return 2;
     }
 
-    @Override
-    public void executeCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void executeCommand(MinecraftServer server, CommandSourceStack sender, String[] args) throws CommandException
     {
         Value value = SubCommandConfig.get(args[0]);
 
@@ -53,7 +50,7 @@ public class SubCommandConfigSet extends SubCommandConfigBase
                     ConfigManager.synchronizeConfig(McLib.proxy.configs.modules.get(mod).filterSyncable(), server);
                 }
 
-                this.getL10n().info(sender, "config.set", args[0], value.toString());
+                this.getL10n().info(String.valueOf(sender), "config.set", args[0], value.toString());
             }
             else
             {
@@ -62,7 +59,7 @@ public class SubCommandConfigSet extends SubCommandConfigBase
         }
         else
         {
-            this.getL10n().info(sender, "config.client_side", args[0]);
+            this.getL10n().info(String.valueOf(sender), "config.client_side", args[0]);
         }
     }
 }

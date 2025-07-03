@@ -10,13 +10,10 @@ import bryanthedragon.mclibreloaded.utils.keyframes.Keyframe;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeChannel;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeEasing;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -496,7 +493,7 @@ public class GuiGraphView extends GuiKeyframeElement
         float g = COLOR.g;
         float b = COLOR.b;
 
-        GlStateManager.color(1, 1, 1, 1);
+        RenderSystem.color(1, 1, 1, 1);
 
         /* Draw the graph */
         vb.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);

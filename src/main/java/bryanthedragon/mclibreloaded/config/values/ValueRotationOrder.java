@@ -2,11 +2,11 @@ package bryanthedragon.mclibreloaded.config.values;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils.RotationOrder;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
 
 import javax.annotation.Nonnull;
 
@@ -69,7 +69,7 @@ public class ValueRotationOrder extends GenericValue<RotationOrder>
     }
 
     @Override
-    public void valueFromNBT(NBTBase tag)
+    public void valueFromNBT(Tag tag)
     {
         if (tag instanceof NBTTagByte)
         {
@@ -78,7 +78,7 @@ public class ValueRotationOrder extends GenericValue<RotationOrder>
     }
 
     @Override
-    public NBTBase valueToNBT()
+    public Tag valueToNBT()
     {
         return new NBTTagByte((byte) this.value.ordinal());
     }
@@ -107,8 +107,10 @@ public class ValueRotationOrder extends GenericValue<RotationOrder>
     @Override
     public RotationOrder interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
-        if (!(to.value instanceof RotationOrder)) return this.value;
-
+        if (!(to.value instanceof RotationOrder)) 
+        {
+            return this.value;
+        }
         return factor == 1F ? (RotationOrder) to.value : this.value;
     }
 }

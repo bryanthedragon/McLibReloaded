@@ -3,7 +3,6 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.keyframes;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.list.GuiListElement;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 
 import java.util.Collections;
 import java.util.List;

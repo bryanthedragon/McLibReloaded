@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.utils.resources;
 
 import bryanthedragon.mclibreloaded.utils.ReflectionUtils;
+import bryanthedragon.mclibreloaded.utils.resources.location.MultiResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.lwjgl.BufferUtils;
@@ -18,6 +19,16 @@ public class MultiskinThread implements Runnable
 
     public Stack<MultiResourceLocation> locations = new Stack<MultiResourceLocation>();
 
+    /**
+     * Adds a MultiResourceLocation to be processed by the MultiskinThread.
+     * 
+     * If the thread is not alive or the instance is null, a new instance of
+     * MultiskinThread is created, and the provided location is added to it. 
+     * If the instance already exists, the location is added to the existing 
+     * instance.
+     *
+     * @param location the MultiResourceLocation to be added
+     */
     public static synchronized void add(MultiResourceLocation location)
     {
         if (instance != null && !thread.isAlive())
@@ -74,6 +85,10 @@ public class MultiskinThread implements Runnable
         return buffer;
     }
 
+    /**
+     * Add a location to be processed by the thread. If the location already exists in the stack, it is not added again.
+     * @param location the location to add
+     */
     public synchronized void addLocation(MultiResourceLocation location)
     {
         if (this.locations.contains(location))
@@ -108,8 +123,8 @@ public class MultiskinThread implements Runnable
                         TextureUtil.allocateTexture(texture.getGlTextureId(), w, h);
 
                         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getGlTextureId());
-                        GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-                        GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+                        RenderSystem.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+                        RenderSystem.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
                         GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, w, h, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
                     });
                 }

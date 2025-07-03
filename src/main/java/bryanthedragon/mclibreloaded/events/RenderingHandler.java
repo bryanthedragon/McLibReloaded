@@ -1,7 +1,7 @@
 package bryanthedragon.mclibreloaded.events;
 
-import bryanthedragon.mclibreloaded.forge.fml.common.eventhandler.SubscribeEvent;
-import bryanthedragon.mclibreloaded.forge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class RenderingHandler
 {

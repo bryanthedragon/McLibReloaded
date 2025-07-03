@@ -297,6 +297,7 @@ public class MathBuilder
     /**
      * Trims spaces from individual symbols
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private List<Object> trimSymbols(List<Object> symbols)
     {
         List<Object> newSymbols = new ArrayList<Object>();

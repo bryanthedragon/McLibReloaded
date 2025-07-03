@@ -2,8 +2,9 @@ package bryanthedragon.mclibreloaded.utils.keyframes;
 
 import bryanthedragon.mclibreloaded.utils.IInterpolation;
 import bryanthedragon.mclibreloaded.utils.Interpolations;
-import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
-import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 
 public class KeyframeInterpolations
 {

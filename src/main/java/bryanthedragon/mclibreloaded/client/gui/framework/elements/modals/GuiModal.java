@@ -5,9 +5,9 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.IGuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.function.Supplier;
 
@@ -95,7 +95,7 @@ public abstract class GuiModal extends GuiElement
     public void draw(GuiContext context)
     {
         Gui.drawRect(this.area.x, this.area.y, this.area.ex(), this.area.ey(), 0xcc000000);
-        GlStateManager.enableAlpha();
+        RenderSystem.enableAlpha();
 
         this.y = 0;
         int y = this.area.y + 10;

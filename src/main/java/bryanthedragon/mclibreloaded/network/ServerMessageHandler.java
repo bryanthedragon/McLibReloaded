@@ -3,6 +3,7 @@ package bryanthedragon.mclibreloaded.network;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 /**
  * This class passes operation from Netty to Minecraft (Server) Thread. This
@@ -10,12 +11,13 @@ import net.minecraft.world.level.Level;
  * server message handler classes.
  *
  * @author Ernio (Ernest Sadowski)
+ * @param <IMessage>
  */
 public abstract class ServerMessageHandler<T extends IMessage> extends AbstractMessageHandler<T>
 {
     public abstract void run(final ServerPlayer player, final T message);
 
-    public IMessage handleServerMessage(final ServerPlayer player, final T message)
+    public Message handleServerMessage(final ServerPlayer player, final T message)
     {
         player.getServer().addScheduledTask(new Runnable()
         {
@@ -37,13 +39,13 @@ public abstract class ServerMessageHandler<T extends IMessage> extends AbstractM
      * Safe way to get a tile entity on the server without exposing code 
      * to ACG (Arbitrary Chunk Generation) exploit (thanks to Paul Fulham)
      */
-    protected TileEntity getTE(ServerPlayer player, BlockPos pos)
+    protected BlockEntity getTE(ServerPlayer player, BlockPos pos)
     {
         Level world = player.getEntityWorld();
 
         if (world.isBlockLoaded(pos))
         {
-            return world.getTileEntity(pos);
+            return world.getBlockEntity(pos);
         }
 
         return null;

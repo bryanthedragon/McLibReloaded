@@ -29,6 +29,7 @@ public class ValueColors extends Value implements IServerValue
         return this.getColors();
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void setValue(Object value)
     {

@@ -1,13 +1,11 @@
 package bryanthedragon.mclibreloaded.utils;
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+
 import java.util.Arrays;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHandSide;
-import net.minecraft.world.World;
+
 
 /**
  * Dummy entity

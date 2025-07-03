@@ -22,17 +22,13 @@ import bryanthedragon.mclibreloaded.utils.files.entries.FolderEntry;
 import bryanthedragon.mclibreloaded.utils.resources.FilteredResourceLocation;
 import bryanthedragon.mclibreloaded.utils.resources.MultiResourceLocation;
 import bryanthedragon.mclibreloaded.utils.resources.RLUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.ChatAllowedCharacters;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.resources.ResourceLocation;
+
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Collections;
@@ -167,7 +163,7 @@ public class GuiTexturePicker extends GuiElement
 
     private void copyRL()
     {
-        NBTBase location = RLUtils.writeNbt(this.multiRL != null ? this.multiRL : this.current);
+        Tag location = RLUtils.writeNbt(this.multiRL != null ? this.multiRL : this.current);
 
         if (location == null)
         {
@@ -440,7 +436,7 @@ public class GuiTexturePicker extends GuiElement
 
         int keyCode = context.keyCode;
 
-        if (keyCode == Keyboard.KEY_RETURN)
+        if (keyCode == GLFW.GLFW_KEY_ENTER)
         {
             List<AbstractEntry> selected = this.picker.getCurrent();
             AbstractEntry entry = selected.isEmpty() ? null : selected.get(0);
@@ -458,15 +454,15 @@ public class GuiTexturePicker extends GuiElement
 
             return true;
         }
-        else if (keyCode == Keyboard.KEY_UP)
+        else if (keyCode == GLFW.GLFW_KEY_UP)
         {
             return this.moveCurrent(-1, GuiScreen.isShiftKeyDown());
         }
-        else if (keyCode == Keyboard.KEY_DOWN)
+        else if (keyCode == GLFW.GLFW_KEY_DOWN)
         {
             return this.moveCurrent(1, GuiScreen.isShiftKeyDown());
         }
-        else if (keyCode == Keyboard.KEY_ESCAPE)
+        else if (keyCode == GLFW.GLFW_KEY_ESCAPE)
         {
             this.close();
 
@@ -580,7 +576,7 @@ public class GuiTexturePicker extends GuiElement
             /* Draw preview */
             if (loc != null)
             {
-                GlStateManager.color(1, 1, 1, 1);
+                RenderSystem.color(1, 1, 1, 1);
                 this.mc.renderEngine.bindTexture(loc);
 
                 int w = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
@@ -610,7 +606,7 @@ public class GuiTexturePicker extends GuiElement
 
                 Icons.CHECKBOARD.renderArea(x, y, fw, fh);
 
-                GlStateManager.enableAlpha();
+                RenderSystem.enableAlpha();
                 this.mc.renderEngine.bindTexture(loc);
                 GuiDraw.drawBillboard(x, y, 0, 0, fw, fh, fw, fh);
             }

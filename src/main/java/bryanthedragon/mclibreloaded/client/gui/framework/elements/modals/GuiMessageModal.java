@@ -3,8 +3,10 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.modals;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiButtonElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
+
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
+
+import org.lwjgl.glfw.GLFW;
 
 public class GuiMessageModal extends GuiModal
 {
@@ -27,7 +29,7 @@ public class GuiMessageModal extends GuiModal
             return true;
         }
 
-        if (context.keyCode == Keyboard.KEY_RETURN || context.keyCode == Keyboard.KEY_ESCAPE)
+        if (context.keyCode == GLFW.GLFW_KEY_ENTER || context.keyCode == GLFW.GLFW_KEY_ESCAPE)
         {
             this.button.clickItself(context);
 

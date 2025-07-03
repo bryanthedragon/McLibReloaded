@@ -19,7 +19,14 @@ public class LegacyPermissionHandler
         permissions.put(sampleAdmin, new HashSet<>(List.of("yourmodid.command.openadminmenu")));
     }
 
-    public boolean checkPermission(String uuidStr, String node) 
+    public boolean checkServerPermission(String uuidStr, String node) 
+    {
+        UUID uuid = UUID.fromString(uuidStr);
+        Set<String> playerPermissions = permissions.get(uuid);
+        return playerPermissions != null && playerPermissions.contains(node);
+    }
+
+    public boolean checkLocalPermission(String uuidStr, String node) 
     {
         UUID uuid = UUID.fromString(uuidStr);
         Set<String> playerPermissions = permissions.get(uuid);

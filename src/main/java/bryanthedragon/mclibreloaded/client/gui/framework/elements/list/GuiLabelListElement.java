@@ -22,6 +22,7 @@ public class GuiLabelListElement <T> extends GuiListElement<Label<T>>
         this.add(new Label<T>(title, value));
     }
 
+    @SuppressWarnings("unlikely-arg-type")
     public void setCurrentTitle(String title)
     {
         for (int i = 0; i < this.list.size(); i ++)

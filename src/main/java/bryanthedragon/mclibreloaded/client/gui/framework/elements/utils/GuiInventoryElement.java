@@ -9,20 +9,12 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrack
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollArea;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.PlayerSP;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.client.util.SearchTreeManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -56,8 +48,8 @@ public class GuiInventoryElement extends GuiElement
     {
         RenderItem itemRender = Minecraft.getInstance().getRenderItem();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0.0F, 0.0F, 32.0F);
+        RenderSystem.pushMatrix();
+        RenderSystem.translate(0.0F, 0.0F, 32.0F);
         itemRender.zLevel = z;
 
         FontRenderer font = null;
@@ -67,13 +59,13 @@ public class GuiInventoryElement extends GuiElement
         itemRender.renderItemAndEffectIntoGUI(stack, x, y);
         itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
         itemRender.zLevel = 0.0F;
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     /**
      * Draw item tooltip
      */
-    public static void drawItemTooltip(ItemStack stack, PlayerSP player, FontRenderer providedFont, int x, int y)
+    public static void drawItemTooltip(ItemStack stack, LocalPlayer player, FontRenderer providedFont, int x, int y)
     {
         if (stack.isEmpty())
         {
@@ -91,7 +83,7 @@ public class GuiInventoryElement extends GuiElement
             }
             else
             {
-                list.set(i, TextFormatting.GRAY + list.get(i));
+                list.set(i, ChatFormatting.GRAY + list.get(i));
             }
         }   
 
@@ -282,7 +274,7 @@ public class GuiInventoryElement extends GuiElement
         this.active = null;
 
         /* Background rendering */
-        GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT);
 
         int border = 0xffffffff;
         int fourth = this.area.y(0.75F);
@@ -312,7 +304,7 @@ public class GuiInventoryElement extends GuiElement
 
         GuiDraw.drawDropCircleShadow(this.toggle.area.mx(), this.toggle.area.my(), 10, 4, 8, 0x18000000, 0);
 
-        GlStateManager.enableDepth();
+        RenderSystem.enableDepth();
         RenderHelper.enableGUIStandardItemLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 
@@ -353,7 +345,7 @@ public class GuiInventoryElement extends GuiElement
             context.tooltip.set(context, this);
         }
 
-        GlStateManager.disableDepth();
+        RenderSystem.disableDepth();
         RenderHelper.disableStandardItemLighting();
 
         GuiDraw.drawLockedArea(this, McLib.enableBorders.get() ? 1 : 0);

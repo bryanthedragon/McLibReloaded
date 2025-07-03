@@ -4,9 +4,11 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiBut
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.list.GuiStringListElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.network.chat.Component;
+
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +40,7 @@ public class GuiListModal extends GuiModal
         this.list = new GuiStringListElement(mc, null);
 
         this.list.flex().set(10, 0, 0, 0).relative(this.area).y(0.4F, 0).w(1, -20).h(0.6F, -35);
-        this.list.add(I18n.format("mclib.gui.none"));
+        this.list.add(Component.translatable("mclib.gui.none").getString());
         this.list.setIndex(0);
 
         this.bar.add(this.pick, this.cancel);
@@ -96,13 +98,13 @@ public class GuiListModal extends GuiModal
             return true;
         }
 
-        if (context.keyCode == Keyboard.KEY_RETURN)
+        if (context.keyCode == GLFW.GLFW_KEY_ENTER)
         {
             this.send();
 
             return true;
         }
-        else if (context.keyCode == Keyboard.KEY_ESCAPE)
+        else if (context.keyCode == GLFW.GLFW_KEY_ESCAPE)
         {
             this.removeFromParent();
 

@@ -8,8 +8,8 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.IGuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiKeybinds;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 
 import java.util.ArrayList;
 import java.util.List;

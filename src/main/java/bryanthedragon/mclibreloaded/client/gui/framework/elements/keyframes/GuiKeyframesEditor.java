@@ -10,29 +10,23 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrack
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.list.GuiListElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.tooltips.InterpolationTooltip;
-import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.GuiUtils;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
-import bryanthedragon.mclibreloaded.client.gui.utils.InterpolationRenderer;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
-import bryanthedragon.mclibreloaded.utils.IInterpolation;
-import bryanthedragon.mclibreloaded.utils.Interpolation;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
 import bryanthedragon.mclibreloaded.utils.keyframes.Keyframe;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeEasing;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
-import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.lwjgl.glfw.GLFW;
 
 public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends GuiElement
 {
@@ -101,8 +95,8 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
         this.add(this.graph, this.frameButtons);
         this.frameButtons.add(this.tick, this.value, this.interp, this.easing, this.interpolations);
 
-        this.keys().register(IKey.lang("mclib.gui.keyframes.context.maximize"), Keyboard.KEY_HOME, this::resetView).inside();
-        this.keys().register(IKey.lang("mclib.gui.keyframes.context.select_all"), Keyboard.KEY_A, this::selectAll).held(Keyboard.KEY_LCONTROL).inside();
+        this.keys().register(IKey.lang("mclib.gui.keyframes.context.maximize"), GLFW.GLFW_KEY_HOME, this::resetView).inside();
+        this.keys().register(IKey.lang("mclib.gui.keyframes.context.select_all"), GLFW.GLFW_KEY_A, this::selectAll).held(GLFW.GLFW_KEY_LEFT_CONTROL).inside();
     }
 
     protected abstract T createElement(Minecraft mc);
@@ -230,7 +224,7 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
 
             for (String key : tag.getKeySet())
             {
-                NBTTagList list = tag.getTagList(key, Constants.NBT.TAG_COMPOUND);
+                ListTag list = tag.getTagList(key, Constants.NBT.TAG_COMPOUND);
 
                 for (int i = 0, c = list.tagCount(); i < c; i++)
                 {
@@ -274,7 +268,7 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
 
             if (c > 0)
             {
-                NBTTagList list = new NBTTagList();
+                ListTag list = new ListTag();
 
                 for (int i = 0; i < c; i++)
                 {
@@ -408,6 +402,7 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
         this.graph.setEasing(KeyframeEasing.values()[this.easing.getValue()]);
     }
 
+    @SuppressWarnings("null")
     public void fillData(Keyframe frame)
     {
         boolean show = frame != null && this.graph.which != Selection.NOT_SELECTED;

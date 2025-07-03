@@ -1,14 +1,13 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
-import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiViewportStack;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.IViewportStack;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollArea;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollDirection;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+
 
 /**
  * Scroll area GUI class
@@ -152,16 +151,16 @@ public class GuiScrollElement extends GuiElement implements IViewport
 
         GuiDraw.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, context);
 
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
 
         /* Translate the contents using OpenGL (scroll) */
         if (this.scroll.direction == ScrollDirection.VERTICAL)
         {
-            GlStateManager.translate(0, -this.scroll.scroll, 0);
+            RenderSystem.translate(0, -this.scroll.scroll, 0);
         }
         else
         {
-            GlStateManager.translate(-this.scroll.scroll, 0, 0);
+            RenderSystem.translate(-this.scroll.scroll, 0, 0);
         }
 
         this.apply(context);
@@ -172,7 +171,7 @@ public class GuiScrollElement extends GuiElement implements IViewport
         this.postDraw(context);
         this.unapply(context);
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
         this.scroll.drawScrollbar();
 

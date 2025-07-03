@@ -8,6 +8,7 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Elements;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
+
 import net.minecraft.client.Minecraft;
 
 import java.util.function.Supplier;

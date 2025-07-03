@@ -24,7 +24,7 @@
       "projectName": "mclib",
       "cwd": "${workspaceFolder}\\run-data",
       "vmArgs": "-Dforge.logging.console.level\u003ddebug -Dforge.logging.markers\u003dREGISTRIES -Djava.net.preferIPv6Addresses\u003dsystem",
-      "args": "--launchTarget forge_userdev_data --assetIndex 24 --assetsDir C:\\Users\\gumbr\\.gradle\\caches\\forge_gradle\\assets --gameDir . --mod examplemod --all --output \"C:\\Users\\gumbr\\source\\repos\\New folder\\mclib\\src\\generated\\resources\" --existing \"C:\\Users\\gumbr\\source\\repos\\New folder\\mclib\\src\\main\\resources\"",
+      "args": "--launchTarget forge_userdev_data --assetIndex 24 --assetsDir C:\\Users\\gumbr\\.gradle\\caches\\forge_gradle\\assets --gameDir . --mod examplemod --all --output C:\\Users\\gumbr\\source\\repos\\New_folder\\mclib\\src\\generated\\resources --existing C:\\Users\\gumbr\\source\\repos\\New_folder\\mclib\\src\\main\\resources",
       "env": {
         "MOD_CLASSES": "${workspaceFolder}\\build\\sourcesSets\\main",
         "MCP_MAPPINGS": "official_1.21.5"

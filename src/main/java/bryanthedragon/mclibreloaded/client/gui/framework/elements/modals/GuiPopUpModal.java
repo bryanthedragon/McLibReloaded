@@ -8,11 +8,10 @@ import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.Interpolations;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
 import bryanthedragon.mclibreloaded.utils.Timer;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
+
 import org.lwjgl.opengl.GL11;
 
 public class GuiPopUpModal extends GuiModal
@@ -88,9 +87,9 @@ public class GuiPopUpModal extends GuiModal
         this.area.x = this.x0;
         this.area.y = this.y0;
 
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0);
+        RenderSystem.enableBlend();
+        RenderSystem.tryBlendFuncSeparate(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA, RenderSystem.SourceFactor.ONE, RenderSystem.DestFactor.ZERO);
+        RenderSystem.alphaFunc(GL11.GL_GREATER, 0);
 
         int shadowAlpha = (int)(this.shadowAlpha * 255F) << 24;
         int textAlpha = (int)(this.textAlpha * 255F) << 24;
@@ -138,7 +137,7 @@ public class GuiPopUpModal extends GuiModal
             this.defaultColors();
         }
 
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+        RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F);
     }
 
     public void defaultColors()

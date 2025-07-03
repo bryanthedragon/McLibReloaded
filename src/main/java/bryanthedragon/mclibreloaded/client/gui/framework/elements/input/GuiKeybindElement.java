@@ -8,6 +8,7 @@ import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.values.ValueInt;
 import bryanthedragon.mclibreloaded.config.values.ValueInt.Subtype;
 import bryanthedragon.mclibreloaded.utils.Keys;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
@@ -15,7 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 public class GuiKeybindElement extends GuiElement
 {
@@ -92,9 +93,9 @@ public class GuiKeybindElement extends GuiElement
             }
             else
             {
-                if (context.keyCode == Keyboard.KEY_ESCAPE)
+                if (context.keyCode == GLFW.GLFW_KEY_ESCAPE)
                 {
-                    this.keybind = Keyboard.KEY_NONE;
+                    this.keybind = GLFW.GLFW_KEY_NONE;
                 }
                 else
                 {

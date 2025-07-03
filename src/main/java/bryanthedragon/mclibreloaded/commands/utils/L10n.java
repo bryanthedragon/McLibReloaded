@@ -1,10 +1,8 @@
 package bryanthedragon.mclibreloaded.commands.utils;
 
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 
 /**
  * Localization utils
@@ -16,9 +14,9 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class L10n
 {
-    public static String ERROR_MARKER = "§4(§cX§4)§r ";
-    public static String SUCCESS_MARKER = "§2(§aV§2)§r ";
-    public static String INFO_MARKER = "§9(§bi§9)§r ";
+    public static final Component ERROR_MARKER = Component.literal("(X)").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD);
+    public static final Component SUCCESS_MARKER = Component.literal("(V)").withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD);
+    public static final Component INFO_MARKER = Component.literal("(i)").withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.BOLD);
 
     private final String id;
 
@@ -30,87 +28,78 @@ public class L10n
     /**
      * Send a translated message to player
      */
-    public void send(ICommandSender sender, String key, Object... objects)
+    public void send(CommandSourceStack sender, String key, Object... objects)
     {
-        sender.sendMessage(new TextComponentTranslation(key, objects));
+        sender.sendSuccess(() -> Component.translatable(key, objects), false);
     }
 
     /**
      * Send a translated message to player
      */
-    public void sendColored(ICommandSender sender, TextFormatting color, String key, Object... objects)
+    public void sendColored(CommandSourceStack sender,ChatFormatting color, String key, Object... objects)
     {
-        ITextComponent text = new TextComponentTranslation(key, objects);
-        text.getStyle().setColor(color);
-
-        sender.sendMessage(text);
+        Component text = Component.translatable(key, objects);
+        sender.sendSuccess(() -> text, false);
     }
 
     /**
      * Send error message to the sender
      */
-    public void error(ICommandSender sender, String key, Object... objects)
+    public void error(CommandSourceStack sender, String key, Object... objects)
     {
-        this.sendWithMarker(sender, ERROR_MARKER, this.id + ".error." + key, objects);
+        this.sendWithMarker(sender, String.valueOf(ERROR_MARKER), this.id + ".error." + key, objects);
     }
 
     /**
      * Get error message
      */
-    public ITextComponent error(String key, Object... objects)
+    public Component error(String key, Object... objects)
     {
-        return this.messageWithMarker(ERROR_MARKER, this.id + ".error." + key, objects);
+        return this.messageWithMarker(String.valueOf(ERROR_MARKER), this.id + ".error." + key, objects);
     }
 
     /**
      * Send success message to the sender
      */
-    public void success(ICommandSender sender, String key, Object... objects)
+    public void success(CommandSourceStack sender, String key, Object... objects)
     {
-        this.sendWithMarker(sender, SUCCESS_MARKER, this.id + ".success." + key, objects);
+        this.sendWithMarker(sender, String.valueOf(SUCCESS_MARKER), this.id + ".success." + key, objects);
     }
 
     /**
      * Get success message
      */
-    public ITextComponent success(String key, Object... objects)
+    public Component success(String key, Object... objects)
     {
-        return this.messageWithMarker(SUCCESS_MARKER, this.id + ".success." + key, objects);
+        return this.messageWithMarker(String.valueOf(SUCCESS_MARKER), this.id + ".success." + key, objects);
     }
 
     /**
      * Send informing message to the sender
      */
-    public void info(ICommandSender sender, String key, Object... objects)
+    public void info(CommandSourceStack sender, String key, Object... objects)
     {
-        this.sendWithMarker(sender, INFO_MARKER, this.id + ".info." + key, objects);
+        this.sendWithMarker(sender, String.valueOf(INFO_MARKER), this.id + ".info." + key, objects);
     }
 
     /**
      * Get informing message
      */
-    public ITextComponent info(String key, Object... objects)
+    public Component info(String key, Object... objects)
     {
-        return  this.messageWithMarker(INFO_MARKER, this.id + ".info." + key, objects);
+        return  this.messageWithMarker(String.valueOf(INFO_MARKER), this.id + ".info." + key, objects);
     }
 
     /**
      * Send a message with given marker
      */
-    public void sendWithMarker(ICommandSender sender, String marker, String key, Object... objects)
+    public void sendWithMarker(CommandSourceStack sender, String marker, String key, Object... objects)
     {
-        sender.sendMessage(this.messageWithMarker(marker, key, objects));
+        sender.sendSuccess(() -> messageWithMarker(marker, key, objects),false);
     }
 
-    public ITextComponent messageWithMarker(String marker, String key, Object... objects)
+    public Component messageWithMarker(String marker, String key, Object... objects)
     {
-        ITextComponent message = new TextComponentString(marker);
-        ITextComponent string = new TextComponentTranslation(key, objects);
-
-        string.getStyle().setColor(TextFormatting.GRAY);
-
-        message.appendSibling(string);
-
-        return message;
+        return Component.literal(marker).append(Component.translatable(key, objects).withStyle(ChatFormatting.GRAY));
     }
 }

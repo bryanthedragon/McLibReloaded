@@ -2,10 +2,6 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
 import java.util.function.Consumer;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
-
 import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiCirculateElement;
@@ -13,22 +9,14 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiTog
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.Color;
-import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils.Transformation;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils.RotationOrder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
 
 /**
  * Transformation editor GUI
@@ -271,12 +259,12 @@ public class GuiTransformations extends GuiElement
     public GuiContextMenu createContextMenu(GuiContext context)
     {
         GuiSimpleContextMenu menu = new GuiSimpleContextMenu(context.mc);
-        NBTTagList transforms = null;
+        ListTag transforms = null;
 
         try
         {
             CompoundTag tag = JsonToNBT.getTagFromJson("{Transforms:"+ GuiScreen.getClipboardString()+"}");
-            NBTTagList list = tag.getTagList("Transforms", Constants.NBT.TAG_DOUBLE);
+            ListTag list = tag.getTagList("Transforms", Constants.NBT.TAG_DOUBLE);
 
             if (list.tagCount() >= 9)
             {
@@ -290,7 +278,7 @@ public class GuiTransformations extends GuiElement
 
         if (transforms != null)
         {
-            final NBTTagList innerList = transforms;
+            final ListTag innerList = transforms;
 
             menu.action(Icons.PASTE, IKey.lang("mclib.gui.transforms.context.paste"), () -> this.pasteAll(innerList));
             menu.action(Icons.ALL_DIRECTIONS, IKey.lang("mclib.gui.transforms.context.paste_translation"), () -> this.pasteTranslation(innerList));
@@ -305,7 +293,7 @@ public class GuiTransformations extends GuiElement
 
     private void copyTransformations()
     {
-        NBTTagList list = new NBTTagList();
+        ListTag list = new ListTag();
 
         list.appendTag(new NBTTagDouble(this.tx.value));
         list.appendTag(new NBTTagDouble(this.ty.value));
@@ -320,14 +308,14 @@ public class GuiTransformations extends GuiElement
         GuiScreen.setClipboardString(list.toString());
     }
 
-    public void pasteAll(NBTTagList list)
+    public void pasteAll(ListTag list)
     {
         this.pasteTranslation(list);
         this.pasteScale(list);
         this.pasteRotation(list);
     }
 
-    public void pasteTranslation(NBTTagList list)
+    public void pasteTranslation(ListTag list)
     {
         Vector3d translation = this.getVector(list, 0);
 
@@ -336,7 +324,7 @@ public class GuiTransformations extends GuiElement
         this.tz.setValueAndNotify(translation.z);
     }
 
-    public void pasteScale(NBTTagList list)
+    public void pasteScale(ListTag list)
     {
         Vector3d scale = this.getVector(list, 3);
 
@@ -345,7 +333,7 @@ public class GuiTransformations extends GuiElement
         this.sx.setValueAndNotify(scale.x);
     }
 
-    public void pasteRotation(NBTTagList list)
+    public void pasteRotation(ListTag list)
     {
         Vector3d rotation = this.getVector(list, 6);
 
@@ -354,7 +342,7 @@ public class GuiTransformations extends GuiElement
         this.rz.setValueAndNotify(rotation.z);
     }
 
-    private Vector3d getVector(NBTTagList list, int offset)
+    private Vector3d getVector(ListTag list, int offset)
     {
         Vector3d result = new Vector3d();
 

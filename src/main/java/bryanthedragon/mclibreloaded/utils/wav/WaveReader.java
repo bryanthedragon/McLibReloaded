@@ -10,6 +10,13 @@ import java.io.InputStream;
  */
 public class WaveReader extends BinaryReader
 {
+    /**
+     * Reads a WAVE file from the given input stream and returns a Wave object containing the audio data.
+     * 
+     * @param stream the input stream to read from
+     * @return the read Wave object
+     * @throws Exception if there is an error reading the stream
+     */
     public Wave read(InputStream stream) throws Exception
     {
         try
@@ -85,6 +92,14 @@ public class WaveReader extends BinaryReader
         return null;
     }
 
+    /**
+     * Reads a chunk from the input stream and returns its ID and size as a
+     * BinaryChunk object.
+     * 
+     * @param stream the input stream to read from
+     * @return the read chunk
+     * @throws Exception if there is an error reading the stream
+     */
     public BinaryChunk readChunk(InputStream stream) throws Exception
     {
         String id = this.readFourString(stream);

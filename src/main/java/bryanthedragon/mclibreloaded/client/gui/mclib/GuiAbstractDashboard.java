@@ -1,6 +1,5 @@
 package bryanthedragon.mclibreloaded.client.gui.mclib;
 
-import bryanthedragon.mclibreloaded.McLib;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiIconElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
@@ -9,6 +8,7 @@ import bryanthedragon.mclibreloaded.events.RegisterDashboardPanels;
 import bryanthedragon.mclibreloaded.permissions.PermissionUtils;
 import bryanthedragon.mclibreloaded.utils.OpHelper;
 import net.minecraft.client.Minecraft;
+
 import java.util.function.Consumer;
 
 public abstract class GuiAbstractDashboard extends GuiBase
@@ -18,8 +18,6 @@ public abstract class GuiAbstractDashboard extends GuiBase
     public GuiDashboardPanel defaultPanel;
 
     private boolean wasClosed = true;
-    private int opLevel = -1;
-
     public GuiAbstractDashboard(Minecraft mc)
     {
         this.panels = this.createDashboardPanels(mc);
@@ -67,7 +65,7 @@ public abstract class GuiAbstractDashboard extends GuiBase
         super.setWorldAndResolution(mc, width, height);
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unused" })
     private void checkPermissions()
     {
         int newOpLevel = OpHelper.getPlayerOpLevel();
@@ -118,8 +116,6 @@ public abstract class GuiAbstractDashboard extends GuiBase
         {
             this.panels.setPanel(null);
         }
-
-        this.opLevel = newOpLevel;
     }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks)

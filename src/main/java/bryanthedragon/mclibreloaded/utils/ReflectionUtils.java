@@ -1,15 +1,12 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourcePack;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
-import bryanthedragon.mclibreloaded.forge.fml.client.FMLClientHandler;
-import bryanthedragon.mclibreloaded.forge.fml.relauncher.Side;
-import bryanthedragon.mclibreloaded.forge.fml.relauncher.SideOnly;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -37,9 +34,10 @@ public class ReflectionUtils
 
     /**
      * Get texture map from texture manager using reflection API
+     * @param <ITextureObject>
      */
     @SuppressWarnings("unchecked")
-    public static Map<ResourceLocation, ITextureObject> getTextures(TextureManager manager)
+    public static <ITextureObject> Map<ResourceLocation, ITextureObject> getTextures(TextureManager manager)
     {
         if (TEXTURE_MAP == null)
         {
@@ -90,8 +88,9 @@ public class ReflectionUtils
         }
     }
 
+    @SuppressWarnings("unchecked")
     @OnlyIn(Dist.CLIENT)
-    public static boolean registerResourcePack(IResourcePack pack)
+    public static <SimpleReloadableResourceManager, IResourcePack> boolean registerResourcePack(IResourcePack pack)
     {
         try
         {
@@ -100,7 +99,7 @@ public class ReflectionUtils
 
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
             packs.add(pack);
-            IResourceManager manager = Minecraft.getInstance().getResourceManager();
+            ResourceManager manager = Minecraft.getInstance().getResourceManager();
 
             if (manager instanceof SimpleReloadableResourceManager)
             {
@@ -120,6 +119,7 @@ public class ReflectionUtils
     /**
      * Use {@link OptifineHelper} class!
      */
+    @SuppressWarnings("rawtypes")
     @Deprecated
     public static boolean isOptifineShadowPass()
     {
@@ -132,7 +132,10 @@ public class ReflectionUtils
                 SHADOW_PASS = clazz.getDeclaredField("isShadowPass");
             }
             catch (Exception e)
-            {}
+            {
+                e.printStackTrace();
+                SHADOW_PASS = null; // Reset the field if it fails to avoid further issues
+            }
 
             SHADOW_PASS_CHECK = true;
         }
@@ -144,7 +147,10 @@ public class ReflectionUtils
                 return (boolean) SHADOW_PASS.get(null);
             }
             catch (Exception e)
-            {}
+            {
+                e.printStackTrace();
+                SHADOW_PASS = null; // Reset the field if it fails to avoid further issues
+            }
         }
 
         return false;

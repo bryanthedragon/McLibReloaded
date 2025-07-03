@@ -4,19 +4,29 @@ import net.minecraft.client.Minecraft;
 
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.ImmutableList;
 
 public class Keys
 {
-    public static final String[] KEYS = new String[Keyboard.KEYBOARD_SIZE];
-    public static final List<Integer> MODIFIERS = ImmutableList.<Integer>of(Keyboard.KEY_LCONTROL, Keyboard.KEY_LSHIFT, Keyboard.KEY_LMENU, Keyboard.KEY_RCONTROL, Keyboard.KEY_RSHIFT, Keyboard.KEY_RMENU);
+    public static final int KEYBOARD_SIZE = 512;
+    public static final String[] KEYS = new String[KEYBOARD_SIZE];
+    public static final List<Integer> MODIFIERS = ImmutableList.<Integer>of(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_LEFT_ALT, GLFW.GLFW_KEY_RIGHT_CONTROL, GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_RIGHT_ALT);
     public static final String[] MODNAME = new String[] {"Ctrl", "Shift", "Alt"};
 
+    /**
+     * Retrieves the human-readable name for a given GLFW key code.
+     * If the key code is not within the valid range, returns null.
+     * Caches the key name for performance optimization.
+     * If the key is unknown, returns "Unknown key".
+     *
+     * @param key the GLFW key code
+     * @return the human-readable name of the key, or null if out of range
+     */
     public static String getKeyName(int key)
     {
-        if (key < Keyboard.KEY_NONE || key >= Keyboard.KEYBOARD_SIZE)
+        if (key < GLFW.GLFW_KEY_UNKNOWN || key >= KEYBOARD_SIZE)
         {
             return null;
         }
@@ -25,7 +35,8 @@ public class Keys
         if (KEYS[key] == null)
         {
             KEYS[key] = getKey(key);
-            if (KEYS[key] == null) {
+            if (KEYS[key] == null) 
+            {
                 return "Unknown key";
             }
         }
@@ -33,69 +44,75 @@ public class Keys
         return KEYS[key];
     }
 
+    /**
+     * Returns a human-readable name for the given GLFW key code.
+     * The name is cached for performance reasons.
+     * @param key the key code
+     * @return the human-readable name, or null if the key is unknown
+     */
+    @SuppressWarnings("null")
     private static String getKey(int key)
     {
         switch (key)
         {
-            case Keyboard.KEY_MINUS:
+            case GLFW.GLFW_KEY_MINUS:
                 return "-";
-            case Keyboard.KEY_EQUALS:
+            case GLFW.GLFW_KEY_EQUAL:
                 return "=";
-            case Keyboard.KEY_LBRACKET:
+            case GLFW.GLFW_KEY_LEFT_BRACKET:
                 return "[";
-            case Keyboard.KEY_RBRACKET:
+            case GLFW.GLFW_KEY_RIGHT_BRACKET:
                 return "]";
-            case Keyboard.KEY_SEMICOLON:
+            case GLFW.GLFW_KEY_SEMICOLON:
                 return ";";
-            case Keyboard.KEY_APOSTROPHE:
+            case GLFW.GLFW_KEY_APOSTROPHE:
                 return "'";
-            case Keyboard.KEY_BACKSLASH:
+            case GLFW.GLFW_KEY_BACKSLASH:
                 return "\\";
-            case Keyboard.KEY_COMMA:
+            case GLFW.GLFW_KEY_COMMA:
                 return ",";
-            case Keyboard.KEY_PERIOD:
+            case GLFW.GLFW_KEY_PERIOD:
                 return ".";
-            case Keyboard.KEY_SLASH:
+            case GLFW.GLFW_KEY_SLASH:
                 return "/";
-            case Keyboard.KEY_GRAVE:
+            case GLFW.GLFW_KEY_GRAVE_ACCENT:
                 return "`";
-            case Keyboard.KEY_TAB:
+            case GLFW.GLFW_KEY_TAB:
                 return "Tab";
-            case Keyboard.KEY_CAPITAL:
+            case GLFW.GLFW_KEY_CAPS_LOCK:
                 return "Caps Lock";
-            case Keyboard.KEY_LSHIFT:
+            case GLFW.GLFW_KEY_LEFT_SHIFT:
                 return "L. Shift";
-            case Keyboard.KEY_LCONTROL:
+            case GLFW.GLFW_KEY_LEFT_CONTROL:
                 return "L. Ctrl";
-            case Keyboard.KEY_LMENU:
+            case GLFW.GLFW_KEY_LEFT_ALT:
                 return "L. Alt";
-            case Keyboard.KEY_LMETA:
-                return Minecraft.IS_RUNNING_ON_MAC ? "L. Cmd" : "L. Win";
-            case Keyboard.KEY_RSHIFT:
+            case GLFW.GLFW_KEY_LEFT_SUPER:
+                return isMac() ? "L. Cmd" : "L. Win";
+            case GLFW.GLFW_KEY_RIGHT_SHIFT:
                 return "R. Shift";
-            case Keyboard.KEY_RCONTROL:
+            case GLFW.GLFW_KEY_RIGHT_CONTROL:
                 return "R. Ctrl";
-            case Keyboard.KEY_RMENU:
+            case GLFW.GLFW_KEY_RIGHT_ALT:
                 return "R. Alt";
-            case Keyboard.KEY_RMETA:
-                return Minecraft.IS_RUNNING_ON_MAC ? "R. Cmd" : "R. Win";
-            case Keyboard.KEY_DIVIDE:
+            case GLFW.GLFW_KEY_RIGHT_SUPER:
+                return isMac() ? "R. Cmd" : "R. Win";
+            case GLFW.GLFW_KEY_KP_DIVIDE:
                 return "Numpad /";
-            case Keyboard.KEY_MULTIPLY:
+            case GLFW.GLFW_KEY_KP_MULTIPLY:
                 return "Numpad *";
-            case Keyboard.KEY_SUBTRACT:
+            case GLFW.GLFW_KEY_KP_SUBTRACT:
                 return "Numpad -";
-            case Keyboard.KEY_ADD:
+            case GLFW.GLFW_KEY_KP_ADD:
                 return "Numpad +";
-            case Keyboard.KEY_DECIMAL:
+            case GLFW.GLFW_KEY_KP_DECIMAL:
                 return "Numpad .";
         }
 
-        String name = Keyboard.getKeyName(key);
-
-	// Adding this line prevents a null-pointer exception
-	if (name == null) {
-            return null;
+        String name = GLFW.glfwGetKeyName(key,0);
+        if (name != null)
+        {
+            return name;
         }
 
         if (name.length() > 1)
@@ -113,6 +130,25 @@ public class Keys
 
     /* Combo keys */
 
+    /**
+     * Generates a combo key code from a list of held keys and a key code.
+     * <p>
+     * The combo key code is a combination of the key code and the modifiers.
+     * The modifiers are stored in the high-order three bits of the combo key code.
+     * The low-order 29 bits of the combo key code are the key code.
+     * <p>
+     * The modifier index is the position of the modifier in the MODIFIERS list.
+     * The modifier index is used to determine which modifier to set in the combo key code.
+     * <p>
+     * If the key code is a modifier, the modifier is ignored in the combo key code.
+     * If the held keys contain multiple modifiers, the last modifier in the list is used.
+     * <p>
+     * For example, if the key code is GLFW.GLFW_KEY_A and the held keys are GLFW.GLFW_KEY_LEFT_SHIFT and GLFW.GLFW_KEY_LEFT_CONTROL, the combo key code is GLFW.GLFW_KEY_A | (1 << 31 - 0) | (1 << 31 - 1).
+     * <p>
+     * @param held the list of held keys
+     * @param keyCode the key code
+     * @return the combo key code
+     */
     public static int getComboKeyCode(int[] held, int keyCode)
     {
         int comboKey = keyCode;
@@ -134,29 +170,53 @@ public class Keys
         return comboKey;
     }
 
+    /**
+     * A simple test to verify that the combo key generation works as expected.
+     * <p>
+     * This program prints the combo key name for the key combination
+     * RightShift+LeftAlt+LeftControl+RightControl+RightAlt.
+     */
     public static void main(String...args)
     {
-        System.out.println(getComboKeyName(getComboKeyCode(new int[] {Keyboard.KEY_RSHIFT, Keyboard.KEY_LMENU, Keyboard.KEY_LCONTROL, Keyboard.KEY_RCONTROL}, Keyboard.KEY_RMENU)));
+        System.out.println(getComboKeyName(getComboKeyCode(new int[] {GLFW.GLFW_KEY_RIGHT_SHIFT, GLFW.GLFW_KEY_LEFT_ALT, GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_RIGHT_CONTROL}, GLFW.GLFW_KEY_RIGHT_ALT)));
     }
 
+    /**
+     * Extracts the main key from a combo key.
+     * <p>
+     * This method masks the combo key to retrieve the main key part and checks if 
+     * it is within the valid keyboard size. If the key is not valid, it defaults 
+     * to an unknown key.
+     * 
+     * @param comboKey the combo key to extract the main key from
+     * @return the main key extracted from the combo key, or GLFW.GLFW_KEY_UNKNOWN 
+     *         if the key is invalid
+     */
     public static int getMainKey(int comboKey)
     {
         int key = comboKey & 0x1FFFFFFF;
 
-        if (key >= Keyboard.KEYBOARD_SIZE)
+        if (key >= KEYBOARD_SIZE)
         {
-            key = Keyboard.KEY_NONE;
+            key = GLFW.GLFW_KEY_UNKNOWN;
         }
 
         return key;
     }
 
+    /**
+     * Returns a string representation of the given combo key.
+     * <p>
+     * Example: "Ctrl + Shift + Space"
+     * @param comboKey the combo key
+     * @return the string representation of the combo key
+     */
     public static String getComboKeyName(int comboKey)
     {
         StringBuilder builder = new StringBuilder();
         int mainKey = getMainKey(comboKey);
 
-        if (mainKey == Keyboard.KEY_NONE)
+        if (mainKey == GLFW.GLFW_KEY_UNKNOWN)
         {
             return getKeyName(mainKey);
         }
@@ -174,6 +234,13 @@ public class Keys
         return builder.toString();
     }
 
+    /**
+     * Checks if the modifier keys for the specified combo key are currently pressed.
+     * <p>
+     * This is useful for checking if the modifier keys for a given combo key are currently held down.
+     * @param comboKey the combo key to check
+     * @return true if the modifier keys are currently pressed
+     */
     public static boolean checkModifierKeys(int comboKey)
     {
         int index = MODIFIERS.indexOf(getMainKey(comboKey)) % 3;
@@ -194,21 +261,76 @@ public class Keys
         return true;
     }
 
+    /**
+     * Checks if the specified key is currently pressed (or repeating) in the Minecraft window.
+     * <p>
+     * This is a utility method for checking if a key is pressed from various parts of the codebase.
+     * @param key the key to check
+     * @return true if the key is currently pressed (or repeating)
+     */
     public static boolean isKeyDown(int key)
     {
-        if (key == Keyboard.KEY_LSHIFT || key == Keyboard.KEY_RSHIFT)
-        {
-            return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
-        }
-        else if (key == Keyboard.KEY_LCONTROL || key == Keyboard.KEY_RCONTROL)
-        {
-            return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
-        }
-        else if (key == Keyboard.KEY_LMENU || key == Keyboard.KEY_RMENU)
-        {
-            return Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU);
+        long window = Minecraft.getInstance().getWindow().getWindow();
+
+        if (key == GLFW.GLFW_KEY_LEFT_SHIFT || key == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+            return glfwKeyPressed(window, GLFW.GLFW_KEY_LEFT_SHIFT) || glfwKeyPressed(window, GLFW.GLFW_KEY_RIGHT_SHIFT);
+        } else if (key == GLFW.GLFW_KEY_LEFT_CONTROL || key == GLFW.GLFW_KEY_RIGHT_CONTROL) {
+            return glfwKeyPressed(window, GLFW.GLFW_KEY_LEFT_CONTROL) || glfwKeyPressed(window, GLFW.GLFW_KEY_RIGHT_CONTROL);
+        } else if (key == GLFW.GLFW_KEY_LEFT_ALT || key == GLFW.GLFW_KEY_RIGHT_ALT) {
+            return glfwKeyPressed(window, GLFW.GLFW_KEY_LEFT_ALT) || glfwKeyPressed(window, GLFW.GLFW_KEY_RIGHT_ALT);
         }
 
-        return Keyboard.isKeyDown(key);
+        return glfwKeyPressed(window, key);
+    }
+
+    /**
+     * Checks if the specified key is currently pressed (or repeating)
+     * in the specified window.
+     * <p>
+     * This uses GLFW's {@code glfwGetKey} function to query the state of
+     * the key in the specified window.
+     * <p>
+     * Note that this will return true if the key is repeating, not just
+     * if it was initially pressed.
+     * <p>
+     * This is a utility method for checking if a key is pressed from
+     * various parts of the codebase.
+     * @param window the window to check the key in
+     * @param key the key to check
+     * @return true if the key is currently pressed (or repeating)
+     */
+    private static boolean glfwKeyPressed(long window, int key) {
+        int state = GLFW.glfwGetKey(window, key);
+        return state == GLFW.GLFW_PRESS || state == GLFW.GLFW_REPEAT;
+    }
+
+    /**
+     * Checks if the current OS is a Mac.
+     * <p>
+     * This uses the {@code os.name} system property, which is set to
+     * {@code "Mac OS X"} on Macs.
+     * @return true if the current OS is a Mac
+     */
+    private static boolean isMac()
+    {
+        return System.getProperty("os.name").toLowerCase().contains("mac");
+    }
+
+    /**
+     * Returns the GLFW key name for the given key.
+     * <p>
+     * Since GLFW.glfwGetKeyName requires a scancode, and you don't have one, 0 is passed as the scancode.
+     * <p>
+     * This method is not intended to be used, and is only here for debugging purposes.
+     * @param key the key
+     * @return the GLFW key name
+     */
+    @SuppressWarnings("unused")
+    private static String getGlfwKeyName(int key)
+    {
+        // GLFW key names are often obtained by GLFW.glfwGetKeyName, which takes the key and scancode.
+        // Since you don't have a scancode, pass 0
+        String name = GLFW.glfwGetKeyName(key, 0);
+        return name;
     }
 }
