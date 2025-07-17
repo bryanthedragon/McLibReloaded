@@ -18,7 +18,8 @@ import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 
 import net.minecraft.client.Minecraft;
-
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -49,11 +50,11 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
 
     public void setColorValue(String value)
     {
-        this.set(ColorUtils.parseColor(value));
+        this.setBaseValue(ColorUtils.parseColor(value));
     }
 
-    @Override
-    protected Integer numberToValue(Number number) {
+    protected Integer numberToValue(Number number) 
+    {
         return number.intValue();
     }
 
@@ -103,52 +104,43 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
     }
 
 
-    @Override
     public void resetServer()
     {
         this.serverValue = null;
     }
 
-    @Override
     protected Integer getNullValue()
     {
         return 0;
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiElement element = new GuiElement(mc);
         GuiLabel label = Elements.label(IKey.lang(this.getLabelKey()), 0).anchor(0, 0.5F);
-
         element.flex().row(0).preferred(0).height(20);
         element.add(label);
-
         if (this.subtype == Subtype.COLOR || this.subtype == Subtype.COLOR_ALPHA)
         {
             GuiColorElement color = new GuiColorElement(mc, this);
-
             color.flex().w(90);
             element.add(color.removeTooltip());
         }
         else if (this.subtype == Subtype.KEYBIND || this.subtype == Subtype.COMBOKEY)
         {
             GuiKeybindElement keybind = new GuiKeybindElement(mc, this);
-
             keybind.flex().w(90);
             element.add(keybind.removeTooltip());
         }
         else if (this.subtype == Subtype.MODES)
         {
             GuiCirculateElement button = new GuiCirculateElement(mc, null);
-
             for (IKey key : this.labels)
             {
                 button.addLabel(key);
             }
-
-            button.callback = (b) -> this.set(button.getValue());
+            button.callback = (b) -> this.setBaseValue(button.getValue());
             button.setValue(this.get());
             button.flex().w(90);
             element.add(button);
@@ -156,67 +148,60 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
         else
         {
             GuiTrackpadElement trackpad = new GuiTrackpadElement(mc, this);
-
             trackpad.flex().w(90);
             element.add(trackpad.removeTooltip());
         }
-
         return Arrays.asList(element.tooltip(IKey.lang(this.getCommentKey())));
     }
 
-    @Override
     public void valueFromJSON(JsonElement element)
     {
-        this.set(element.getAsInt());
+        this.setBaseValue(element.getAsInt());
     }
 
-    @Override
     public void valueFromNBT(Tag tag)
     {
-        if (tag instanceof NBTPrimitive)
+        if (tag instanceof IntTag)
         {
-            this.set(((NBTPrimitive) tag).getInt());
+            this.setValue(((IntTag) tag).getId());
         }
     }
 
-    @Override
+    @SuppressWarnings("removal")
     public Tag valueToNBT()
     {
-        return new NBTTagInt(this.value);
+        return new IntTag(this.value);
     }
 
-    @Override
     public boolean parseFromCommand(String value)
     {
         try
         {
             if (this.subtype == Subtype.COLOR || this.subtype == Subtype.COLOR_ALPHA)
             {
-                this.set(ColorUtils.parseColorWithException(value));
+                this.setBaseValue(ColorUtils.parseColorWithException(value));
             }
             else
             {
-                this.set(Integer.parseInt(value));
+                this.setBaseValue(Integer.parseInt(value));
             }
-
             return true;
         }
         catch (Exception e)
-        {}
+        {
 
+        }
         return false;
     }
 
-    @Override
     public void copy(Value value)
     {
         if (value instanceof ValueInt)
         {
-            this.set(((ValueInt) value).value);
+            this.setBaseValue(((ValueInt) value).value);
         }
     }
 
-    @Override
     public void copyServer(Value value)
     {
         if (value instanceof ValueInt)
@@ -225,26 +210,20 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
         }
     }
 
-    @Override
     public void fromBytes(ByteBuf buffer)
     {
         superFromBytes(buffer);
-
         this.defaultValue = buffer.readInt();
         this.min = buffer.readInt();
         this.max = buffer.readInt();
         this.valueFromBytes(buffer);
-
         this.subtype = Subtype.values()[buffer.readInt()];
-
         if (buffer.readBoolean())
         {
             this.labels = new ArrayList<IKey>();
-
             for (int i = 0, c = buffer.readInt(); i < c; i++)
             {
                 IKey key = KeyParser.keyFromBytes(buffer);
-
                 if (key != null)
                 {
                     this.labels.add(key);
@@ -253,23 +232,18 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
         }
     }
 
-    @Override
     public void toBytes(ByteBuf buffer)
     {
         superToBytes(buffer);
-
         buffer.writeInt(this.defaultValue);
         buffer.writeInt(this.min);
         buffer.writeInt(this.max);
         this.valueToBytes(buffer);
-
         buffer.writeInt(this.subtype.ordinal());
         buffer.writeBoolean(this.labels != null);
-
         if (this.labels != null)
         {
             buffer.writeInt(this.labels.size());
-
             for (IKey key : this.labels)
             {
                 KeyParser.keyToBytes(buffer, key);
@@ -277,35 +251,29 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
         }
     }
 
-    @Override
     public void valueFromBytes(ByteBuf buffer)
     {
-        this.set(buffer.readInt());
+        this.setBaseValue(buffer.readInt());
     }
 
-    @Override
     public void valueToBytes(ByteBuf buffer)
     {
         buffer.writeInt(this.value);
     }
 
-    @Override
     public String toString()
     {
         if (this.subtype == Subtype.COLOR || this.subtype == Subtype.COLOR_ALPHA)
         {
             return "#" + Integer.toHexString(this.value);
         }
-
         return Integer.toString(this.value);
     }
 
-    @Override
     public ValueInt copy()
     {
         ValueInt clone = new ValueInt(this.id, this.defaultValue, this.min, this.max);
         clone.value = this.value;
-
         return clone;
     }
 
@@ -325,6 +293,6 @@ public class ValueInt extends GenericNumberValue<Integer> implements IServerValu
         {
             return this.value;
         }
-        return (int) interpolation.interpolate(this.value, (Integer) to.value, factor);
+        return (int) interpolation.interpolateFloat(this.value, (Integer) to.value, factor);
     }
 }

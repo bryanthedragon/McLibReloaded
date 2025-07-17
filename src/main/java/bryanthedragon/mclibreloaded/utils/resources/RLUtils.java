@@ -2,7 +2,7 @@ package bryanthedragon.mclibreloaded.utils.resources;
 
 import com.google.gson.JsonElement;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.utils.resources.location.IWritableLocation;
 import bryanthedragon.mclibreloaded.utils.resources.location.MultiResourceLocation;
 import bryanthedragon.mclibreloaded.utils.resources.location.ResourceLocations;
@@ -38,18 +38,17 @@ public class RLUtils
     private static final ResourceLocation PIXEL = ResourceLocation.fromNamespaceAndPath("mclib", "textures/pixel.png");
 
 
-
     /**
      * Get a stream for a multi-skin.
      *
      * This method will either return a stream for the multi-skin if
-     * {@link bryanthedragon.mclibreloaded.config.values.ConfigValues#multiskinMultiThreaded} is
+     * {@link ConfigValues#multiskinMultiThreaded} is
      * {@code false}, or request the multi-skin to be processed in the
      * multiskin thread if it is {@code true}.
      *
      * @param multi the multi-skin to get a stream for
      * @return a stream for the multi-skin, or an empty optional if
-     *         {@link bryanthedragon.mclibreloaded.config.values.ConfigValues#multiskinMultiThreaded}
+     *         {@link ConfigValues#multiskinMultiThreaded}
      *         is {@code true}
      * @throws IOException if the multi-skin is empty or if the
      *                     multiskin thread is used and the
@@ -65,10 +64,9 @@ public class RLUtils
 
         try
         {
-            if (McLib.multiskinMultiThreaded.get())
+            if (McLibReloaded.multiskinMultiThreaded.get())
             {
                 MultiskinThread.add(multi);
-
                 return Minecraft.getInstance().getResourceManager().getResource(PIXEL);
             }
             else
@@ -112,7 +110,6 @@ public class RLUtils
         {
             path = transformer.transform(path);
         }
-
         return new TextureLocationFinder(path);
     }
 
@@ -130,11 +127,9 @@ public class RLUtils
         {
             String newDomain = transformer.transformDomain(domain, path);
             String newPath = transformer.transformPath(domain, path);
-
             domain = newDomain;
             path = newPath;
         }
-
         return new TextureLocationFinder(domain, path);
     }
 
@@ -153,17 +148,14 @@ public class RLUtils
     public static Comparable<ResourceLocation> createNBTTag(Tag base)
     {
         MultiResourceLocation location = MultiResourceLocation.fromNBTList(base);
-
         if (location != null)
         {
             return (Comparable<ResourceLocation>) location;
         }
-
         if (base instanceof StringTag)
         {
             return ResourceLocations.fromNBTToString(String.valueOf(((StringTag) base).asString()));
         }
-
         return null;
     }
 
@@ -181,17 +173,14 @@ public class RLUtils
     public static MultiResourceLocation createResource(JsonElement element)
     {
         MultiResourceLocation location = MultiResourceLocation.fromJsonList(element);
-
         if (location != null)
         {
             return location;
         }
-
         if (element.isJsonPrimitive())
         {
             return MultiResourceLocation.fromJsonList(ResourceLocations.toJson(element.getAsString()));
         }
-
         return null;
     }
 
@@ -211,7 +200,7 @@ public class RLUtils
     {
         if (path instanceof IWritableLocation)
         {
-            Object copy = ((IWritableLocation) path).copy();
+            Object copy = ((IWritableLocation) path).copier();
 
             if (copy instanceof ResourceLocation)
             {

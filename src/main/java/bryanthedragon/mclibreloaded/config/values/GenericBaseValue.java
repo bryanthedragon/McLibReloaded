@@ -6,8 +6,9 @@ import io.netty.buffer.ByteBuf;
 
 import bryanthedragon.mclibreloaded.utils.ICopy;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
-
+import bryanthedragon.mclibreloaded.utils.resources.textures.TextureLocationFinder;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
  * @author Christian F (Chryfi)
  */
 public abstract class GenericBaseValue<T> extends Value {
-    protected T value;
+    protected ResourceLocation value;
     protected T serverValue;
 
     public GenericBaseValue(String id)
@@ -61,7 +62,7 @@ public abstract class GenericBaseValue<T> extends Value {
         {
             if (this.value instanceof ICopy)
             {
-                return ((ICopy<T>) this.value).copy();
+                return ((ICopy<T>) this.value).copier();
             }
             else
             {
@@ -72,7 +73,7 @@ public abstract class GenericBaseValue<T> extends Value {
         {
             if (this.serverValue instanceof ICopy)
             {
-                return ((ICopy<T>) this.serverValue).copy();
+                return ((ICopy<T>) this.serverValue).copier();
             }
             else
             {
@@ -89,7 +90,7 @@ public abstract class GenericBaseValue<T> extends Value {
      * @param value
      */
     @SuppressWarnings("unchecked")
-    public void set(T value)
+    public void setBaseValue(T value)
     {
         if (value == null)
         {
@@ -99,14 +100,13 @@ public abstract class GenericBaseValue<T> extends Value {
         {
             if (value instanceof ICopy)
             {
-                this.value = ((ICopy<T>) value).copy();
+                this.value = ((ICopy<T>) value).copier();
             }
             else
             {
                 this.value = value;
             }
         }
-
         this.saveLater();
     }
 
@@ -133,10 +133,9 @@ public abstract class GenericBaseValue<T> extends Value {
         {
             return;
         }
-
         try
         {
-            this.set((T) value);
+            this.setBaseValue((T) value);
         }
         catch(ClassCastException e)
         {
@@ -194,7 +193,6 @@ public abstract class GenericBaseValue<T> extends Value {
         {
             return true;
         }
-
         return this == obj;
     }
 

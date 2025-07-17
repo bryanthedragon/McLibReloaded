@@ -10,7 +10,7 @@ public class MathUtils
      * @param max the maximum value of the range
      * @return the clamped value
      */
-    public static int clamp(int x, int min, int max)
+    public static int clampInt(int x, int min, int max)
     {
         return x < min ? min : (x > max ? max : x);
     }
@@ -120,7 +120,6 @@ public class MathUtils
     {
         x = x / size;
         y = y / size;
-
         return x + y * width / size;
     }
 
@@ -136,7 +135,6 @@ public class MathUtils
     public static int gridRows(int count, int size, int width)
     {
         double x = count * size / (double) width;
-
         return count <= 0 ? 1 : (int) Math.ceil(x);
     }
 
@@ -151,12 +149,10 @@ public class MathUtils
     {
         final float sign = (prev > current) ? 1 : -1;
         final float add = sign * 2.0F * (float) Math.PI;
-
         while (Math.abs(prev - current) >= Math.PI)
         {
             current += add;
         }
-
         return current;
     }
 }

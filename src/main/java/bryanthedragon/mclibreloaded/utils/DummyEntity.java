@@ -50,25 +50,21 @@ public class DummyEntity extends EntityLivingBase
         }
     }
 
-    @Override
     public Iterable<ItemStack> getArmorInventoryList()
     {
         return Arrays.asList(this.held);
     }
 
-    @Override
     public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn)
     {
         return this.held[slotIn.getSlotIndex()];
     }
 
-    @Override
     public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack)
     {
         this.held[slotIn.getSlotIndex()] = stack;
     }
 
-    @Override
     public EnumHandSide getPrimaryHand()
     {
         return EnumHandDist.RIGHT;

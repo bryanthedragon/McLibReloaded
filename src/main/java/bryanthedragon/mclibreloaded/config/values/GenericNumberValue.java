@@ -5,6 +5,8 @@ import com.google.gson.JsonPrimitive;
 
 import bryanthedragon.mclibreloaded.utils.MathUtils;
 
+import java.util.Optional;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -44,7 +46,6 @@ public abstract class GenericNumberValue<T extends Number & Comparable<T>> exten
         this.reset();
     }
 
-    @Override
     public void setValue(Object value)
     {
         if (value == null)
@@ -53,7 +54,7 @@ public abstract class GenericNumberValue<T extends Number & Comparable<T>> exten
         }
 
         if (value instanceof Number) {
-            this.set(this.numberToValue((Number) value));
+            this.setBaseValue(this.numberToValue((Number) value));
         }
     }
 
@@ -63,11 +64,9 @@ public abstract class GenericNumberValue<T extends Number & Comparable<T>> exten
      * The value will be clamped between {@link #min} and {@link #max}
      * @param value
      */
-    @Override
-    public void set(T value)
+    public void setFloat(T value)
     {
-        this.value = MathUtils.clamp((value == null) ? this.getNullValue() : value, this.min, this.max);
-
+        this.value = MathUtils.clamperRange((value == null) ? this.getNullValue() : value, this.min, this.max);
         this.saveLater();
     }
 
@@ -81,7 +80,6 @@ public abstract class GenericNumberValue<T extends Number & Comparable<T>> exten
         return this.max;
     }
 
-    @Override
     protected abstract T getNullValue();
 
     /**
@@ -89,7 +87,6 @@ public abstract class GenericNumberValue<T extends Number & Comparable<T>> exten
      */
     public abstract boolean isInteger();
 
-    @Override
     public JsonElement valueToJSON()
     {
         return new JsonPrimitive(this.value);

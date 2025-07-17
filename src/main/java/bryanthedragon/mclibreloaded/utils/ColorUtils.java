@@ -83,7 +83,6 @@ public class ColorUtils
     public static void bindColor(int color)
     {
         COLOR.alphaSetter(color, true);
-
         RenderSystem.color(COLOR.r, COLOR.g, COLOR.b, COLOR.a);
     }
 
@@ -99,7 +98,6 @@ public class ColorUtils
     public static int rgbaToInt(float r, float g, float b, float a)
     {
         COLOR.set(r, g, b, a);
-
         return COLOR.getRGBAColor();
     }
 
@@ -150,8 +148,9 @@ public class ColorUtils
             return parseColorWithException(color);
         }
         catch (Exception e)
-        {}
+        {
 
+        }
         return orDefault;
     }
 
@@ -192,23 +191,18 @@ public class ColorUtils
         {
             color = color.substring(1);
         }
-
         if (color.length() == 6 || color.length() == 8)
         {
             if (color.length() == 8)
             {
                 String alpha = color.substring(0, 2);
                 String rest = color.substring(2);
-
                 int a = Integer.parseInt(alpha, 16) << 24;
                 int rgb = Integer.parseInt(rest, 16);
-
                 return a + rgb;
             }
-
             return Integer.parseInt(color, 16);
         }
-
         throw new Exception("Given color \"" + color + "\" can't be parsed!");
     }
 }

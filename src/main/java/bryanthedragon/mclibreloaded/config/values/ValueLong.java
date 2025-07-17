@@ -13,6 +13,9 @@ import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.nbt.Tag;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,13 +39,11 @@ public class ValueLong extends GenericNumberValue<Long> implements IServerValue,
         super(id, defaultValue, min, max);
     }
 
-    @Override
     public void resetServer()
     {
         this.serverValue = null;
     }
 
-    @Override
     protected Long getNullValue()
     {
         return 0L;
@@ -53,75 +54,65 @@ public class ValueLong extends GenericNumberValue<Long> implements IServerValue,
         return true;
     }
 
-    @Override
-    protected Long numberToValue(Number number) {
+    protected Long numberToValue(Number number) 
+    {
         return number.longValue();
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
         GuiElement element = new GuiElement(mc);
         GuiLabel label = Elements.label(IKey.lang(this.getLabelKey()), 0).anchor(0, 0.5F);
-
         element.flex().row(0).preferred(0).height(20);
         element.add(label);
-
         GuiTrackpadElement trackpad = new GuiTrackpadElement(mc, this);
-
         trackpad.flex().w(90);
         element.add(trackpad.removeTooltip());
-
         return Arrays.asList(element.tooltip(IKey.lang(this.getCommentKey())));
     }
 
-    @Override
     public void valueFromJSON(JsonElement element)
     {
-        this.set(element.getAsLong());
+        this.setValue(element.getAsLong());
     }
 
-    @Override
     public void valueFromNBT(Tag tag)
     {
-        if (tag instanceof NBTPrimitive)
+        if (tag instanceof LongTag)
         {
-            this.set(((NBTPrimitive) tag).getLong());
+            this.setValue(((LongTag) tag).asLong());
         }
     }
 
-    @Override
+    @SuppressWarnings("removal")
     public Tag valueToNBT()
     {
-        return new NBTTagLong(this.value);
+        return new LongTag(this.value);
     }
 
-    @Override
     public boolean parseFromCommand(String value)
     {
         try
         {
-            this.set(Long.parseLong(value));
-
+            this.setValue(Long.parseLong(value));
             return true;
         }
         catch (Exception e)
-        {}
+        {
 
+        }
         return false;
     }
 
-    @Override
     public void copy(Value value)
     {
         if (value instanceof ValueLong)
         {
-            this.set(((ValueLong) value).value);
+            this.setValue(((ValueLong) value).value);
         }
     }
 
-    @Override
     public void copyServer(Value value)
     {
         if (value instanceof ValueLong)
@@ -130,50 +121,41 @@ public class ValueLong extends GenericNumberValue<Long> implements IServerValue,
         }
     }
 
-    @Override
     public void fromBytes(ByteBuf buffer)
     {
         superFromBytes(buffer);
-
         this.defaultValue = buffer.readLong();
         this.min = buffer.readLong();
         this.max = buffer.readLong();
         this.valueFromBytes(buffer);
     }
 
-    @Override
     public void toBytes(ByteBuf buffer)
     {
         superToBytes(buffer);
-
         buffer.writeLong(this.defaultValue);
         buffer.writeLong(this.min);
         buffer.writeLong(this.max);
         this.valueToBytes(buffer);
     }
 
-    @Override
     public void valueFromBytes(ByteBuf buffer)
     {
-        this.set(buffer.readLong());
+        this.setValue(buffer.readLong());
     }
 
-    @Override
     public void valueToBytes(ByteBuf buffer)
     {
         buffer.writeLong(this.value);
     }
 
-    @Override
     public ValueLong copy()
     {
         ValueLong clone = new ValueLong(this.id, this.defaultValue, this.min, this.max);
         clone.value = this.value;
-
         return clone;
     }
 
-    @Override
     public String toString()
     {
         return Long.toString(this.value);
@@ -181,8 +163,10 @@ public class ValueLong extends GenericNumberValue<Long> implements IServerValue,
 
     public Long interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
-        if (!(to.value instanceof Long)) return this.value;
-
-        return (long) interpolation.interpolate(this.value, (Long) to.value, factor);
+        if (!(to.value instanceof Long)) 
+        {
+            return this.value;
+        }
+        return (long) interpolation.interpolateDouble(this.value, (Long) to.value, factor);
     }
 }

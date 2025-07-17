@@ -1,7 +1,9 @@
 package bryanthedragon.mclibreloaded.config.values;
 
 import com.google.gson.JsonElement;
+
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiButtonElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTexturePicker;
@@ -9,15 +11,22 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel
 import bryanthedragon.mclibreloaded.client.gui.utils.Elements;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
+import bryanthedragon.mclibreloaded.forge.fml.common.network.ForgeByteBufUtils;
 import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 import bryanthedragon.mclibreloaded.utils.resources.RLUtils;
+import bryanthedragon.mclibreloaded.utils.resources.location.ResourceLocations;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import javax.annotation.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,14 +45,12 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
     public ValueRL(String id, ResourceLocation defaultValue)
     {
         super(id);
-
         this.defaultValue = defaultValue;
     }
 
     /**
      * @return the reference to {@link #value} or {@link #serverValue}.
      */
-    @Override
     public ResourceLocation get()
     {
         return !this.useServer ? this.value : this.serverValue;
@@ -55,33 +62,28 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
      * and it has been used throughout McLib etc., so to avoid any problems, the old implementation is kept
      * @param value
      */
-    @Override
-    public void set(ResourceLocation value)
+    public void setResourceLocation(ResourceLocation value)
     {
         this.value = value;
-
         this.saveLater();
     }
 
-    public void set(String value)
+    public void setString(String value)
     {
-        this.set(RLUtils.create(value));
+        this.setValue(RLUtils.createTextureTransformer(value));
     }
 
-    @Override
     public void resetServer()
     {
         this.useServer = false;
         this.serverValue = null;
     }
 
-    @Override
     public void reset()
     {
-        this.set(RLUtils.clone(this.defaultValue));
+        this.setValue(RLUtils.clone(this.defaultValue));
     }
 
-    @Override
     @OnlyIn(Dist.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel gui)
     {
@@ -93,117 +95,96 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
             {
                 picker = new GuiTexturePicker(mc, null);
             }
-
-            picker.callback = this::set;
+            picker.callback = this::setValue;
             picker.fill(this.value);
             picker.flex().relative(gui).wh(1F, 1F);
             picker.resize();
-
             if (picker.hasParent())
             {
                 picker.removeFromParent();
             }
-
             gui.add(picker);
         });
-
         pick.flex().w(90);
-
         element.flex().row(0).preferred(0).height(20);
         element.add(label, pick);
-
         return Arrays.asList(element.tooltip(IKey.lang(this.getCommentKey())));
     }
 
-    @Override
     public void valueFromJSON(JsonElement element)
     {
-        this.value = RLUtils.create(element);
+        this.value = (ResourceLocation) ResourceLocations.fromJson(element);
     }
 
-    @Override
     public JsonElement valueToJSON()
     {
-        return RLUtils.writeJson(this.value);
+        return ResourceLocations.toJson(this.value);
     }
 
-    @Override
     public void valueFromNBT(Tag tag)
     {
-        this.set(RLUtils.create(tag));
+        this.setValue(RLUtils.createNBTTag(tag));
     }
 
-    @Override
     @Nullable
     public Tag valueToNBT()
     {
-        return RLUtils.writeNbt(this.value);
+        return ResourceLocations.toNBT(this.value);
     }
 
-    @Override
     public boolean parseFromCommand(String value)
     {
-        this.set(RLUtils.create(value));
-
+        this.setValue(RLUtils.createTextureTransformer(value));
         return true;
     }
 
-    @Override
     public void copy(Value value)
     {
         if (value instanceof ValueRL)
         {
-            this.value = RLUtils.clone(((ValueRL) value).value);
+            this.value = (ResourceLocation) RLUtils.clone(((ValueRL) value).value);
         }
     }
 
-    @Override
     public void copyServer(Value value)
     {
         if (value instanceof ValueRL)
         {
             this.useServer = true;
-            this.serverValue = RLUtils.clone(((ValueRL) value).value);
+            this.serverValue = (ResourceLocation) RLUtils.clone(((ValueRL) value).value);
         }
     }
 
-    @Override
     public void fromBytes(ByteBuf buffer)
     {
         superFromBytes(buffer);
-
         this.value = this.readRL(buffer);
         this.defaultValue = this.readRL(buffer);
     }
 
+    @SuppressWarnings("null")
     private ResourceLocation readRL(ByteBuf buffer)
     {
         if (buffer.readBoolean())
         {
-            CompoundTag tag = ByteBufUtils.readTag(buffer);
-
-            return RLUtils.create(tag.getTag("RL"));
+            CompoundTag tag = ForgeByteBufUtils.readTag(buffer);
+            return (ResourceLocation) RLUtils.createNBTTag(tag.get("RL"));
         }
-
         return null;
     }
 
-    @Override
     public void toBytes(ByteBuf buffer)
     {
         superToBytes(buffer);
-
         this.writeRL(buffer, this.value);
         this.writeRL(buffer, this.defaultValue);
     }
 
-    @Override
     public void valueFromBytes(ByteBuf buffer)
     {
         this.value = this.readRL(buffer);
     }
 
-    @Override
     public void valueToBytes(ByteBuf buffer)
     {
         this.writeRL(buffer, this.value);
@@ -212,41 +193,35 @@ public class ValueRL extends GenericValue<ResourceLocation> implements IServerVa
     private void writeRL(ByteBuf buffer, ResourceLocation rl)
     {
         buffer.writeBoolean(rl != null);
-
         if (rl != null)
         {
             CompoundTag tag = new CompoundTag();
-
-            tag.setTag("RL", RLUtils.writeNbt(rl));
-            ByteBufUtils.writeTag(buffer, tag);
+            tag.setTag("RL", ResourceLocations.toNBT(rl));
+            ForgeByteBufUtils.writeTag(buffer, tag);
         }
     }
 
-    @Override
     public String toString()
     {
         return this.value == null ? "" : this.value.toString();
     }
 
-    @Override
     public ValueRL copy()
     {
         ValueRL clone = new ValueRL(this.id);
-        clone.value = RLUtils.clone(this.value);
-        clone.defaultValue = RLUtils.clone(this.defaultValue);
-        clone.serverValue = RLUtils.clone(this.serverValue);
+        clone.value = (ResourceLocation) RLUtils.clone(this.value);
+        clone.defaultValue = (ResourceLocation) RLUtils.clone(this.defaultValue);
+        clone.serverValue = (ResourceLocation) RLUtils.clone(this.serverValue);
         clone.useServer = this.useServer;
-
         return clone;
     }
 
-    @Override
     public ResourceLocation interpolate(Interpolation interpolation, GenericBaseValue<?> to, float factor)
     {
         if (!(to.value instanceof ResourceLocation)) 
         {
-            return RLUtils.clone(this.value);
+            return (ResourceLocation) RLUtils.clone(this.value);
         }
-        return factor == 1F ? RLUtils.clone((ResourceLocation) to.value) : RLUtils.clone(this.value);
+        return factor == 1F ? (ResourceLocation) RLUtils.clone((ResourceLocation) to.value) : (ResourceLocation) RLUtils.clone(this.value);
     }
 }

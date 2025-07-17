@@ -168,7 +168,7 @@ public class WavePlayer
      */
     public void setPlaybackPosition(float seconds)
     {
-        seconds = MathUtils.clamp(seconds, 0, this.duration);
+        seconds = MathUtils.clamperFloat(seconds, 0, this.duration);
 
         AL10.alSourcef(this.source, AL11.AL_SEC_OFFSET, seconds);
     }

@@ -92,7 +92,7 @@ public class Color implements ICopy<Color>
      * @param color the color to set, format of 0xAARRGGBB
      * @return this
      */
-    public Color set(int color)
+    public Color setInt(int color)
     {
         return this.alphaSetter(color, true);
     }
@@ -108,7 +108,6 @@ public class Color implements ICopy<Color>
     public Color alphaSetter(int color, boolean alpha)
     {
         this.set((color >> 16 & 0xff) / 255F, (color >> 8 & 0xff) / 255F, (color & 0xff)  / 255F, alpha ? (color >> 24 & 0xff)  / 255F : 1F);
-
         return this;
     }
 
@@ -120,9 +119,7 @@ public class Color implements ICopy<Color>
     public Color copier()
     {
         Color copy = new Color();
-
         copy.copy(this);
-
         return copy;
     }
 
@@ -146,10 +143,10 @@ public class Color implements ICopy<Color>
      */
     public int getRGBAColor()
     {
-        float r = MathUtils.clamp(this.r, 0, 1);
-        float g = MathUtils.clamp(this.g, 0, 1);
-        float b = MathUtils.clamp(this.b, 0, 1);
-        float a = MathUtils.clamp(this.a, 0, 1);
+        float r = MathUtils.clamperFloat(this.r, 0, 1);
+        float g = MathUtils.clamperFloat(this.g, 0, 1);
+        float b = MathUtils.clamperFloat(this.b, 0, 1);
+        float a = MathUtils.clamperFloat(this.a, 0, 1);
 
         return ((int) (a * 255) << 24) | ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
     }

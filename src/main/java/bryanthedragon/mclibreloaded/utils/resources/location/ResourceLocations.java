@@ -1,7 +1,5 @@
 package bryanthedragon.mclibreloaded.utils.resources.location;
 
-import java.util.Optional;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
@@ -67,12 +65,10 @@ public class ResourceLocations
         {
             return multi;
         }
-
         if (element.isJsonPrimitive())
         {
             return fromJsonToString(element.getAsString());
         }
-
         return null;
     }
 
@@ -134,23 +130,24 @@ public class ResourceLocations
     }
 
     // To NBT Tag from ResourceLocation
-    public static Tag toNBT(ResourceLocation location)
+    public static Tag toNBT(Object location)
     {
         if (location instanceof IWritableLocation writable) 
         {
             return writable.ToNbt();
         }
-        else if (location != null)
+        else if (location instanceof ResourceLocation rl)
         {
-            return StringTag.valueOf(location.toString());
+            return StringTag.valueOf(rl.toString());
         }
         return null;
     }
 
     // To JsonElement from ResourceLocation
-    public static JsonElement toJson(String location)
+    public static JsonElement toJson(Object location)
     {
-        if (location instanceof IWritableLocation writable) {
+        if (location instanceof IWritableLocation writable) 
+        {
             return writable.ToJson();
         }
         else if (location != null)

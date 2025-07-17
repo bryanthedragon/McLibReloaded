@@ -18,7 +18,7 @@ public class FilteredResourceLocation implements IWritableLocation<FilteredResou
 {
     public static final int DEFAULT_COLOR = 0xffffffff;
 
-    public ResourceLocation path;
+    public TextureLocationFinder path;
 
     public boolean autoSize = true;
     public int sizeW;
@@ -151,7 +151,7 @@ public class FilteredResourceLocation implements IWritableLocation<FilteredResou
     {
         if (nbt instanceof StringTag)
         {
-            this.path = (ResourceLocation) RLUtils.createNBTTag(nbt);
+            this.path = (TextureLocationFinder) RLUtils.createNBTTag(nbt);
 
             return;
         }
@@ -162,52 +162,52 @@ public class FilteredResourceLocation implements IWritableLocation<FilteredResou
 
         if (tag.contains("Color"))
         {
-            this.color = tag.getInt("Color");
+            this.color = tag.getInt("Color").orElse(DEFAULT_COLOR);
         }
 
         if (tag.contains("Scale"))
         {
-            this.scale = tag.getFloat("Scale");
+            this.scale = tag.getFloat("Scale").orElse(1F);
         }
 
         if (tag.contains("ScaleToLargest"))
         {
-            this.scaleToLargest = tag.getBoolean("ScaleToLargest");
+            this.scaleToLargest = tag.getBoolean("ScaleToLargest").orElse(false);
         }
 
         if (tag.contains("ShiftX"))
         {
-            this.shiftX = tag.getInt("ShiftX");
+            this.shiftX = tag.getInt("ShiftX").orElse(0);
         }
 
         if (tag.contains("ShiftY"))
         {
-            this.shiftY = tag.getInt("ShiftY");
+            this.shiftY = tag.getInt("ShiftY").orElse(0);
         }
 
         if (tag.contains("Pixelate"))
         {
-            this.pixelate = tag.getInt("Pixelate");
+            this.pixelate = tag.getInt("Pixelate").orElse(1);
         }
 
         if (tag.contains("Erase"))
         {
-            this.erase = tag.getBoolean("Erase");
+            this.erase = tag.getBoolean("Erase").orElse(false);
         }
 
         if (tag.contains("AutoSize"))
         {
-            this.autoSize = tag.getBoolean("AutoSize");
+            this.autoSize = tag.getBoolean("AutoSize").orElse(true);
         }
 
         if (tag.contains("SizeW"))
         {
-            this.sizeW = tag.getInt("SizeW");
+            this.sizeW = tag.getInt("SizeW").orElse(0);
         }
 
         if (tag.contains("SizeH"))
         {
-            this.sizeH = tag.getInt("SizeH");
+            this.sizeH = tag.getInt("SizeH").orElse(0);
         }
     }
 
@@ -215,7 +215,7 @@ public class FilteredResourceLocation implements IWritableLocation<FilteredResou
     {
         if (element.isJsonPrimitive())
         {
-            this.path = ResourceLocations.fromJson(element);
+            this.path = (TextureLocationFinder) ResourceLocations.fromJson(element);
 
             return;
         }
@@ -320,7 +320,7 @@ public class FilteredResourceLocation implements IWritableLocation<FilteredResou
         return RLUtils.clone(this.path);
     }
 
-    public FilteredResourceLocation copy()
+    public FilteredResourceLocation copier()
     {
         return FilteredResourceLocation.from(this.ToNbt());
     }

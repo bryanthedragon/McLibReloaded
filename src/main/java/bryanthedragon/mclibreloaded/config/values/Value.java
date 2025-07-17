@@ -113,7 +113,6 @@ public class Value implements IByteBufSerializable, ICopy<Value>
     public Value setParent(Value parent)
     {
         this.parent = parent;
-
         return this;
     }
 
@@ -128,12 +127,9 @@ public class Value implements IByteBufSerializable, ICopy<Value>
             {
                 strings.add(value.id);
             }
-
             value = value.parent;
         }
-
         Collections.reverse(strings);
-
         return String.join(".", strings);
     }
 
@@ -142,14 +138,12 @@ public class Value implements IByteBufSerializable, ICopy<Value>
     public Value invisible()
     {
         this.visible = false;
-
         return this;
     }
 
     public Value clientSide()
     {
         this.clientSide = true;
-
         return this;
     }
 
@@ -159,14 +153,12 @@ public class Value implements IByteBufSerializable, ICopy<Value>
         {
             value.markClientSide();
         }
-
         return this.clientSide();
     }
 
     public Value syncable()
     {
         this.syncable = true;
-
         return this;
     }
 
@@ -174,13 +166,11 @@ public class Value implements IByteBufSerializable, ICopy<Value>
     {
         boolean visible = true;
         Value value = this;
-
         while (value != null)
         {
             visible = visible && value.visible;
             value = value.parent;
         }
-
         return visible;
     }
 
@@ -188,13 +178,11 @@ public class Value implements IByteBufSerializable, ICopy<Value>
     {
         boolean visible = false;
         Value value = this;
-
         while (value != null)
         {
             visible = visible || value.clientSide;
             value = value.parent;
         }
-
         return visible;
     }
 
@@ -209,7 +197,6 @@ public class Value implements IByteBufSerializable, ICopy<Value>
         {
             return true;
         }
-
         for (Value value : this.children.values())
         {
             if (value.hasSyncable())
@@ -217,7 +204,6 @@ public class Value implements IByteBufSerializable, ICopy<Value>
                 return true;
             }
         }
-
         return false;
     }
 
@@ -236,7 +222,6 @@ public class Value implements IByteBufSerializable, ICopy<Value>
         if (element.isJsonObject())
         {
             JsonObject object = element.getAsJsonObject();
-
             if (object.has("value") && object.has("subvalues") && object.size() == 2)
             {
                 this.childrenFromJSON(object.get("subvalues").getAsJsonObject());
@@ -269,7 +254,9 @@ public class Value implements IByteBufSerializable, ICopy<Value>
     }
 
     protected void valueFromJSON(JsonElement element)
-    {}
+    {
+
+    }
 
     public JsonElement toJSON()
     {
@@ -289,12 +276,9 @@ public class Value implements IByteBufSerializable, ICopy<Value>
         {
             return child;
         }
-
         JsonObject container = new JsonObject();
-
         container.add("value", child);
         container.add("subvalues", object);
-
         return container;
     }
 
@@ -307,19 +291,17 @@ public class Value implements IByteBufSerializable, ICopy<Value>
      * @return a Value instance with the same {@link #id} and containing copies of the {@link #children} values
      */
     @Override
-    public Value copy()
+    public Value copier()
     {
         Value copy = new Value(this.id);
 
         for (Map.Entry<String, Value> entry : this.children.entrySet())
         {
-            copy.children.put(entry.getKey(), entry.getValue().copy());
+            copy.children.put(entry.getKey(), entry.getValue().copier());
         }
-
         return copy;
     }
 
-    @Override
     public void copy(Value category)
     {
         this.superCopy(category);
@@ -370,7 +352,6 @@ public class Value implements IByteBufSerializable, ICopy<Value>
         for (int i = 0, c = buffer.readInt(); i < c; i++)
         {
             Value value = ConfigManager.fromBytes(buffer);
-
             if (value != null)
             {
                 value.setConfig(this.config);
@@ -394,9 +375,7 @@ public class Value implements IByteBufSerializable, ICopy<Value>
     {
         buffer.writeBoolean(this.visible);
         buffer.writeBoolean(this.clientSide);
-
         buffer.writeInt(this.children.size());
-
         for (Map.Entry<String, Value> entry : this.children.entrySet())
         {
             ConfigManager.toBytes(buffer, entry.getValue());

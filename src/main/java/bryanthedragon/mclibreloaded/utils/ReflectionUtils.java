@@ -1,16 +1,13 @@
 package bryanthedragon.mclibreloaded.utils;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.Map;
 
 public class ReflectionUtils
@@ -88,32 +85,33 @@ public class ReflectionUtils
         }
     }
 
-    @SuppressWarnings("unchecked")
     @OnlyIn(Dist.CLIENT)
     public static <SimpleReloadableResourceManager, IResourcePack> boolean registerResourcePack(IResourcePack pack)
     {
-        try
-        {
-            Field field = FMLClientHandler.class.getDeclaredField("resourcePackList");
-            field.setAccessible(true);
-
-            List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
-            packs.add(pack);
-            ResourceManager manager = Minecraft.getInstance().getResourceManager();
-
-            if (manager instanceof SimpleReloadableResourceManager)
-            {
-                ((SimpleReloadableResourceManager) manager).reloadResourcePack(pack);
-            }
-
-            return false;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
         return false;
+        // try
+        // {
+        //     Field field = FMLClientHandler.class.getDeclaredField("resourcePackList");
+        //     field.setAccessible(true);
+
+        //     List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
+        //     packs.add(pack);
+        //     ResourceManager manager = Minecraft.getInstance().getResourceManager();
+
+        //     if (manager instanceof SimpleReloadableResourceManager)
+        //     {
+        //         // Use the correct method to reload resource packs
+        //         ((SimpleReloadableResourceManager) manager).reloadResources();
+        //     }
+
+        //     return false;
+        // }
+        // catch (Exception e)
+        // {
+        //     e.printStackTrace();
+        // }
+
+        // return false;
     }
 
     /**

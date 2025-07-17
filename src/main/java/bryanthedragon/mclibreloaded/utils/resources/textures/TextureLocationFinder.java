@@ -15,15 +15,13 @@ public class TextureLocationFinder
     public TextureLocationFinder(String domain, String path)
     {
         super();
-
-        this.set(domain, path);
+        this.setDomainPath(domain, path);
     }
 
     public TextureLocationFinder(String path)
     {
         super();
-
-        this.set(path);
+        this.setLocation(path);
     }
 
     /**
@@ -37,13 +35,12 @@ public class TextureLocationFinder
      *
      * @param location the location to set the domain and path to
      */
-    public void set(String location)
+    public void setLocation(String location)
     {
         String[] split = location.split(":");
         String domain = split.length > 0 ? split[0] : "minecraft";
         String path = split.length > 1 ? split[1] : "";
-
-        this.set(domain, path);
+        this.setDomainPath(domain, path);
     }
 
     /**
@@ -59,11 +56,10 @@ public class TextureLocationFinder
      * @param domain the domain to set
      * @param path the path to set
      */
-    public void set(String domain, String path)
+    public void setDomainPath(String domain, String path)
     {
         /* Guess what it does */
         Field[] fields = ResourceLocation.class.getDeclaredFields();
-
         for (Field field : fields)
         {
             try
@@ -75,7 +71,6 @@ public class TextureLocationFinder
                 e.printStackTrace();
             }
         }
-
         try
         {
             fields[0].set(this, domain);
@@ -101,7 +96,6 @@ public class TextureLocationFinder
     protected void unlockField(Field field) throws Exception
     {
         field.setAccessible(true);
-
         Field modifiers = Field.class.getDeclaredField("modifiers");
         modifiers.setAccessible(true);
         modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);

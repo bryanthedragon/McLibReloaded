@@ -271,7 +271,6 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
     /**
      * Calls {@link GenericBaseValue#valueFromBytes(ByteBuf)}
      */
-    @Override
     public void fromBytes(ByteBuf buffer)
     {
         for (Value<?> value : this.pool.values())
@@ -283,7 +282,6 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
     /**
      * Calls {@link GenericBaseValue#valueToBytes(ByteBuf)}
      */
-    @Override
     public void toBytes(ByteBuf buffer)
     {
         for (Value<?> value : this.pool.values())
@@ -294,7 +292,6 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
 
 
     @SuppressWarnings("null")
-    @Override
     public void fromNBT(CompoundTag tag)
     {
         for (Map.Entry<String, String> entry : this.nbtMap.entrySet())
@@ -315,7 +312,6 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
      * Serializes always, if the value has been registered with alwaysWrite flag true.
      */
     @SuppressWarnings({ "rawtypes", "null" })
-    @Override
     public CompoundTag toNBT(CompoundTag tag)
     {
         for (Map.Entry<String, String> entry : this.nbtMap.entrySet())
@@ -440,8 +436,7 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
     /**
      * @return deep copy of this valueSerializer
      */
-    @Override
-    public ValueSerializer copy()
+    public ValueSerializer copier()
     {
         ValueSerializer copy = new ValueSerializer();
         copy.copy(this);
@@ -452,7 +447,6 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
      * Copies the values (deep copy), json and nbt mappings from the specified origin and put them into this.
      * @param origin
      */
-    @Override
     public void copy(ValueSerializer origin)
     {
         this.jsonMap.clear();
@@ -477,10 +471,9 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
         private final GenericBaseValue<T> value;
         private final ValueSerializer serializer;
 
-        @SuppressWarnings("unchecked")
-        public Value(bryanthedragon.mclibreloaded.config.values.Value value, ValueSerializer serializer)
+        public Value(GenericBaseValue<T> value, ValueSerializer serializer)
         {
-            this.value = (GenericBaseValue<T>) value;
+            this.value = value;
             this.serializer = serializer;
         }
 
@@ -534,8 +527,10 @@ public class ValueSerializer implements IByteBufSerializable, INBTSerializable, 
             return this;
         }
 
-        public Value<T> copy(ValueSerializer destinationSerializer) {
-            Value<T> copy = new Value<>(this.value.copy(), destinationSerializer);
+        @SuppressWarnings("unchecked")
+        public Value<T> copy(ValueSerializer destinationSerializer) 
+        {
+            Value<T> copy = new Value<>((GenericBaseValue<T>) this.value.copy(), destinationSerializer);
             copy.json = this.json;
             copy.jsonAlwaysWrite = this.jsonAlwaysWrite;
             copy.nbt = this.nbt;

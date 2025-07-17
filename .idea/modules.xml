@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mclibreloaded.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mclibreloaded.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mclibreloaded.test.iml" filepath="$PROJECT_DIR$/.idea/modules/mclibreloaded.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mclib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mclib.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mclib.test.iml" filepath="$PROJECT_DIR$/.idea/modules/mclib.test.iml" />
     </modules>
   </component>
 </project>

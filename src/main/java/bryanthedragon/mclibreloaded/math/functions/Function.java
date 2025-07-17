@@ -35,15 +35,21 @@ public abstract class Function implements IValue
     }
 
     protected void verifyArgument(int index, IValue value)
-    {}
+    {
+        
+    }
 
     @Override
     public void set(double value)
-    {}
+    {
+
+    }
 
     @Override
     public void set(String value)
-    {}
+    {
+
+    }
 
     /**
      * Get the value of nth argument 

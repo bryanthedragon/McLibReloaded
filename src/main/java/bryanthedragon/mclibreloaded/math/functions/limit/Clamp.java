@@ -20,6 +20,6 @@ public class Clamp extends NNFunction
     @Override
     public double doubleValue()
     {
-        return MathUtils.clamp(this.getArg(0).doubleValue(), this.getArg(1).doubleValue(), this.getArg(2).doubleValue());
+        return MathUtils.clamperDouble(this.getArg(0).doubleValue(), this.getArg(1).doubleValue(), this.getArg(2).doubleValue());
     }
 }
