@@ -1,7 +1,0 @@
-package net.minecraft.world.level.entity;
-
-import java.util.UUID;
-
-public interface UUIDLookup<IdentifiedType extends UniquelyIdentifyable> {
-    IdentifiedType getEntity(UUID p_392533_);
-}
