@@ -1,8 +1,9 @@
 package bryanthedragon.mclibreloaded.commands;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.commands.config.SubCommandConfig;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
+
 import net.minecraft.commands.CommandSourceStack;
 
 public class CommandMcLib extends SubCommandBase
@@ -31,6 +32,6 @@ public class CommandMcLib extends SubCommandBase
     @Override
     public L10n getL10n()
     {
-        return McLib.l10n;
+        return McLibReloaded.l10n;
     }
 }

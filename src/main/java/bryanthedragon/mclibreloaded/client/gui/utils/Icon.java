@@ -1,8 +1,10 @@
 package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -38,7 +40,7 @@ public class Icon
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void render(int x, int y)
+    public void renderer(int x, int y)
     {
         this.render(x, y, 0, 0);
     }

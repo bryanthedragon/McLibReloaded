@@ -1,8 +1,8 @@
 package bryanthedragon.mclibreloaded.client.gui.mclib;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiIconElement;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrackpadElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.text.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiCanvas;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.GuiUtils;
@@ -201,7 +201,7 @@ public class GuiGraphPanel extends GuiDashboardPanel<GuiDashboard>
             RenderSystem.disableTexture2D();
             BufferBuilder builder = Tessellator.getInstance().getBuffer();
 
-            builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+            builder.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
 
             int sub = 40;
             int gap = (max - min) * sub;

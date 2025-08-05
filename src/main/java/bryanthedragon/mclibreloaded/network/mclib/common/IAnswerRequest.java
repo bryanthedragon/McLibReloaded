@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public interface IAnswerRequest<T extends Serializable> extends IMessage
+public interface IAnswerRequest<T extends Serializable>
 {
     void setCallbackID(int callbackID);
     Optional<Integer> getCallbackID();
+    
     /**
      * Get an answer packet with the provided values and callbackID.
      * The generic type of the PacketAnswer needs to equal the type of the provided value.

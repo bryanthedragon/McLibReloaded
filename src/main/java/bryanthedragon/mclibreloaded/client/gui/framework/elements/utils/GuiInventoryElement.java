@@ -1,21 +1,25 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiIconElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiSlotElement;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrackpadElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.text.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollArea;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import java.util.List;
 
@@ -52,20 +56,20 @@ public class GuiInventoryElement extends GuiElement
         RenderSystem.translate(0.0F, 0.0F, 32.0F);
         itemRender.zLevel = z;
 
-        FontRenderer font = null;
-        if (!stack.isEmpty()) font = stack.getItem().getFontRenderer(stack);
-        if (font == null) font = Minecraft.getInstance().fontRenderer;
+        Font font = null;
+        if (!stack.isEmpty()) font = stack.getItem().getFont(stack);
+        if (font == null) font = Minecraft.getInstance().Font;
 
         itemRender.renderItemAndEffectIntoGUI(stack, x, y);
         itemRender.renderItemOverlayIntoGUI(font, stack, x, y, altText);
         itemRender.zLevel = 0.0F;
-        RenderSystem.popMatrix();
+        .popMatrix();
     }
 
     /**
      * Draw item tooltip
      */
-    public static void drawItemTooltip(ItemStack stack, LocalPlayer player, FontRenderer providedFont, int x, int y)
+    public static void drawItemTooltip(ItemStack stack, LocalPlayer player, Font providedFont, int x, int y)
     {
         if (stack.isEmpty())
         {
@@ -73,7 +77,7 @@ public class GuiInventoryElement extends GuiElement
         }
 
         List<String> list = stack.getTooltip(player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
-        FontRenderer font = stack.getItem().getFontRenderer(stack);
+        Font font = stack.getItem().getFont(stack);
 
         for (int i = 0; i < list.size(); ++i)
         {
@@ -87,11 +91,11 @@ public class GuiInventoryElement extends GuiElement
             }
         }   
 
-        GuiScreen screen = Minecraft.getInstance().currentScreen;
+        Screen screen = Minecraft.getInstance().screen;
 
-        net.minecraftforge.fml.client.config.GuiUtils.preItemToolTip(stack);
-        net.minecraftforge.fml.client.config.GuiUtils.drawHoveringText(list, x, y, screen.width, screen.height, -1, font == null ? providedFont : font);
-        net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
+        GuiUtils.preItemToolTip(stack);
+        GuiUtils.drawHoveringText(list, x, y, screen.width, screen.height, -1, font == null ? providedFont : font);
+        GuiUtils.postItemToolTip();
     }
 
     public GuiInventoryElement(Minecraft mc, GuiSlotElement slot)
@@ -279,7 +283,7 @@ public class GuiInventoryElement extends GuiElement
         int border = 0xffffffff;
         int fourth = this.area.y(0.75F);
 
-        if (McLib.enableBorders.get())
+        if (McLibReloaded.enableBorders.get())
         {
             Gui.drawRect(this.area.x + 1, this.area.y, this.area.ex() - 1, this.area.ey(), 0xff000000);
             Gui.drawRect(this.area.x, this.area.y + 1, this.area.ex(), this.area.ey() - 1, 0xff000000);
@@ -348,7 +352,7 @@ public class GuiInventoryElement extends GuiElement
         RenderSystem.disableDepth();
         RenderHelper.disableStandardItemLighting();
 
-        GuiDraw.drawLockedArea(this, McLib.enableBorders.get() ? 1 : 0);
+        GuiDraw.drawLockedArea(this, McLibReloaded.enableBorders.get() ? 1 : 0);
 
         if (this.searching)
         {
@@ -392,7 +396,7 @@ public class GuiInventoryElement extends GuiElement
 
             if (hover)
             {
-                Gui.drawRect(x - 2, y - 2, x + 18, y + 18, 0xcc000000 + McLib.primaryColor.get());
+                Gui.drawRect(x - 2, y - 2, x + 18, y + 18, 0xcc000000 + McLibReloaded.primaryColor.get());
                 index = k;
             }
         }

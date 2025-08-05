@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class IconContainer
 {
@@ -67,7 +68,6 @@ public class IconContainer
     public IconContainer setIcon(Icon icon)
     {
         this.icon = icon;
-
         return this;
     }
 
@@ -79,7 +79,6 @@ public class IconContainer
     public IconContainer setW(int w)
     {
         this.w = w;
-
         return this;
     }
 
@@ -101,21 +100,18 @@ public class IconContainer
     public IconContainer setOffsetX(int offsetX)
     {
         this.offsetX = offsetX;
-
         return this;
     }
 
     public IconContainer setOffsetY(int offsetY)
     {
         this.offsetY = offsetY;
-
         return this;
     }
 
     public IconContainer setH(int h)
     {
         this.h = h;
-
         return this;
     }
 
@@ -128,7 +124,6 @@ public class IconContainer
     {
         this.ax = ax;
         this.ay = ay;
-
         return this;
     }
 
@@ -137,7 +132,7 @@ public class IconContainer
         return this.ay;
     }
 
-    public void render(int x, int y)
+    public void renderer(int x, int y)
     {
         this.render(x, y, 0, 0);
     }
@@ -146,7 +141,20 @@ public class IconContainer
     {
         x += this.w * this.ax + this.offsetX;
         y += this.h * this.ay + this.offsetY;
+        this.icon.render(x, y, ax, ay);
+    }
 
+    public void renderLeftIcon(GuiGraphics guiGraphics, int x, int y, float ax, float ay)
+    {
+        x += this.w * this.ax + this.offsetX;
+        y += (this.h - this.icon.h) / 2 + this.offsetY;
+        this.icon.render(x, y, ax, ay);
+    }
+    
+    public void renderRightIcon(GuiGraphics guiGraphics, int x, int y, float ax, float ay)
+    {
+        x += this.w * this.ax - this.icon.w + this.offsetX;
+        y += (this.h - this.icon.h) / 2 + this.offsetY;
         this.icon.render(x, y, ax, ay);
     }
 }

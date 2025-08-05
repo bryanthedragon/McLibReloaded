@@ -1,21 +1,21 @@
 package bryanthedragon.mclibreloaded.utils;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 
 public class PayloadASM
 {
     public static final int MIN_SIZE = 32767;
 
     /**
-     * ASM hook which is used in {@link bryanthedragon.mclibreloaded.core.transformers.CPacketCustomPayloadTransformer}
+     * ASM hook which is used in {@link CPacketCustomPayloadTransformer}
      */
     public static int getPayloadSize()
     {
-        if (McLib.maxPacketSize == null)
+        if (McLibReloaded.maxPacketSize == null)
         {
             return MIN_SIZE;
         }
 
-        return Math.max(MIN_SIZE, McLib.maxPacketSize.get());
+        return Math.max(MIN_SIZE, McLibReloaded.maxPacketSize.get());
     }
 }

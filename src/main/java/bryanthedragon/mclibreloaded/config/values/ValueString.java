@@ -6,7 +6,7 @@ import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.text.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
 import bryanthedragon.mclibreloaded.client.gui.utils.Elements;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
@@ -15,6 +15,9 @@ import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 
 import net.minecraft.client.Minecraft;
+
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -86,7 +89,7 @@ public class ValueString extends GenericValue<String> implements IServerValue, I
     @Override
     public boolean parseFromCommand(String value)
     {
-        this.set(value);
+        this.setValue(value);
 
         return true;
     }
@@ -163,6 +166,6 @@ public class ValueString extends GenericValue<String> implements IServerValue, I
         {
             return this.value;
         }
-        return factor == 1F ? (String) to.value : this.value;
+        return factor == 1F ? to.value : this.value;
     }
 }

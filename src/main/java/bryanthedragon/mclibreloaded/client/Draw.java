@@ -1,6 +1,8 @@
 package bryanthedragon.mclibreloaded.client;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+
 import org.lwjgl.opengl.GL11;
 
 public class Draw
@@ -11,7 +13,7 @@ public class Draw
         BufferBuilder buffer = tessellator.getBuffer();
 
         GL11.glLineWidth(5);
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
         buffer.pos(0, 0, 0).color(0, 0, 0, 1F).endVertex();
         buffer.pos(length, 0, 0).color(0, 0, 0, 1F).endVertex();
         buffer.pos(0, 0, 0).color(0, 0, 0, 1F).endVertex();
@@ -21,7 +23,7 @@ public class Draw
         tessellator.draw();
 
         GL11.glLineWidth(3);
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
         buffer.pos(0, 0, 0).color(1F, 0, 0, 1F).endVertex();
         buffer.pos(length, 0, 0).color(1F, 0, 0, 1F).endVertex();
         buffer.pos(0, 0, 0).color(0, 1F, 0, 1F).endVertex();
@@ -55,7 +57,7 @@ public class Draw
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
         cube(buffer, minX, minY, minZ, maxX, maxY, maxZ, red, green, blue, alpha);
         tessellator.draw();
     }

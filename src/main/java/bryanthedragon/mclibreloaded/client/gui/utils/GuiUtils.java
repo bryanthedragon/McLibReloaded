@@ -1,7 +1,18 @@
 package bryanthedragon.mclibreloaded.client.gui.utils;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -11,67 +22,57 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+
 /**
  * GUI utilities
  */
 @OnlyIn(Dist.CLIENT)
 public class GuiUtils
 {
-    public static void drawModel(ModelBase model, Player player, int x, int y, float scale)
+    public static void drawModel(PlayerModel model, Player player, int x, int y, float scale)
     {
-        drawModel(model, player, x, y, scale, 1.0F);
+        modelDrawer(model, player, x, y, scale, 1.0F, null, null);
     }
 
     /**
-     * Draw a {@link ModelBase} without using the {@link RenderManager} (which 
+     * Draw a {@link ModelBase} without using the {@link EntityRenderDispatcher} (which 
      * adds a lot of useless transformations and stuff to the screen rendering).
      */
-    public static void drawModel(ModelBase model, Player player, int x, int y, float scale, float alpha)
+    public static void modelDrawer(PlayerModel model, Player player, int x, int y, float scale, float alpha, PoseStack matrices, MultiBufferSource buffer) 
     {
         float factor = 0.0625F;
 
-        RenderSystem.enableColorMaterial();
-        RenderSystem.pushMatrix();
-        RenderSystem.translate(x, y, 50.0F);
-        RenderSystem.scale((-scale), scale, scale);
-        RenderSystem.rotate(45.0F, -1.0F, 0.0F, 0.0F);
-        RenderSystem.rotate(45.0F, 0.0F, -1.0F, 0.0F);
-        RenderSystem.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-        RenderSystem.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+        matrices.pushPose();
+        matrices.translate(x, y, 50.0F);
+        matrices.scale(-scale, scale, scale);
+        matrices.mulPose(Axis.XP.rotationDegrees(45));
+        matrices.mulPose(Axis.YP.rotationDegrees(45));
+        matrices.mulPose(Axis.ZP.rotationDegrees(180));
+        matrices.mulPose(Axis.YP.rotationDegrees(180));
 
-        RenderHelper.enableStandardItemLighting();
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableCull();
 
-        RenderSystem.pushMatrix();
-        RenderSystem.disableCull();
+        // Animation
+        model.animateModel(player, 0, 0, player.tickCount);
+        model.setAngles(player, 0, 0, player.tickCount, 0, 0);
 
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.scale(-1.0F, -1.0F, 1.0F);
-        RenderSystem.translate(0.0F, -1.501F, 0.0F);
+        // Render
+        VertexConsumer vertex = buffer.getBuffer(RenderType.entitySolid(player.getSkinTexture()));
+        model.renderToBuffer(matrices, vertex, 15728880, OverlayTexture.NO_OVERLAY);
 
-        RenderSystem.enableAlpha();
-
-        model.setLivingAnimations(player, 0, 0, 0);
-        model.setRotationAngles(0, 0, player.ticksExisted, 0, 0, factor, player);
-
-        RenderSystem.enableDepth();
-        RenderSystem.color(1.0F, 1.0F, 1.0F, alpha);
-
-        model.render(player, 0, 0, 0, 0, 0, factor);
-
-        RenderSystem.disableDepth();
-
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.disableAlpha();
-        RenderSystem.popMatrix();
-
-        RenderSystem.popMatrix();
-
-        RenderHelper.disableStandardItemLighting();
-
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        RenderSystem.disableTexture2D();
-        RenderSystem.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        matrices.popPose();
     }
 
     /**
@@ -81,70 +82,46 @@ public class GuiUtils
      * the license of minecraft's decompiled code?
      * @param alpha 
      */
-    public static void drawEntityOnScreen(int posX, int posY, float scale, EntityLivingBase ent, float alpha)
+    public static void drawEntityOnScreen(int posX, int posY, float scale, LivingEntity entity, float alpha) 
     {
-        RenderSystem.enableDepth();
-        RenderSystem.disableBlend();
-        RenderSystem.enableColorMaterial();
-        RenderSystem.pushMatrix();
-        RenderSystem.translate(posX, posY, 100.0F);
-        RenderSystem.scale((-scale), scale, scale);
-        RenderSystem.rotate(45.0F, -1.0F, 0.0F, 0.0F);
-        RenderSystem.rotate(45.0F, 0.0F, -1.0F, 0.0F);
-        RenderSystem.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        PoseStack poseStack = new PoseStack();
 
-        boolean render = ent.getAlwaysRenderNameTag();
+        poseStack.translate(posX, posY, 100.0F);
+        poseStack.scale(-scale, scale, scale);
+        poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+        poseStack.mulPose(Axis.YP.rotationDegrees(45.0F));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 
-        if (ent instanceof EntityDragon)
-        {
-            RenderSystem.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-        }
+        Lighting.setupForEntityInInventory();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
 
-        RenderHelper.enableStandardItemLighting();
+        // save old rotations
+        float f = entity.yBodyRot;
+        float f1 = entity.getYRot();
+        float f2 = entity.getXRot();
+        float f3 = entity.yHeadRotO;
+        float f4 = entity.yHeadRot;
 
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.color(1.0F, 1.0F, 1.0F, alpha);
+        entity.yBodyRot = 0;
+        entity.setYRot(0);
+        entity.setXRot(0);
+        entity.yHeadRot = entity.getYRot();
+        entity.yHeadRotO = entity.getYRot();
 
-        float f = ent.renderYawOffset;
-        float f1 = ent.rotationYaw;
-        float f2 = ent.rotationPitch;
-        float f3 = ent.prevRotationYawHead;
-        float f4 = ent.rotationYawHead;
+        EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
 
-        ent.renderYawOffset = 0;
-        ent.rotationYaw = 0;
-        ent.rotationPitch = 0;
-        ent.rotationYawHead = ent.rotationYaw;
-        ent.prevRotationYawHead = ent.rotationYaw;
-        ent.setAlwaysRenderNameTag(false);
+        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        dispatcher.render(entity, 0.0, 0.0, 0.0, 0.0F, poseStack, bufferSource, LightTexture.FULL_BRIGHT);
+        bufferSource.endBatch();
 
-        RenderSystem.translate(0.0F, 0.0F, 0.0F);
+        // restore
+        entity.yBodyRot = f;
+        entity.setYRot(f1);
+        entity.setXRot(f2);
+        entity.yHeadRotO = f3;
+        entity.yHeadRot = f4;
 
-        RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
-        rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
-        rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        rendermanager.setRenderShadow(true);
-
-        ent.renderYawOffset = f;
-        ent.rotationYaw = f1;
-        ent.rotationPitch = f2;
-        ent.prevRotationYawHead = f3;
-        ent.rotationYawHead = f4;
-
-        ent.setAlwaysRenderNameTag(render);
-
-        RenderSystem.popMatrix();
-
-        RenderHelper.disableStandardItemLighting();
-
-        RenderSystem.disableRescaleNormal();
-
-        RenderSystem.disableBlend();
-        RenderSystem.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        RenderSystem.disableTexture2D();
-        RenderSystem.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        RenderSystem.disableDepth();
+        Lighting.setupFor3DItems();
     }
 
     /**
@@ -153,48 +130,44 @@ public class GuiUtils
      * Taken <s>stolen</s> from minecraft's class GuiInventory. I wonder what's
      * the license of minecraft's decompiled code?
      */
-    public static void drawEntityOnScreen(int posX, int posY, int scale, int mouseX, int mouseY, EntityLivingBase ent)
+    public static void drawLivingEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity entity) 
     {
-        RenderSystem.enableColorMaterial();
-        RenderSystem.pushMatrix();
-        RenderSystem.translate(posX, posY, 100.0F);
-        RenderSystem.scale((-scale), scale, scale);
-        RenderSystem.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        PoseStack poseStack = new PoseStack();
+        poseStack.translate((double)posX, (double)posY, 50.0D);
+        poseStack.scale((float)scale, (float)scale, (float)scale);
+        poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 
-        float f = ent.renderYawOffset;
-        float f1 = ent.rotationYaw;
-        float f2 = ent.rotationPitch;
-        float f3 = ent.prevRotationYawHead;
-        float f4 = ent.rotationYawHead;
+        float oldBodyRot = entity.yBodyRot;
+        float oldYRot = entity.getYRot();
+        float oldXRot = entity.getXRot();
+        float oldHeadRotO = entity.yHeadRotO;
+        float oldHeadRot = entity.yHeadRot;
 
-        ent.renderYawOffset = (float) Math.atan(mouseX / 40.0F) * 20.0F;
-        ent.rotationYaw = (float) Math.atan(mouseX / 40.0F) * 40.0F;
-        ent.rotationPitch = -((float) Math.atan(mouseY / 40.0F)) * 20.0F;
-        ent.rotationYawHead = ent.rotationYaw;
-        ent.prevRotationYawHead = ent.rotationYaw;
+        entity.yBodyRot = (float)Math.atan(mouseX / 40.0F) * 20.0F;
+        entity.setYRot((float)Math.atan(mouseX / 40.0F) * 40.0F);
+        entity.setXRot(-((float)Math.atan(mouseY / 40.0F)) * 20.0F);
+        entity.yHeadRot = entity.getYRot();
+        entity.yHeadRotO = entity.getYRot();
 
-        RenderSystem.translate(0.0F, 0.0F, 0.0F);
+        Lighting.setupForEntityInInventory();
 
-        RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
-        rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
-        rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        rendermanager.setRenderShadow(true);
+        EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        dispatcher.overrideCameraOrientation(new Quaternionf().rotateX((float)Math.toRadians(-15))); // optional tilt
+        dispatcher.setRenderShadow(false);
 
-        ent.renderYawOffset = f;
-        ent.rotationYaw = f1;
-        ent.rotationPitch = f2;
-        ent.prevRotationYawHead = f3;
-        ent.rotationYawHead = f4;
+        MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+        dispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, poseStack, buffer, 15728880);
 
-        RenderSystem.popMatrix();
-        RenderHelper.disableStandardItemLighting();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        RenderSystem.disableTexture2D();
-        RenderSystem.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        buffer.endBatch();
+
+        dispatcher.setRenderShadow(true);
+
+        entity.yBodyRot = oldBodyRot;
+        entity.setYRot(oldYRot);
+        entity.setXRot(oldXRot);
+        entity.yHeadRotO = oldHeadRotO;
+        entity.yHeadRot = oldHeadRot;
     }
-
 
     /**
      * Open web link
@@ -206,7 +179,9 @@ public class GuiUtils
             openWebLink(new URI(address));
         }
         catch (Exception e)
-        {}
+        {
+
+        }
     }
 
     /**
@@ -218,82 +193,52 @@ public class GuiUtils
         {
             Class<?> clazz = Class.forName("java.awt.Desktop");
             Object object = clazz.getMethod("getDesktop", new Class[0]).invoke(null);
-
             clazz.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {uri});
         }
         catch (Throwable t)
-        {}
+        {
+
+        }
     }
 
-    public static void playClick()
+    public static void playClick() 
     {
-        Minecraft.getInstance().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
-
     /**
      * Open a Folder<br>
      * Referenced from {@link net.minecraft.client.renderer.OpenGlHelper.openFile(File)}
      */
-    public static void openFolder(String url)
+    public static void openFolder(String url) 
     {
         File file = new File(url);
+        String osName = System.getProperty("os.name").toLowerCase();
 
-        switch (Util.getOSType())
+        try 
         {
-            case WINDOWS:
-                try
-                {
-                    Runtime.getRuntime().exec(new String[]
-                    {
-                        "cmd.exe", "/C", "start", "\"Open file\"", file.getAbsolutePath()
-                    });
-
-                    return;
-                }
-                catch (IOException ioexception)
-                {
-                    ioexception.printStackTrace();
-
-                    break;
-                }
-
-            case OSX:
-                try
-                {
-                    Runtime.getRuntime().exec(new String[]
-                    {
-                            "/usr/bin/open", file.getAbsolutePath()
-                    });
-
-                    return;
-                }
-                catch (IOException ioexception1)
-                {
-                    ioexception1.printStackTrace();
-                }
-
-            default:
-                break;
-        }
-
-        boolean failed = false;
-
-        try
+            if (osName.contains("win")) 
+            {
+                // Windows
+                Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start", "\"Open file\"", file.getAbsolutePath()});
+            } 
+            else if (osName.contains("mac")) 
+            {
+                // macOS
+                Runtime.getRuntime().exec(new String[] {"/usr/bin/open", file.getAbsolutePath()});
+            } 
+            else if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) 
+            {
+                // Linux / Unix
+                Runtime.getRuntime().exec(new String[] {"xdg-open", file.getAbsolutePath()});
+            }
+            else 
+            {
+                System.out.println("Unsupported OS: " + osName);
+            }
+        } 
+        catch (IOException e) 
         {
-            Class<?> clazz = Class.forName("java.awt.Desktop");
-            Object object = clazz.getMethod("getDesktop", new Class[0]).invoke(null);
-
-            clazz.getMethod("browse", new Class[] {URI.class}).invoke(object, new Object[] {file.toURI()});
-        }
-        catch (Throwable throwable1)
-        {
-            throwable1.printStackTrace();
-            failed = true;
-        }
-
-        if (failed)
-        {
-            Sys.openURL("file://" + file.getAbsolutePath());
+            e.printStackTrace();
         }
     }
 }

@@ -146,7 +146,7 @@ public class GuiPopUpModal extends GuiModal
         this.textAlpha = this.alphaDefault;
         this.backgroundAlpha = this.alphaDefault;
 
-        this.shadowColor = new Color(McLib.primaryColor.get());
+        this.shadowColor = new Color(McLibReloaded.primaryColor.get());
         this.backgroundColor = this.backgroundColorDefault.copy();
         this.textColor = this.textColorDefault.copy();
     }

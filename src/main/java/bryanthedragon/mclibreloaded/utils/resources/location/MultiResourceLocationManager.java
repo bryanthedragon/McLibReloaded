@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bryanthedragon.mclibreloaded.utils.resources.FilteredResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 
 public class MultiResourceLocationManager
@@ -29,17 +30,14 @@ public class MultiResourceLocationManager
         {
             return -1;
         }
-
-        ResourceLocation keyRL = location.children.get(0).path;
+        location.children.get(0);
+        ResourceLocation keyRL = FilteredResourceLocation.Jsonpath;
         List<Pair> pairs = map.get(keyRL);
-
         if (pairs == null)
         {
             pairs = new ArrayList<Pair>();
-
             map.put(keyRL, pairs);
         }
-
         for (Pair pair : pairs)
         {
             if (pair.mrl.equals(location))
@@ -47,12 +45,9 @@ public class MultiResourceLocationManager
                 return pair.id;
             }
         }
-
         int newId = id;
-
         pairs.add(new Pair(newId, location.copy()));
         id += 1;
-
         return newId;
     }
 
@@ -60,7 +55,6 @@ public class MultiResourceLocationManager
     {
         public int id;
         public MultiResourceLocation mrl;
-
         public Pair(int id, MultiResourceLocation mrl)
         {
             this.id = id;

@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 public class ColorUtils
 {
     public static final int HALF_BLACK = 0x88000000;
-
     public static final Color COLOR = new Color();
 
     /**
@@ -22,7 +21,6 @@ public class ColorUtils
         COLOR.r *= factor;
         COLOR.g *= factor;
         COLOR.b *= factor;
-
         return COLOR.getRGBAColor();
     }
 
@@ -37,7 +35,6 @@ public class ColorUtils
     {
         COLOR.alphaSetter(color, true);
         COLOR.a = alpha;
-
         return COLOR.getRGBAColor();
     }
 
@@ -69,11 +66,9 @@ public class ColorUtils
     {
         target.alphaSetter(a, alpha);
         COLOR.alphaSetter(b, alpha);
-
         target.r = Interpolations.lerp(target.r, COLOR.r, x);
         target.g = Interpolations.lerp(target.g, COLOR.g, x);
         target.b = Interpolations.lerp(target.b, COLOR.b, x);
-
         if (alpha)
         {
             target.a = Interpolations.lerp(target.a, COLOR.a, x);
@@ -97,7 +92,7 @@ public class ColorUtils
      */
     public static int rgbaToInt(float r, float g, float b, float a)
     {
-        COLOR.set(r, g, b, a);
+        COLOR.setColor(r, g, b, a);
         return COLOR.getRGBAColor();
     }
 

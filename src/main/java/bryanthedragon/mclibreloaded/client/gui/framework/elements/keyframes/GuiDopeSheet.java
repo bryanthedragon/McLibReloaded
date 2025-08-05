@@ -8,8 +8,14 @@ import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeEasing;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +31,6 @@ import java.util.function.Consumer;
 public class GuiDopeSheet extends GuiKeyframeElement
 {
     public static final int TOP_MARGIN = 15;
-
     public List<GuiSheet> sheets = new ArrayList<GuiSheet>();
 
     public GuiDopeSheet(Minecraft mc, Consumer<Keyframe> callback)
@@ -56,7 +61,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
         {
             this.which.setX(this.getCurrent(), tick, opposite);
         }
-
         this.sliding = true;
     }
 
@@ -66,7 +70,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
         if (this.isMultipleSelected())
         {
             double dy = value - this.which.getY(this.getCurrent());
-
             for (GuiSheet sheet : this.sheets)
             {
                 sheet.setValue(dy, this.which, opposite);
@@ -102,9 +105,7 @@ public class GuiDopeSheet extends GuiKeyframeElement
     public void resetView()
     {
         int c = 0;
-
         this.scaleX.set(0, 2);
-
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
 
@@ -116,7 +117,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
                 min = Integer.min((int) frame.tick, min);
                 max = Integer.max((int) frame.tick, max);
             }
-
             c = Math.max(c, sheet.channel.getKeyframes().size());
         }
 
@@ -126,7 +126,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
             {
                 min = 0;
             }
-
             max = this.duration;
         }
 
@@ -140,7 +139,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
     public Keyframe getCurrent()
     {
         GuiSheet current = this.getCurrentSheet();
-
         return current == null ? null : current.getKeyframe();
     }
 
@@ -166,7 +164,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
                 return sheet;
             }
         }
-
         return null;
     }
 
@@ -177,7 +174,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
         {
             sheet.selectAll();
         }
-
         this.which = Selection.KEYFRAME;
         this.setKeyframe(this.getCurrent());
     }
@@ -191,7 +187,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
                 return sheet;
             }
         }
-
         return null;
     }
 
@@ -204,7 +199,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
         {
             i += sheet.getSelectedCount();
         }
-
         return i;
     }
 
@@ -212,7 +206,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
     public void clearSelection()
     {
         this.which = Selection.NOT_SELECTED;
-
         for (GuiSheet sheet : this.sheets)
         {
             sheet.clearSelection();
@@ -254,12 +247,13 @@ public class GuiDopeSheet extends GuiKeyframeElement
             frame.setEasing(easing);
             frame.setInterpolation(interp);
         }
-
         this.addedDoubleClick(frame, tick, mouseX, mouseY);
     }
 
     protected void addedDoubleClick(Keyframe frame, long tick, int mouseX, int mouseY)
-    {}
+    {
+
+    }
 
     @Override
     public void removeCurrent()
@@ -270,9 +264,7 @@ public class GuiDopeSheet extends GuiKeyframeElement
         {
             return;
         }
-
         GuiSheet current = this.getCurrentSheet();
-
         current.channel.remove(current.selected.get(0));
         current.selected.clear();
         this.which = Selection.NOT_SELECTED;
@@ -285,7 +277,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
         {
             sheet.removeSelectedKeyframes();
         }
-
         this.setKeyframe(null);
         this.which = Selection.NOT_SELECTED;
     }
@@ -301,7 +292,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
         {
             sheet.duplicate(offset);
         }
-
         this.setKeyframe(this.getCurrent());
     }
 
@@ -356,7 +346,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
                         {
                             frame = this.getCurrent();
                         }
-
                         this.setKeyframe(frame);
                     }
 
@@ -378,21 +367,17 @@ public class GuiDopeSheet extends GuiKeyframeElement
                         return true;
                     }
                 }
-
                 prev = frame;
                 index++;
             }
-
             y += h;
         }
-
         return finished;
     }
 
     private boolean isInside(double x, double y, int mouseX, int mouseY)
     {
         double d = Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2);
-
         return Math.sqrt(d) < 4;
     }
 
@@ -407,7 +392,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
                 sheet.sort();
             }
         }
-
         this.sliding = false;
     }
 
@@ -418,9 +402,7 @@ public class GuiDopeSheet extends GuiKeyframeElement
         {
             /* Multi select */
             Area area = new Area();
-
             area.setPoints(this.lastX, this.lastY, context.mouseX, context.mouseY, 3);
-
             int count = this.sheets.size();
             int h = (this.area.h - TOP_MARGIN) / count;
             int y = this.area.ey() - h * count;
@@ -437,10 +419,8 @@ public class GuiDopeSheet extends GuiKeyframeElement
                         sheet.selected.add(i);
                         c++;
                     }
-
                     i++;
                 }
-
                 y += h;
             }
 
@@ -468,16 +448,16 @@ public class GuiDopeSheet extends GuiKeyframeElement
 
         for (GuiSheet sheet : this.sheets)
         {
-            COLOR.set(sheet.color, false);
+            COLOR.alphaSetter(sheet.color, false);
 
-            vb.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+            vb.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
             vb.pos(this.area.x, y + h / 2, 0).color(COLOR.r, COLOR.g, COLOR.b, 0.65F).endVertex();
             vb.pos(this.area.ex(), y + h / 2, 0).color(COLOR.r, COLOR.g, COLOR.b, 0.65F).endVertex();
 
             Tessellator.getInstance().draw();
 
             /* Draw points */
-            vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+            vb.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
 
             int index = 0;
             int count = sheet.channel.getKeyframes().size();
@@ -524,7 +504,7 @@ public class GuiDopeSheet extends GuiKeyframeElement
 
             Tessellator.getInstance().draw();
 
-            int lw = this.font.getStringWidth(sheet.title.get()) + 10;
+            int lw = this.font.width(sheet.title.get()) + 10;
             GuiDraw.drawHorizontalGradientRect(this.area.ex() - lw - 10, y, this.area.ex(), y + h, sheet.color, 0xaa000000 + sheet.color, 0);
             this.font.drawStringWithShadow(sheet.title.get(), this.area.ex() - lw + 5, y + (h - this.font.FONT_HEIGHT) / 2 + 1, 0xffffff);
 
@@ -565,7 +545,7 @@ public class GuiDopeSheet extends GuiKeyframeElement
                 x = (int) x - frame.tick;
             }
 
-            this.setTick(x, !GuiScreen.isAltKeyDown());
+            this.setTick(x, !Screen.hasAltDown());
         }
 
         return frame;

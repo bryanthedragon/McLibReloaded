@@ -16,6 +16,6 @@ public class ClientProxy
         MinecraftForge.EVENT_BUS.register(new KeyboardHandler());
         MinecraftForge.EVENT_BUS.register(new InputRenderer());
         MinecraftForge.EVENT_BUS.register(new RenderingHandler());
-        McLib.LOGGER.info("ClientProxy: Registered client-side handlers");
+        McLibReloaded.LOGGER.info("ClientProxy: Registered client-side handlers");
     }
 }

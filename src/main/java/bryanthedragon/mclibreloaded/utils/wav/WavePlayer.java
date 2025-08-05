@@ -29,17 +29,13 @@ public class WavePlayer
     {
         this.buffer = AL10.alGenBuffers();
         ByteBuffer buffer = BufferUtils.createByteBuffer(wave.data.length);
-
         buffer.put(wave.data);
         buffer.flip();
-
         AL10.alBufferData(this.buffer, wave.getALFormat(), buffer, wave.sampleRate);
-
         this.duration = wave.getDuration();
         this.source = AL10.alGenSources();
         AL10.alSourcei(this.source, AL10.AL_BUFFER, this.buffer);
         AL10.alSourcei(this.source, AL10.AL_SOURCE_RELATIVE, AL10.AL_TRUE);
-
         return this;
     }
 
@@ -147,7 +143,6 @@ public class WavePlayer
     public boolean isStopped()
     {
         int state = this.getSourceState();
-
         return state == AL10.AL_STOPPED || state == AL10.AL_INITIAL;
     }
 
@@ -169,7 +164,6 @@ public class WavePlayer
     public void setPlaybackPosition(float seconds)
     {
         seconds = MathUtils.clamperFloat(seconds, 0, this.duration);
-
         AL10.alSourcef(this.source, AL11.AL_SEC_OFFSET, seconds);
     }
 

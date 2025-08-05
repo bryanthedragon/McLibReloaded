@@ -16,12 +16,14 @@ public class GuiLabel extends GuiElement implements ITextColoring
     public IKey label;
     public int color;
     public boolean textShadow = true;
+    public boolean Shadow = true;
     public float anchorX;
     public float anchorY;
     public int background;
     public Supplier<Integer> backgroundColor;
     private IconContainer leftIcon;
     private IconContainer rightIcon;
+    private GuiGraphics guiGraphics;
 
     public GuiLabel(Minecraft mc, IKey label)
     {
@@ -36,7 +38,6 @@ public class GuiLabel extends GuiElement implements ITextColoring
     public GuiLabel(Minecraft mc, IKey label, int color, @Nullable Icon leftIcon, @Nullable Icon rightIcon)
     {
         super(mc);
-
         this.label = label;
         this.color = color;
         this.leftIcon = leftIcon != null ? new IconContainer(leftIcon) : null;
@@ -46,7 +47,6 @@ public class GuiLabel extends GuiElement implements ITextColoring
     public GuiLabel(Minecraft mc, IKey label, int color, @Nullable IconContainer leftIcon, @Nullable IconContainer rightIcon)
     {
         super(mc);
-
         this.label = label;
         this.color = color;
         this.leftIcon = leftIcon;
@@ -102,41 +102,54 @@ public class GuiLabel extends GuiElement implements ITextColoring
         this.leftIcon = leftIcon;
     }
 
-    @Override
-    public void setColor(int color, boolean shadow)
+    public void setColorWithShadow(int color, boolean shadow)
     {
-        this.color(color, shadow);
+        this.colorWithShadow(color, shadow);
+    }
+
+    public GuiLabel setColorWithTextShadow(int color, boolean textShadow)
+    {
+        return this.colorWithTextShadow(color, textShadow);
+    }
+    
+    public void setColor(int color)
+    {
+        this.color = color;
     }
 
     public GuiLabel color(int color)
     {
-        return this.color(color, true);
+        return this.colorWithTextShadow(color, true);
     }
 
-    public GuiLabel color(int color, boolean textShadow)
+    public GuiLabel colorWithTextShadow(int color, boolean textShadow)
     {
         this.textShadow = textShadow;
         this.color = color;
+        return this;
+    }
 
+    public GuiLabel colorWithShadow(int color, boolean Shadow)
+    {
+        this.Shadow = Shadow;
+        this.color = color;
         return this;
     }
 
     public GuiLabel background()
     {
-        return this.background(ColorUtils.HALF_BLACK);
+        return this.setBackground(ColorUtils.HALF_BLACK);
     }
 
-    public GuiLabel background(int color)
+    public GuiLabel setBackground(int color)
     {
         this.background = color;
-
         return this;
     }
 
-    public GuiLabel background(Supplier<Integer> color)
+    public GuiLabel backgroundSupplier(Supplier<Integer> color)
     {
         this.backgroundColor = color;
-
         return this;
     }
 
@@ -144,7 +157,6 @@ public class GuiLabel extends GuiElement implements ITextColoring
     {
         this.anchorX = x;
         this.anchorY = y;
-
         return this;
     }
 
@@ -153,7 +165,7 @@ public class GuiLabel extends GuiElement implements ITextColoring
         return this.backgroundColor == null ? this.background : this.backgroundColor.get();
     }
     
-    public void draw(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
+    public void draw(GuiContext context)
     {
         int offset = 3;
         int leftIconW = this.leftIcon != null ? this.leftIcon.getW() : 0;
@@ -162,9 +174,7 @@ public class GuiLabel extends GuiElement implements ITextColoring
         int width = textWidth + rightIconW + leftIconW;
         int x0 = this.area.x(this.anchorX, width);
         int y = this.area.y(this.anchorY, this.font.lineHeight);
-
         int xText = x0 + leftIconW;
-
         int bgColor = this.getColor();
         int alpha = (bgColor >> 24) & 0xff;
 
@@ -177,16 +187,19 @@ public class GuiLabel extends GuiElement implements ITextColoring
 
         if (this.leftIcon != null)
         {
-            this.leftIcon.render(guiGraphics, x0, y, 0.5F, 0.5F);
+            this.leftIcon.renderLeftIcon(guiGraphics, x0, y, 0.5F, 0.5F);
         }
 
         if (this.rightIcon != null)
         {
-            this.rightIcon.render(guiGraphics, xText + textWidth, y, 0.5F, 0.5F);
+            this.rightIcon.renderRightIcon(guiGraphics, xText + textWidth, y, 0.5F, 0.5F);
         }
-
         guiGraphics.drawString(this.font, this.label.get(), xText, y, this.color, this.textShadow);
+        super.draw(context);
+    }
 
-        super.draw(guiGraphics, mouseX, mouseY, partialTicks);
+    public void drawer(GuiContext context)
+    {
+        this.draw(context);
     }
 }

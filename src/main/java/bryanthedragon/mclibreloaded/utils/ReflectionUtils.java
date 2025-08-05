@@ -1,5 +1,6 @@
 package bryanthedragon.mclibreloaded.utils;
 
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 
@@ -34,16 +35,15 @@ public class ReflectionUtils
      * @param <ITextureObject>
      */
     @SuppressWarnings("unchecked")
-    public static <ITextureObject> Map<ResourceLocation, ITextureObject> getTextures(TextureManager manager)
+    public static <ITextureObject> Map<ResourceLocation, AbstractTexture> getTextures(TextureManager manager)
     {
         if (TEXTURE_MAP == null)
         {
             setupTextureMapField(manager);
         }
-
         try
         {
-            return (Map<ResourceLocation, ITextureObject>) TEXTURE_MAP.get(manager);
+            return (Map<ResourceLocation, AbstractTexture>) TEXTURE_MAP.get(manager);
         }
         catch (Exception e)
         {
@@ -64,17 +64,13 @@ public class ReflectionUtils
             {
                 continue;
             }
-
             field.setAccessible(true);
-
             try
             {
                 Object value = field.get(manager);
-
                 if (value instanceof Map && ((Map) value).keySet().iterator().next() instanceof ResourceLocation)
                 {
                     TEXTURE_MAP = field;
-
                     break;
                 }
             }
@@ -118,7 +114,6 @@ public class ReflectionUtils
      * Use {@link OptifineHelper} class!
      */
     @SuppressWarnings("rawtypes")
-    @Deprecated
     public static boolean isOptifineShadowPass()
     {
         if (!SHADOW_PASS_CHECK)
@@ -126,7 +121,6 @@ public class ReflectionUtils
             try
             {
                 Class clazz = Class.forName("net.optifine.shaders.Shaders");
-
                 SHADOW_PASS = clazz.getDeclaredField("isShadowPass");
             }
             catch (Exception e)
@@ -134,10 +128,8 @@ public class ReflectionUtils
                 e.printStackTrace();
                 SHADOW_PASS = null; // Reset the field if it fails to avoid further issues
             }
-
             SHADOW_PASS_CHECK = true;
         }
-
         if (SHADOW_PASS != null)
         {
             try
@@ -150,7 +142,6 @@ public class ReflectionUtils
                 SHADOW_PASS = null; // Reset the field if it fails to avoid further issues
             }
         }
-
         return false;
     }
 }

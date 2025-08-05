@@ -6,9 +6,11 @@ import net.minecraft.nbt.Tag;
 
 public interface IWritableLocation<T> extends ICopy<T>
 {
-    public void fromNbt(Tag nbt) throws Exception;
 
-    public void fromJson(JsonElement element) throws Exception;
+
+    public void tagChecker(Tag nbt) throws Exception;
+
+    public void objectChecker(JsonElement element) throws Exception;
 
     public Tag ToNbt();
 

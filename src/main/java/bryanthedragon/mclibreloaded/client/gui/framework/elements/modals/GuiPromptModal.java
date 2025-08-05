@@ -2,7 +2,7 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.modals;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiButtonElement;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.text.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 

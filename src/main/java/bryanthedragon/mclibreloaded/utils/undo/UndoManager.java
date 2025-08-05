@@ -19,7 +19,9 @@ public class UndoManager<T>
     private boolean simpleMerge;
 
     public UndoManager()
-    {}
+    {
+
+    }
 
     public UndoManager(int limit)
     {
@@ -49,7 +51,6 @@ public class UndoManager<T>
     public UndoManager<T> simpleMerge()
     {
         this.simpleMerge = true;
-
         return this;
     }
 
@@ -93,7 +94,6 @@ public class UndoManager<T>
         {
             return this.undos.get(this.position);
         }
-
         return null;
     }
 
@@ -143,14 +143,11 @@ public class UndoManager<T>
     public IUndo<T> pushApplyUndo(IUndo<T> undo, T context)
     {
         IUndo<T> newUndo = this.pushUndo(undo);
-
         newUndo.redo(context);
-
         if (this.callback != null)
         {
             this.callback.handleUndo(undo, true);
         }
-
         return newUndo;
     }
 
@@ -169,7 +166,6 @@ public class UndoManager<T>
     public IUndo<T> pushUndo(IUndo<T> undo)
     {
         IUndo<T> present = this.position == -1 ? null : this.undos.get(this.position);
-
         if (present != null && this.checkMergeability(present, undo))
         {
             this.removeConsequent();
@@ -186,11 +182,9 @@ public class UndoManager<T>
                 this.removeConsequent();
                 this.position += 1;
             }
-
             present = undo;
             this.undos.add(undo);
         }
-
         return present;
     }
 
@@ -210,7 +204,6 @@ public class UndoManager<T>
         {
             return present.isMergeable(undo);
         }
-
         return present.isMergeable(undo) && undo.isMergeable(present);
     }
 
@@ -251,17 +244,13 @@ public class UndoManager<T>
         {
             return false;
         }
-
         IUndo<T> undo = this.undos.get(this.position);
-
         undo.undo(context);
         this.position -= 1;
-
         if (this.callback != null)
         {
             this.callback.handleUndo(undo, false);
         }
-
         return true;
     }
 
@@ -285,17 +274,13 @@ public class UndoManager<T>
         {
             return false;
         }
-
         IUndo<T> undo = this.undos.get(this.position + 1);
-
         undo.redo(context);
         this.position += 1;
-
         if (this.callback != null)
         {
             this.callback.handleUndo(undo, true);
         }
-
         return true;
     }
 }

@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.config.gui;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiScrollElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiIconElement;
@@ -22,9 +22,12 @@ import bryanthedragon.mclibreloaded.network.mclib.Dispatcher;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketRequestConfigs;
 import bryanthedragon.mclibreloaded.utils.Direction;
 import bryanthedragon.mclibreloaded.utils.OpHelper;
+
 import net.minecraft.client.Minecraft;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +72,7 @@ public class GuiConfigPanel extends GuiDashboardPanel<GuiAbstractDashboard>
 
     private void fillClientMods()
     {
-        for (Config config : McLib.proxy.configs.modules.values())
+        for (Config config : McLibReloaded.commonproxy.configs.modules.values())
         {
             if (!config.isServerSide())
             {
@@ -141,7 +144,7 @@ public class GuiConfigPanel extends GuiDashboardPanel<GuiAbstractDashboard>
     {
         if (this.serverConfigs == null)
         {
-            McLib.proxy.configs.reload();
+            McLibReloaded.proxy.configs.reload();
             this.refresh();
         }
     }
@@ -149,7 +152,7 @@ public class GuiConfigPanel extends GuiDashboardPanel<GuiAbstractDashboard>
     private void selectConfig(String mod)
     {
         this.mods.setCurrentValue(mod);
-        this.config = this.serverConfigs == null ? McLib.proxy.configs.modules.get(mod) : this.serverConfigs.get(mod);
+        this.config = this.serverConfigs == null ? McLibReloaded.commonproxy.configs.modules.get(mod) : this.serverConfigs.get(mod);
         this.refresh();
     }
 

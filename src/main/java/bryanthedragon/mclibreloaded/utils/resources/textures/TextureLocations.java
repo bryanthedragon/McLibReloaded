@@ -24,6 +24,15 @@ public class TextureLocations
         }
         return new TextureLocationFinder(path);
     }
+    public static TextureLocationFinder fromResourceTransformer(String path)
+    {
+        for (IResourceTransformer transformer : transformers)
+        {
+            path = transformer.transform(path);
+        }
+        return new TextureLocationFinder(path);
+    }
+
     /**
      * Applies all registered resource transformers to the given domain and path and returns a
      * {@link TextureLocationFinder} using the transformed domain and path.

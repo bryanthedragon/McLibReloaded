@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.Config;
 import bryanthedragon.mclibreloaded.config.json.ConfigParser;
@@ -15,14 +15,13 @@ import bryanthedragon.mclibreloaded.utils.Keys;
 
 import net.minecraftforge.fml.ModContainer;
 
-
 public class KeybindConfig extends Config
 {
     public transient Map<String, IKey> keyMap;
 
     public KeybindConfig()
     {
-        super("keybinds", new File(McLib.proxy.configFolder, "mclib/keybinds.json"));
+        super("keybinds", new File(McLibReloaded.proxy.configFolder, "mclib/keybinds.json"));
 
         this.load();
     }

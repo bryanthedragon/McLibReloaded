@@ -1,5 +1,7 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.IViewportStack;
@@ -7,7 +9,6 @@ import bryanthedragon.mclibreloaded.client.gui.utils.ScrollArea;
 import bryanthedragon.mclibreloaded.client.gui.utils.ScrollDirection;
 
 import net.minecraft.client.Minecraft;
-
 
 /**
  * Scroll area GUI class
@@ -17,6 +18,7 @@ import net.minecraft.client.Minecraft;
 public class GuiScrollElement extends GuiElement implements IViewport
 {
     public ScrollArea scroll;
+    protected PoseStack poseStack;
 
     public GuiScrollElement(Minecraft mc)
     {
@@ -26,7 +28,6 @@ public class GuiScrollElement extends GuiElement implements IViewport
     public GuiScrollElement(Minecraft mc, ScrollDirection direction)
     {
         super(mc);
-
         this.area = this.scroll = new ScrollArea(0);
         this.scroll.direction = direction;
         this.scroll.scrollSpeed = 20;
@@ -35,15 +36,12 @@ public class GuiScrollElement extends GuiElement implements IViewport
     public GuiScrollElement cancelScrollEdge()
     {
         this.scroll.cancelScrollEdge = true;
-
         return this;
     }
 
-    @Override
     public void apply(IViewportStack stack)
     {
         stack.pushViewport(this.area);
-
         if (this.scroll.direction == ScrollDirection.VERTICAL)
         {
             stack.shiftY(this.scroll.scroll);
@@ -54,7 +52,6 @@ public class GuiScrollElement extends GuiElement implements IViewport
         }
     }
 
-    @Override
     public void unapply(IViewportStack stack)
     {
         if (this.scroll.direction == ScrollDirection.VERTICAL)
@@ -65,24 +62,20 @@ public class GuiScrollElement extends GuiElement implements IViewport
         {
             stack.shiftX(-this.scroll.scroll);
         }
-
         stack.popViewport();
     }
 
-    @Override
     public void resize()
     {
         super.resize();
-
         this.scroll.clamp();
     }
 
-    @Override
     public boolean mouseClicked(GuiContext context)
     {
         if (context.awaitsRightClick && context.mouseButton == 1)
         {
-            return super.mouseClicked(context);
+            return super.mouseGetsClicked(context);
         }
 
         if (!this.area.isInside(context))
@@ -91,23 +84,19 @@ public class GuiScrollElement extends GuiElement implements IViewport
             {
                 context.unfocus();
             }
-
             return false;
         }
-
+        
         if (this.scroll.mouseClicked(context))
         {
             return true;
         }
-
         this.apply(context);
-        boolean result = super.mouseClicked(context);
+        boolean result = super.mouseGetsClicked(context);
         this.unapply(context);
-
         return result;
     }
 
-    @Override
     public boolean mouseScrolled(GuiContext context)
     {
         if (!this.area.isInside(context))
@@ -132,17 +121,15 @@ public class GuiScrollElement extends GuiElement implements IViewport
         return this.scroll.mouseScroll(context);
     }
 
-    @Override
     public void mouseReleased(GuiContext context)
     {
         this.scroll.mouseReleased(context);
 
         this.apply(context);
-        super.mouseReleased(context);
+        super.mouseGetsReleased(context);
         this.unapply(context);
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         GuiElement lastTooltip = context.tooltip.element;
@@ -151,30 +138,25 @@ public class GuiScrollElement extends GuiElement implements IViewport
 
         GuiDraw.scissor(this.scroll.x, this.scroll.y, this.scroll.w, this.scroll.h, context);
 
-        RenderSystem.pushMatrix();
+        poseStack.pushPose();
 
         /* Translate the contents using OpenGL (scroll) */
         if (this.scroll.direction == ScrollDirection.VERTICAL)
         {
-            RenderSystem.translate(0, -this.scroll.scroll, 0);
+            poseStack.translate(0, -this.scroll.scroll, 0);
         }
         else
         {
-            RenderSystem.translate(-this.scroll.scroll, 0, 0);
+            poseStack.translate(-this.scroll.scroll, 0, 0);
         }
 
         this.apply(context);
         this.preDraw(context);
-
         super.draw(context);
-
         this.postDraw(context);
         this.unapply(context);
-
-        RenderSystem.popMatrix();
-
+        poseStack.popPose();
         this.scroll.drawScrollbar();
-
         GuiDraw.unscissor(context);
 
         /* Clear tooltip in case if it was set outside of scroll area within the scroll */
@@ -185,8 +167,12 @@ public class GuiScrollElement extends GuiElement implements IViewport
     }
 
     protected void preDraw(GuiContext context)
-    {}
+    {
+
+    }
 
     protected void postDraw(GuiContext context)
-    {}
+    {
+
+    }
 }

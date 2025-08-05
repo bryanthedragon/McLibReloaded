@@ -1,7 +1,7 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.list;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.text.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import net.minecraft.client.Minecraft;

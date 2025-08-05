@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
@@ -67,7 +67,7 @@ public class GuiTrackpadElement extends GuiBaseTextElement
     }
 
     {
-        this.decimalPlaces = McLib.trackpadDecimalPlaces.get();
+        this.decimalPlaces = McLibReloaded.trackpadDecimalPlaces.get();
 
         this.getRoundingFormat(true);
     }
@@ -504,7 +504,7 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         if (dragging)
         {
             /* Draw filling background */
-            int color = McLib.primaryColor.get();
+            int color = McLibReloaded.primaryColor.get();
             int fx = MathUtils.clamp(context.mouseX, this.area.x + padding, this.area.ex() - padding);
 
             Gui.drawRect(Math.min(fx, this.initialX), this.area.y + padding, Math.max(fx, this.initialX), this.area.ey() - padding, 0xff000000 + color);

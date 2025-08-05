@@ -8,9 +8,7 @@ import com.google.common.collect.Lists;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 /**
- * This class was brutally stolen from net.minecraft.util.
- *
- * It was also refactored so I could use {@code List<String>} instead of
+ * It was also refactored, so I could use {@code List<String>} instead of
  * {@code String[]}, and it doesn't require server. It's local tab completer!
  */
 @OnlyIn(Dist.CLIENT)

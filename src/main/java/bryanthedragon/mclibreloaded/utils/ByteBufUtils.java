@@ -21,11 +21,9 @@ public class ByteBufUtils
     public static void writeObject(ByteBuf to, Object object)
     {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
         try
         {
             ObjectOutputStream output = new ObjectOutputStream(bos);
-
             output.writeObject(object);
             output.flush();
         }
@@ -33,7 +31,6 @@ public class ByteBufUtils
         {
             e.printStackTrace();
         }
-
         writeByteArray(to, bos.toByteArray());
     }
 
@@ -47,18 +44,15 @@ public class ByteBufUtils
     {
         ByteArrayInputStream bis = new ByteArrayInputStream(readByteArray(from));
         Object result = null;
-
         try
         {
             ObjectInputStream input = new ObjectInputStream(bis);
-
             result = input.readObject();
         }
         catch (IOException | ClassNotFoundException e)
         {
             e.printStackTrace();
         }
-
         return result;
     }
 
@@ -72,11 +66,8 @@ public class ByteBufUtils
     {
         int size = from.readInt();
         ByteBuf bytes = from.readBytes(size);
-
         byte[] array = new byte[bytes.capacity()];
-
         bytes.getBytes(0, array);
-
         return array;
     }
 

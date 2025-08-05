@@ -8,10 +8,11 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-
 import net.minecraft.network.chat.Component;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -43,16 +44,12 @@ public class GuiBase extends Screen
     {
         super(Component.literal("Your Screen Title"));
         current = this.context;
-
         this.context.mc = Minecraft.getInstance();
-        this.context.font = this.context.mc.fontRenderer;
-
+        this.context.font = this.context.mc.font;
         this.root = new GuiRootElement(this.context.mc);
         this.root.markContainer().flex().relative(this.viewport).wh(1F, 1F);
         this.root.keys().register(IKey.lang("mclib.gui.keys.list"), GLFW.GLFW_KEY_F9, () -> this.context.keybinds.toggleVisible());
-
         this.context.keybinds.flex().relative(this.viewport).wh(0.5F, 1F);
-
         Keyboard.enableRepeatEvents(false);
     }
 
@@ -68,10 +65,8 @@ public class GuiBase extends Screen
         if (GuiBase.getCurrent() != null && GuiBase.getCurrent().screen != null && GuiBase.getCurrent().screen.root != null)
         {
             List<T> childList = GuiBase.getCurrent().screen.root.getChildren(clazz);
-
             return (childList.isEmpty()) ? null : childList;
         }
-
         return null;
     }
 
@@ -83,22 +78,21 @@ public class GuiBase extends Screen
     public void init()
     {
         current = this.context;
-
         if (!this.context.keybinds.hasParent())
         {
-            this.root.add(this.context.keybinds);
+            this.root.addArray(this.context.keybinds);
         }
-
         this.viewport.set(0, 0, this.width, this.height);
         this.viewportSet();
-
         this.context.pushViewport(this.viewport);
         this.root.resize();
         this.context.popViewport();
     }
 
     protected void viewportSet()
-    {}
+    {
+
+    }
 
     public void removed()
     {
@@ -109,27 +103,22 @@ public class GuiBase extends Screen
     {
         int x = Mouse.getEventX() * this.width / this.mc.displayWidth;
         int y = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-
         super.handleMouseInput();
-
         int scroll = -Mouse.getEventDWheel();
-
         if (scroll == 0)
         {
             return;
         }
-
         this.mouseScrolled(x, y, scroll);
     }
 
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        this.context.setMouse(mouseX, mouseY, mouseButton);
-
+        this.context.setMouseButton(mouseX, mouseY, mouseButton);
         if (this.root.isEnabled())
         {
             this.context.pushViewport(this.viewport);
-            this.root.mouseClicked(this.context);
+            this.root.mouseGetsClicked(this.context);
             this.context.popViewport();
         }
     }
@@ -148,12 +137,11 @@ public class GuiBase extends Screen
 
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
-        this.context.setMouse(mouseX, mouseY, state);
-
+        this.context.setMouseButton(mouseX, mouseY, state);
         if (this.root.isEnabled())
         {
             this.context.pushViewport(this.viewport);
-            this.root.mouseReleased(this.context);
+            this.root.mouseGetsReleased(this.context);
             this.context.popViewport();
         }
     }
@@ -161,7 +149,6 @@ public class GuiBase extends Screen
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
         this.context.setKey(typedChar, keyCode);
-
         if (this.root.isEnabled() && this.root.keyTyped(this.context))
         {
             return;
@@ -170,7 +157,6 @@ public class GuiBase extends Screen
         this.context.pushViewport(this.viewport);
         this.keyPressed(typedChar, keyCode);
         this.context.popViewport();
-
 
         if (keyCode == 1)
         {
@@ -183,7 +169,9 @@ public class GuiBase extends Screen
      * fields in the GUI (this can be used for handling shortcuts)
      */
     public void keyPressed(char typedChar, int keyCode)
-    {}
+    {
+
+    }
 
     /**
      * This method is called when this screen is about to get closed
@@ -191,12 +179,10 @@ public class GuiBase extends Screen
     protected void closeScreen()
     {
         Minecraft.getInstance().setScreen(null);
-
         if (this.mc.currentScreen == null)
         {
             this.mc.setIngameFocus();
         }
-
         Keyboard.enableRepeatEvents(false);
     }
 
@@ -205,29 +191,21 @@ public class GuiBase extends Screen
         this.closeScreen();
     }
 
-
-
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) 
     {
-        this.renderBackground(poseStack);
         this.context.setMouse(mouseX, mouseY);
         this.context.partialTicks = partialTicks;
-
-        if (this.root.isVisible())
+        if (this.root.isVisible()) 
         {
             this.context.reset();
             this.context.pushViewport(this.viewport);
-
-            this.root.draw(this.context, poseStack);
-
+            this.root.draw(this.context);
             this.context.popViewport();
-            this.context.drawTooltip(poseStack);
-            this.context.postRenderCallbacks.forEach(element -> element.accept(this.context));
+            this.context.drawTooltip();
+            this.context.postRenderCallbacks.forEach((element) -> {element.accept(this.context);});
         }
-
-        super.render(poseStack, mouseX, mouseY, partialTicks);
     }
-
+    
     public static class GuiRootElement extends GuiElement implements IViewport
     {
         public GuiRootElement(Minecraft mc)
@@ -235,12 +213,10 @@ public class GuiBase extends Screen
             super(mc);
         }
 
-
         public void apply(IViewportStack stack)
         {
             stack.pushViewport(this.area);
         }
-
 
         public void unapply(IViewportStack stack)
         {

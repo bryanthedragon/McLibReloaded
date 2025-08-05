@@ -5,6 +5,7 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiConte
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
+
 import net.minecraft.client.Minecraft;
 
 import java.util.List;
@@ -58,10 +59,10 @@ public class GuiColorPalette extends GuiElement
         return this.colors.size() - 1 - this.area.getIndex(context.mouseX, context.mouseY, this.cellSize);
     }
 
-    @Override
+
     public boolean mouseClicked(GuiContext context)
     {
-        if (super.mouseClicked(context))
+        if (super.mouseGetsClicked(context))
         {
             return true;
         }
@@ -81,7 +82,6 @@ public class GuiColorPalette extends GuiElement
         return false;
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         /* Draw recent colors panel */
@@ -103,7 +103,6 @@ public class GuiColorPalette extends GuiElement
                 Color c = this.colors.get(i);
                 int x = this.area.x + j % elements * this.cellSize;
                 int y = this.area.y + j / elements * this.cellSize;
-
                 GuiColorPicker.drawAlphaPreviewQuad(x, y, x + this.cellSize, y + this.cellSize, c);
             }
         }

@@ -2,5 +2,6 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 
 public interface ITextColoring
 {
-    public void setColor(int color, boolean shadow);
+    public void setColorWithShadow(int color, boolean shadow);
+    public void setColorWithTextShadow(int color, boolean textShadow);
 }

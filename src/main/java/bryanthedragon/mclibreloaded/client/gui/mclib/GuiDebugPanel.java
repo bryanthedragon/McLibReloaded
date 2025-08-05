@@ -3,7 +3,7 @@ package bryanthedragon.mclibreloaded.client.gui.mclib;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiButtonElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiSlotElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiSimpleContextMenu;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.text.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.keyframes.GuiDopeSheet;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.keyframes.GuiGraphView;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.keyframes.GuiKeyframesEditor;

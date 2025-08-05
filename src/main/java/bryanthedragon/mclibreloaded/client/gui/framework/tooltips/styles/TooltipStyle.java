@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.tooltips.styles;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 
 public abstract class TooltipStyle
@@ -10,7 +10,7 @@ public abstract class TooltipStyle
 
     public static TooltipStyle get()
     {
-        return get(McLib.tooltipStyle.get());
+        return get(McLibReloaded.tooltipStyle.get());
     }
 
     public static TooltipStyle get(int style)

@@ -52,12 +52,12 @@ public class Elements
 
     public static GuiLabel label(IKey label)
     {
-        return label(label, Minecraft.getInstance().fontRenderer.FONT_HEIGHT);
+        return label(label, Minecraft.getInstance().Font.FONT_HEIGHT);
     }
 
     public static GuiLabel label(IKey label, Icon leftIcon, Icon rightIcon)
     {
-        return label(label, Minecraft.getInstance().fontRenderer.FONT_HEIGHT, leftIcon, rightIcon);
+        return label(label, Minecraft.getInstance().Font.FONT_HEIGHT, leftIcon, rightIcon);
     }
 
     public static GuiLabel label(IKey label, int height)

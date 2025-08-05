@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiLabel;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.IconContainer;
@@ -35,16 +35,13 @@ public class GuiCollapseSection extends GuiElement
         this.title.setLeftIconContainer(this.collapsedIcon);
         this.fields = new GuiElement(mc);
         this.fields.flex().relative(this).column(5).stretch().vertical().height(20);
-
         this.flex().column(5).stretch().vertical();
         super.add(this.title);
-
         if (!collapsed)
         {
             super.add(this.fields);
             this.title.setLeftIconContainer(this.openedIcon);
         }
-
         this.collapsed = collapsed;
     }
 
@@ -55,9 +52,15 @@ public class GuiCollapseSection extends GuiElement
 
     public GuiCollapseSection(Minecraft mc, IKey title)
     {
-        this(mc, title, () -> ColorUtils.HALF_BLACK + McLib.primaryColor.get());
+        this(mc, title, () -> ColorUtils.HALF_BLACK + McLibReloaded.primaryColor.get());
     }
 
+    /**
+     * Sets the collapsed state of the GuiCollapseSection. If the desired state is different from the current state,
+     * the updateCollapse method is called.
+     *
+     * @param collapsed the desired state of the GuiCollapseSection
+     */
     public void setCollapsed(boolean collapsed)
     {
         if (this.collapsed != collapsed)
@@ -66,79 +69,112 @@ public class GuiCollapseSection extends GuiElement
         }
     }
 
+    /**
+     * Returns whether this GuiCollapseSection is collapsed or not.
+     *
+     * @return true if this GuiCollapseSection is collapsed, false otherwise.
+     */
     public boolean isCollapsed()
     {
         return this.collapsed;
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link #add(IGuiElement...)} instead.
+     * Adds a field to the GuiCollapseSection.
+     *
+     * @param element the GuiElement to be added to the fields.
+     */
     public void addField(GuiElement element)
     {
         this.fields.add(element);
     }
 
-    @Deprecated
+    /**
+     * Adds multiple GuiElements to the fields of the GuiCollapseSection.
+     *
+     * @param element the GuiElements to be added to the fields.
+     */
     public void addFields(GuiElement... element)
     {
-        this.fields.add(element);
+        this.fields.addArray(element);
     }
 
-    @Override
-    public void add(IGuiElement... elements)
+    /**
+     * Adds multiple GuiElements to the fields of the GuiCollapseSection. The order of the elements is preserved.
+     *
+     * @param elements the GuiElements to be added to the fields.
+     */
+    public void addGetArray(IGuiElement... elements)
     {
-        this.fields.add(elements);
+        this.fields.addArray(elements);
     }
 
-    @Override
+    /**
+     * Adds a GuiElement to the fields of the GuiCollapseSection.
+     *
+     * @param element the GuiElement to be added to the fields.
+     */
     public void add(IGuiElement element)
     {
         this.fields.add(element);
     }
 
+    /**
+     * Gets the title of the GuiCollapseSection.
+     *
+     * @return the title of the GuiCollapseSection.
+     */
     public GuiLabel getTitle()
     {
         return this.title;
     }
 
+    /**
+     * Updates the collapsed state of the GuiCollapseSection. If the section is currently collapsed, it removes its fields from
+     * the parent and sets the left icon of its title to the collapsed icon. If the section is not collapsed, it adds its fields
+     * back to the parent and sets the left icon of its title to the opened icon.
+     */
     protected void updateCollapse()
     {
         if (!this.collapsed)
         {
             this.fields.removeFromParent();
             this.title.setLeftIconContainer(this.collapsedIcon);
-
             this.collapsed = true;
         }
         else
         {
             super.add(this.fields);
             this.title.setLeftIconContainer(this.openedIcon);
-
             this.collapsed = false;
         }
     }
 
     /**
-     * Toggle visibility of the field section
+     * Handles the mouse click event. If the mouse click occurred on the title of the GuiCollapseSection, the collapse state of the
+     * section is updated and its parent is resized. If the parent is not null, it is resized. If the mouse click did not occur on the
+     * title, the method returns false.
+     *
+     * @param context the GuiContext of the mouse click event
+     * @return true if the mouse click event occurred on the title of the GuiCollapseSection, false otherwise
      */
-    @Override
     public boolean mouseClicked(GuiContext context)
     {
-        if (super.mouseClicked(context))
+        if (super.mouseGetsClicked(context))
         {
             return true;
         }
-
         if (this.title.area.isInside(context))
         {
             this.updateCollapse();
             GuiElement element = this.getRoot();
-
-            if (element != null) element.resize();
-
+            if (element != null) 
+            {
+                element.resize();
+            }
             return true;
         }
-
         return false;
     }
 }

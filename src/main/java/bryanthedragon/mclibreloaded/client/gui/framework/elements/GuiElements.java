@@ -63,7 +63,6 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
     public boolean addAfter(T target, T element)
     {
         int index = this.elements.indexOf(target);
-
         if (index != -1 && element != null)
         {
             if (index + 1 >= this.elements.size())
@@ -74,24 +73,19 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
             {
                 this.elements.add(index + 1, element);
             }
-
             return true;
         }
-
         return false;
     }
 
     public boolean addBefore(T target, T element)
     {
         int index = this.elements.indexOf(target);
-
         if (index != -1 && element != null)
         {
             this.elements.add(index, element);
-
             return true;
         }
-
         return false;
     }
 
@@ -104,7 +98,6 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
         }
     }
 
-    @Override
     public void resize()
     {
         for (T element : this.elements)
@@ -113,7 +106,6 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
         }
     }
 
-    @Override
     public boolean isEnabled()
     {
         return this.enabled && this.visible;
@@ -124,51 +116,76 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
         this.enabled = enabled;
     }
 
-    @Override
+    /**
+     * Returns whether this element and all its children are visible.
+     * 
+     * @return true if this element and all its children are visible, false otherwise
+     */
     public boolean isVisible()
     {
         return this.visible;
     }
 
+    /**
+     * Sets the visibility of this element and all its children.
+     * 
+     * @param visible whether this element and its children should be visible
+     */
     public void setVisible(boolean visible)
     {
         this.visible = visible;
     }
 
-    @Override
-    public boolean mouseClicked(GuiContext context)
+    /**
+     * Handles a mouse click event.
+     * If the element has children, it passes the event to the children.
+     * If the event is not a right-click and the mouse is inside the element and the mouse button is 1,
+     * it checks if there is a context menu needed. If there is, it creates it and sets it in the context.
+     *
+     * @param context the context of the mouse event
+     * @return true if the event was handled, false otherwise
+     */
+    public boolean mouseGetsClicked(GuiContext context)
     {
         for (int i = this.elements.size() - 1; i >= 0; i--)
         {
             T element = this.elements.get(i);
-
-            if (element.isEnabled() && element.mouseClicked(context))
+            if (element.isEnabled() && element.mouseGetsClicked(context))
             {
                 return true;
             }
         }
-
         return false;
     }
 
-    @Override
+    /**
+     * Mouse wheel was scrolled.
+     *
+     * @param context the context of the mouse scroll
+     * @return true if the mouse scroll was consumed by an enabled element, false otherwise
+     */
     public boolean mouseScrolled(GuiContext context)
     {
         for (int i = this.elements.size() - 1; i >= 0; i--)
         {
             T element = this.elements.get(i);
-
             if (element.isEnabled() && element.mouseScrolled(context))
             {
                 return true;
             }
         }
-
         return false;
     }
 
-    @Override
-    public void mouseReleased(GuiContext context)
+    /**
+     * Mouse was released.
+     *
+     * Calls the mouseGetsReleased method of each child element, starting from the last child element and going backwards.
+     * If an element is enabled, calls the mouseGetsReleased method of that element.
+     *
+     * @param context the context of the mouse released event
+     */
+    public void mouseGetsReleased(GuiContext context)
     {
         for (int i = this.elements.size() - 1; i >= 0; i--)
         {
@@ -176,12 +193,20 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
 
             if (element.isEnabled())
             {
-                element.mouseReleased(context);
+                element.mouseGetsReleased(context);
             }
         }
     }
 
-    @Override
+    /**
+     * Key was typed.
+     *
+     * If the children are not null and the children's keyTyped method returns true, returns true.
+     * Otherwise, returns false.
+     *
+     * @param context the context of the key typed
+     * @return true if the children's keyTyped method returns true, otherwise false
+     */
     public boolean keyTyped(GuiContext context)
     {
         for (int i = this.elements.size() - 1; i >= 0; i--)
@@ -197,13 +222,16 @@ public class GuiElements<T extends IGuiElement> implements IGuiElement
         return false;
     }
 
-    @Override
+    /**
+     * Determines whether this element can be drawn on the screen
+     * @param viewport the viewport to check against
+     * @return true if the element can be drawn, false otherwise
+     */
     public boolean canBeDrawn(Area viewport)
     {
         return true;
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         for (T element : this.elements)

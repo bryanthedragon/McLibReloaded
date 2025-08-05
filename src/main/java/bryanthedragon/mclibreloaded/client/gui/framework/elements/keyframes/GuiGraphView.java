@@ -496,7 +496,7 @@ public class GuiGraphView extends GuiKeyframeElement
         RenderSystem.color(1, 1, 1, 1);
 
         /* Draw the graph */
-        vb.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        vb.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
 
         int index = 0;
         int count = channel.getKeyframes().size();
@@ -559,7 +559,7 @@ public class GuiGraphView extends GuiKeyframeElement
         Tessellator.getInstance().draw();
 
         /* Draw points */
-        vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        vb.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         index = 0;
         prev = null;

@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.client.gui.utils;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
+
 import net.minecraft.resources.ResourceLocation;
 
 public class Icons
@@ -8,7 +9,7 @@ public class Icons
     /**
      * Icons texture used across all dashboard panels
      */
-    public static final ResourceLocation ICONS = new ResourceLocation(McLib.MOD_ID, "textures/gui/icons.png");
+    public static final ResourceLocation ICONS = new ResourceLocation(McLibReloaded.MOD_ID, "textures/gui/icons.png");
 
     public static final Icon NONE = new Icon(null, 0, 0);
 

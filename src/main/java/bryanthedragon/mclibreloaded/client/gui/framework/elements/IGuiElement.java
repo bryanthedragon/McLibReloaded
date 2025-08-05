@@ -26,7 +26,7 @@ public interface IGuiElement
     /**
      * Mouse was clicked
      */
-    public boolean mouseClicked(GuiContext context);
+    public boolean mouseGetsClicked(GuiContext context);
 
     /**
      * Mouse wheel was scrolled
@@ -36,7 +36,7 @@ public interface IGuiElement
     /**
      * Mouse was released
      */
-    public void mouseReleased(GuiContext context);
+    public void mouseGetsReleased(GuiContext context);
 
     /**
      * Key was typed

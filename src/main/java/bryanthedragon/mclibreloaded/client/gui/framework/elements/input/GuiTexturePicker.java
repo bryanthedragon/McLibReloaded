@@ -1,11 +1,12 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiButtonElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiIconElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.multiskin.GuiMultiSkinEditor;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.text.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.list.GuiFolderEntryListElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.list.GuiListElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
@@ -20,16 +21,19 @@ import bryanthedragon.mclibreloaded.utils.files.entries.AbstractEntry;
 import bryanthedragon.mclibreloaded.utils.files.entries.FileEntry;
 import bryanthedragon.mclibreloaded.utils.files.entries.FolderEntry;
 import bryanthedragon.mclibreloaded.utils.resources.FilteredResourceLocation;
-import bryanthedragon.mclibreloaded.utils.resources.MultiResourceLocation;
 import bryanthedragon.mclibreloaded.utils.resources.RLUtils;
-
+import bryanthedragon.mclibreloaded.utils.resources.location.MultiResourceLocation;
+import bryanthedragon.mclibreloaded.utils.resources.textures.TextureLocations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,23 +53,19 @@ public class GuiTexturePicker extends GuiElement
     public GuiButtonElement close;
     public GuiButtonElement folder;
     public GuiFolderEntryListElement picker;
-
     public GuiButtonElement multi;
     public GuiFRLListElement multiList;
     public GuiMultiSkinEditor editor;
-
     public GuiElement buttons;
     public GuiIconElement add;
     public GuiIconElement remove;
     public GuiIconElement edit;
-
     public Consumer<ResourceLocation> callback;
-
     public MultiResourceLocation multiRL;
     public FilteredResourceLocation currentFRL;
     public ResourceLocation current;
+    public TextureLocations textureLocations;
     public FileTree tree = GlobalTree.TREE;
-
     private Timer lastTyped = new Timer(1000);
     private Timer lastChecked = new Timer(1000);
     private String typed = "";
@@ -99,7 +99,7 @@ public class GuiTexturePicker extends GuiElement
             this.selectCurrent(rl);
             this.text.setText(rl == null ? "" : rl.toString());
         }) {
-            @Override
+    
             public void setFolder(FolderEntry folder)
             {
                 super.setFolder(folder);
@@ -231,7 +231,7 @@ public class GuiTexturePicker extends GuiElement
      */
     private void addMultiSkin()
     {
-        FilteredResourceLocation rl = this.currentFRL.copy();
+        FilteredResourceLocation rl = this.currentFRL.copier();
 
         this.multiList.add(rl);
         this.multiList.setIndex(this.multiList.getList().size() - 1);
@@ -258,10 +258,11 @@ public class GuiTexturePicker extends GuiElement
         }
     }
 
+    @SuppressWarnings("static-access")
     private void setFRL(FilteredResourceLocation location)
     {
         this.currentFRL = location;
-        this.displayCurrent(location.path);
+        this.displayCurrent(location.Jsonpath);
         this.editor.setLocation(location);
     }
 
@@ -297,7 +298,6 @@ public class GuiTexturePicker extends GuiElement
                 this.picker.parent = folder;
                 this.picker.setCurrent(rl);
                 this.picker.update();
-
                 this.updateFolderButton();
             }
         }
@@ -306,6 +306,7 @@ public class GuiTexturePicker extends GuiElement
     /**
      * Select current resource location
      */
+    @SuppressWarnings("static-access")
     protected void selectCurrent(ResourceLocation rl)
     {
         try
@@ -329,12 +330,12 @@ public class GuiTexturePicker extends GuiElement
         {
             if (rl == null && this.multiRL.children.size() == 1)
             {
-                this.currentFRL.path = rl;
+                this.currentFRL.Jsonpath = rl;
                 this.toggleMultiSkin();
             }
             else
             {
-                this.currentFRL.path = rl;
+                this.currentFRL.Jsonpath = rl;
             }
         }
         else if (this.callback != null)
@@ -345,11 +346,12 @@ public class GuiTexturePicker extends GuiElement
         this.picker.rl = rl;
     }
 
+    @SuppressWarnings("static-access")
     protected void toggleMultiSkin()
     {
         if (this.multiRL != null)
         {
-            this.setMultiSkin(this.multiRL.children.get(0).path, true);
+            this.setMultiSkin(this.multiRL.children.get(0).Jsonpath, true);
         }
         else if (this.current != null)
         {
@@ -373,30 +375,7 @@ public class GuiTexturePicker extends GuiElement
             this.toggleEditor();
         }
 
-        boolean show = skin instanceof MultiResourceLocation;
-
-        if (show)
-        {
-            this.multiRL = (MultiResourceLocation) ((MultiResourceLocation) skin).copy();
-            this.setFRL(this.multiRL.children.get(0));
-
-            this.multiList.setIndex(this.multiRL.children.isEmpty() ? -1 : 0);;
-            this.multiList.setList(this.multiRL.children);
-
-            if (this.current != null)
-            {
-                this.multiList.setIndex(0);
-            }
-
-            this.right.flex().x(120).w(1F, -120);
-        }
-        else
-        {
-            this.multiRL = null;
-
-            this.right.flex().x(0).w(1F);
-            this.displayCurrent(skin);
-        }
+        boolean show = (skin != null && MultiResourceLocation.class.isAssignableFrom(skin.getClass()));
 
         if (notify)
         {
@@ -418,15 +397,51 @@ public class GuiTexturePicker extends GuiElement
         this.updateFolderButton();
     }
 
-    @Override
+    public void setMultiSkin(MultiResourceLocation skin, boolean notify)
+    {
+        boolean show = skin instanceof MultiResourceLocation;
+
+        if (show)
+        {
+            this.multiRL = (MultiResourceLocation) skin.copy();
+            this.setFRL(this.multiRL.children.get(0));
+            this.multiList.setIndex(this.multiRL.children.isEmpty() ? -1 : 0);;
+            this.multiList.setList(this.multiRL.children);
+
+            if (this.current != null)
+            {
+                this.multiList.setIndex(0);
+            }
+            this.right.flex().x(120).w(1F, -120);
+        }
+        else
+        {
+            this.multiRL = null;
+            this.right.flex().x(0).w(1F);
+            this.displayCurrentMulti(skin);
+        }
+    }
+
+    @SuppressWarnings("static-access")
+    private void displayCurrentMulti(MultiResourceLocation skin) 
+    {
+        if (skin != null && !skin.children.isEmpty()) 
+        {
+            this.displayCurrent(skin.children.get(0).Jsonpath);
+        } 
+        else 
+        {
+            this.displayCurrent(null);
+        }
+    }
+
     public boolean mouseClicked(GuiContext context)
     {
         /* Necessary measure to avoid triggering buttons when you press 
          * on a text field, for example */
-        return super.mouseClicked(context) || (this.isVisible() && this.area.isInside(context));
+        return super.mouseGetsClicked(context) || (this.isVisible() && this.area.isInside(context));
     }
 
-    @Override
     public boolean keyTyped(GuiContext context)
     {
         if (super.keyTyped(context))
@@ -449,9 +464,7 @@ public class GuiTexturePicker extends GuiElement
             {
                 this.selectCurrent(((FileEntry) entry).resource);
             }
-
             this.typed = "";
-
             return true;
         }
         else if (keyCode == GLFW.GLFW_KEY_UP)
@@ -465,7 +478,6 @@ public class GuiTexturePicker extends GuiElement
         else if (keyCode == GLFW.GLFW_KEY_ESCAPE)
         {
             this.close();
-
             return true;
         }
 
@@ -477,15 +489,22 @@ public class GuiTexturePicker extends GuiElement
         int index = this.picker.getIndex() + factor;
         int length = this.picker.getList().size();
 
-        if (index < 0) index = length - 1;
-        else if (index >= length) index = 0;
-
-        if (top) index = factor > 0 ? length - 1 : 0;
+        if (index < 0) 
+        {
+            index = length - 1;
+        }
+        else if (index >= length) 
+        {
+            index = 0;
+        }
+        if (top) 
+        {
+            index = factor > 0 ? length - 1 : 0;
+        }
 
         this.picker.setIndex(index);
         this.picker.scroll.scrollIntoView(index * this.picker.scroll.scrollItemSize);
         this.typed = "";
-
         return true;
     }
 
@@ -509,7 +528,6 @@ public class GuiTexturePicker extends GuiElement
             if (entry.title.startsWith(this.typed))
             {
                 this.picker.setCurrentScroll(entry);
-
                 return true;
             }
         }
@@ -517,7 +535,6 @@ public class GuiTexturePicker extends GuiElement
         return true;
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         /* Refresh the list */
@@ -548,7 +565,7 @@ public class GuiTexturePicker extends GuiElement
 
         if (this.editor.isVisible())
         {
-            this.edit.area.draw(ColorUtils.HALF_BLACK + McLib.primaryColor.get());
+            this.edit.area.draw(ColorUtils.HALF_BLACK + McLibReloaded.primaryColor.get());
         }
 
         super.draw(context);
@@ -566,8 +583,7 @@ public class GuiTexturePicker extends GuiElement
                 int w = this.font.getStringWidth(this.typed);
                 int x = this.text.area.x;
                 int y = this.text.area.ey();
-
-                Gui.drawRect(x, y, x + w + 4, y + 4 + this.font.FONT_HEIGHT, ColorUtils.HALF_BLACK + McLib.primaryColor.get());
+                Gui.drawRect(x, y, x + w + 4, y + 4 + this.font.FONT_HEIGHT, ColorUtils.HALF_BLACK + McLibReloaded.primaryColor.get());
                 this.font.drawStringWithShadow(this.typed, x + 2, y + 2, 0xffffff);
             }
 
@@ -578,10 +594,8 @@ public class GuiTexturePicker extends GuiElement
             {
                 RenderSystem.color(1, 1, 1, 1);
                 this.mc.renderEngine.bindTexture(loc);
-
                 int w = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH);
                 int h = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
-
                 int x = this.area.ex();
                 int y = this.area.ey();
                 int fw = w;
@@ -600,12 +614,9 @@ public class GuiTexturePicker extends GuiElement
                         fw = (int) ((w / (float) h) * fh);
                     }
                 }
-
                 x -= fw + 10;
                 y -= fh + 35;
-
                 Icons.CHECKBOARD.renderArea(x, y, fw, fh);
-
                 RenderSystem.enableAlpha();
                 this.mc.renderEngine.bindTexture(loc);
                 GuiDraw.drawBillboard(x, y, 0, 0, fw, fh, fw, fh);
@@ -618,15 +629,13 @@ public class GuiTexturePicker extends GuiElement
         public GuiFRLListElement(Minecraft mc, Consumer<List<FilteredResourceLocation>> callback)
         {
             super(mc, callback);
-
             this.scroll.scrollItemSize = 16;
         }
 
-        @Override
+
         protected boolean sortElements()
         {
             Collections.sort(this.list, (a, b) -> a.toString().compareToIgnoreCase(b.toString()));
-
             return true;
         }
     }

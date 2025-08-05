@@ -2,7 +2,7 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
 import java.util.function.Consumer;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiCirculateElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -15,8 +15,17 @@ import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils.Transformation;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils.RotationOrder;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 /**
  * Transformation editor GUI
@@ -38,7 +47,6 @@ public class GuiTransformations extends GuiElement
     public GuiTrackpadElement ry;
     public GuiTrackpadElement rz;
     public GuiToggleElement one;
-    
     public GuiTrackpadElement drx;
     public GuiTrackpadElement dry;
     public GuiTrackpadElement drz;
@@ -58,34 +66,32 @@ public class GuiTransformations extends GuiElement
         super(mc);
 
         this.tx = new GuiTrackpadElement(mc, (value) -> this.internalSetT(value, this.ty.value, this.tz.value)).block();
-        this.tx.tooltip(IKey.lang("mclib.gui.transforms.x"));
+        this.tx.tooltipLabel(IKey.lang("mclib.gui.transforms.x"));
         this.ty = new GuiTrackpadElement(mc, (value) -> this.internalSetT(this.tx.value, value, this.tz.value)).block();
-        this.ty.tooltip(IKey.lang("mclib.gui.transforms.y"));
+        this.ty.tooltipLabel(IKey.lang("mclib.gui.transforms.y"));
         this.tz = new GuiTrackpadElement(mc, (value) -> this.internalSetT(this.tx.value, this.ty.value, value)).block();
-        this.tz.tooltip(IKey.lang("mclib.gui.transforms.z"));
+        this.tz.tooltipLabel(IKey.lang("mclib.gui.transforms.z"));
 
         this.sx = new GuiTrackpadElement(mc, (value) ->
         {
             boolean one = this.one.isToggled();
-
             this.internalSetS(value, one ? value : this.sy.value, one ? value : this.sz.value);
         });
-        this.sx.tooltip(IKey.lang("mclib.gui.transforms.x"));
+        this.sx.tooltipLabel(IKey.lang("mclib.gui.transforms.x"));
         this.sy = new GuiTrackpadElement(mc, (value) -> this.internalSetS(this.sx.value, value, this.sz.value));
-        this.sy.tooltip(IKey.lang("mclib.gui.transforms.y"));
+        this.sy.tooltipLabel(IKey.lang("mclib.gui.transforms.y"));
         this.sz = new GuiTrackpadElement(mc, (value) -> this.internalSetS(this.sx.value, this.sy.value, value));
-        this.sz.tooltip(IKey.lang("mclib.gui.transforms.z"));
+        this.sz.tooltipLabel(IKey.lang("mclib.gui.transforms.z"));
 
         this.rx = new GuiTrackpadElement(mc, (value) -> this.internalSetR(value, this.ry.value, this.rz.value)).degrees();
-        this.rx.tooltip(IKey.lang("mclib.gui.transforms.x"));
+        this.rx.tooltipLabel(IKey.lang("mclib.gui.transforms.x"));
         this.ry = new GuiTrackpadElement(mc, (value) -> this.internalSetR(this.rx.value, value, this.rz.value)).degrees();
-        this.ry.tooltip(IKey.lang("mclib.gui.transforms.y"));
+        this.ry.tooltipLabel(IKey.lang("mclib.gui.transforms.y"));
         this.rz = new GuiTrackpadElement(mc, (value) -> this.internalSetR(this.rx.value, this.ry.value, value)).degrees();
-        this.rz.tooltip(IKey.lang("mclib.gui.transforms.z"));
+        this.rz.tooltipLabel(IKey.lang("mclib.gui.transforms.z"));
         this.one = new GuiToggleElement(mc, IKey.EMPTY, false, (b) ->
         {
             boolean one = b.isToggled();
-
             this.updateScaleFields();
 
             if (!one)
@@ -102,7 +108,7 @@ public class GuiTransformations extends GuiElement
         this.drz = new GuiRelativeTrackpadElement(mc, (value) -> this.deltaRotate(0, 0, value), IKey.str("Rz")).degrees();
         this.origin = new GuiToggleElement(mc, IKey.EMPTY, false, null);
         this.origin.flex().relative(this.drx).x(1F).y(-13).wh(11, 11).anchorX(1F);
-        this.origin.tooltip(IKey.lang("mclib.gui.transforms.delta.origin"));
+        this.origin.tooltipLabelLabel(IKey.lang("mclib.gui.transforms.delta.origin"));
 
         this.localtx = new GuiRelativeTrackpadElement(mc, (value) -> this.localTranslate(value, 0, 0), IKey.str("X")).block();
         this.localty = new GuiRelativeTrackpadElement(mc, (value) -> this.localTranslate(0, value, 0), IKey.str("Y")).block();
@@ -113,7 +119,7 @@ public class GuiTransformations extends GuiElement
         });
         this.orientation.addLabel(IKey.lang("mclib.gui.transforms.orientation.global"));
         this.orientation.addLabel(IKey.lang("mclib.gui.transforms.orientation.local"));
-        this.orientation.tooltip(IKey.lang("mclib.gui.transforms.orientation.tooltip"));
+        this.orientation.tooltipLabel(IKey.lang("mclib.gui.transforms.orientation.tooltipLabel"));
         this.orientation.flex().relative(this.tx).set(0, -44, 60, 20);
         
         this.first = new GuiElement(mc);
@@ -291,22 +297,23 @@ public class GuiTransformations extends GuiElement
         return menu;
     }
 
-    private void copyTransformations()
-    {
-        ListTag list = new ListTag();
+    // @SuppressWarnings("removal")
+    // private void copyTransformations()
+    // {
+    //     ListTag list = new ListTag();
 
-        list.appendTag(new NBTTagDouble(this.tx.value));
-        list.appendTag(new NBTTagDouble(this.ty.value));
-        list.appendTag(new NBTTagDouble(this.tz.value));
-        list.appendTag(new NBTTagDouble(this.sx.value));
-        list.appendTag(new NBTTagDouble(this.sy.value));
-        list.appendTag(new NBTTagDouble(this.sz.value));
-        list.appendTag(new NBTTagDouble(this.rx.value));
-        list.appendTag(new NBTTagDouble(this.ry.value));
-        list.appendTag(new NBTTagDouble(this.rz.value));
+    //     list.appendTag(new DoubleTag(this.tx.value));
+    //     list.appendTag(new DoubleTag(this.ty.value));
+    //     list.appendTag(new DoubleTag(this.tz.value));
+    //     list.appendTag(new DoubleTag(this.sx.value));
+    //     list.appendTag(new DoubleTag(this.sy.value));
+    //     list.appendTag(new DoubleTag(this.sz.value));
+    //     list.appendTag(new DoubleTag(this.rx.value));
+    //     list.appendTag(new DoubleTag(this.ry.value));
+    //     list.appendTag(new DoubleTag(this.rz.value));
 
-        GuiScreen.setClipboardString(list.toString());
-    }
+    //     Screen.setClipboardString(list.toString());
+    // }
 
     public void pasteAll(ListTag list)
     {
@@ -346,9 +353,9 @@ public class GuiTransformations extends GuiElement
     {
         Vector3d result = new Vector3d();
 
-        result.x = list.getDoubleAt(offset);
-        result.y = list.getDoubleAt(offset + 1);
-        result.z = list.getDoubleAt(offset + 2);
+        result.x = list.getDouble(offset);
+        result.y = list.getDouble(offset + 1);
+        result.z = list.getDouble(offset + 2);
 
         return result;
     }
@@ -363,11 +370,11 @@ public class GuiTransformations extends GuiElement
     protected void prepareRotation(Matrix4f mat)
     {
         Matrix4f rot = new Matrix4f();
-        rot.rotZ((float) Math.toRadians(this.rz.value));
+        rot.rotateZ((float) Math.toRadians(this.rz.value));
         mat.mul(rot);
-        rot.rotY((float) Math.toRadians(this.ry.value));
+        rot.rotateY((float) Math.toRadians(this.ry.value));
         mat.mul(rot);
-        rot.rotX((float) Math.toRadians(this.rx.value));
+        rot.rotateX((float) Math.toRadians(this.rx.value));
         mat.mul(rot);
     }
     
@@ -380,7 +387,9 @@ public class GuiTransformations extends GuiElement
     }
 
     protected void localTranslate(double x, double y, double z)
-    { }
+    {
+
+    }
 
     protected void deltaRotate(double x, double y, double z)
     {
@@ -425,7 +434,7 @@ public class GuiTransformations extends GuiElement
 
         this.orientationCache = GuiStaticTransformOrientation.getOrientation();
 
-        if (McLib.renderTranslateTextColors.get())
+        if (McLibReloaded.renderTranslateTextColors.get())
         {
             this.tx.setTextColor(new Color(1,0.5F,0.5F));
             this.ty.setTextColor(new Color(0.5F,1,0.5F));
@@ -463,7 +472,6 @@ public class GuiTransformations extends GuiElement
             this.setTextColor(0xE0E0E0);
         }
 
-        @Override
         public void mouseReleased(GuiContext context)
         {
             super.mouseReleased(context);
@@ -472,7 +480,6 @@ public class GuiTransformations extends GuiElement
             this.setText(this.label.get());
         }
 
-        @Override
         public void setValueAndNotify(double value)
         {
             this.setValue(value);
@@ -502,19 +509,16 @@ public class GuiTransformations extends GuiElement
             return TransformOrientation.values()[value];
         }
 
-        @Override
         public int getValue()
         {
             return value;
         }
 
-        @Override
         public String getLabel()
         {
             return this.labels.get(value).get();
         }
 
-        @Override
         public void setValue(int newValue, int direction)
         {
             value = newValue;
@@ -537,7 +541,6 @@ public class GuiTransformations extends GuiElement
             }
         }
 
-        @Override
         protected void click(int mouseButton)
         {
             int direction = mouseButton == 0 ? 1 : -1;

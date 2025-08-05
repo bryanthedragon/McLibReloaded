@@ -20,9 +20,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
 import org.apache.commons.io.IOUtils;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import java.nio.charset.StandardCharsets;
 
@@ -62,23 +65,23 @@ public class GuiMultiSkinEditor extends GuiCanvasEditor
             this.location.autoSize = toggle.isToggled();
             this.resizeCanvas();
         });
-        this.autoSize.tooltip(IKey.lang("mclib.gui.multiskin.auto_size_tooltip"));
+        this.autoSize.tooltip(IKey.lang("mclib.gui.multiskin.auto_size_tooltip"), h, null);
         this.sizeW = new GuiTrackpadElement(mc, (value) ->
         {
             this.location.sizeW = value.intValue();
             this.resizeCanvas();
         });
-        this.sizeW.integer().limit(0).tooltip(IKey.lang("mclib.gui.multiskin.size_w"));
+        this.sizeW.integer().limit(0).tooltip(IKey.lang("mclib.gui.multiskin.size_w"), h, null);
         this.sizeH = new GuiTrackpadElement(mc, (value) ->
         {
             this.location.sizeH = value.intValue();
             this.resizeCanvas();
         });
-        this.sizeH.integer().limit(0).tooltip(IKey.lang("mclib.gui.multiskin.size_h"));
+        this.sizeH.integer().limit(0).tooltip(IKey.lang("mclib.gui.multiskin.size_h"), h, null);
 
         this.color = new GuiColorElement(mc, (value) -> this.location.color = value);
         this.color.picker.editAlpha();
-        this.color.direction(Direction.TOP).tooltip(IKey.lang("mclib.gui.multiskin.color"));
+        this.color.direction(Direction.TOP).tooltip(IKey.lang("mclib.gui.multiskin.color"), h, null);
         this.scale = new GuiTrackpadElement(mc, (value) -> this.location.scale = value.floatValue());
         this.scale.limit(0).metric();
         this.scaleToLargest = new GuiToggleElement(mc, IKey.lang("mclib.gui.multiskin.scale_to_largest"), (toggle) -> this.location.scaleToLargest = toggle.isToggled());
@@ -90,9 +93,9 @@ public class GuiMultiSkinEditor extends GuiCanvasEditor
         this.pixelate = new GuiTrackpadElement(mc, (value) -> this.location.pixelate = value.intValue());
         this.pixelate.integer().limit(1);
         this.erase = new GuiToggleElement(mc, IKey.lang("mclib.gui.multiskin.erase"), (toggle) -> this.location.erase = toggle.isToggled());
-        this.erase.tooltip(IKey.lang("mclib.gui.multiskin.erase_tooltip"), Direction.TOP);
+        this.erase.tooltip(IKey.lang("mclib.gui.multiskin.erase_tooltip"), h, Direction.TOP);
 
-        this.editor.add(this.color);
+        this.editor.add(this.color, picker, picker);
         this.editor.add(Elements.label(IKey.lang("mclib.gui.multiskin.scale")).background(), this.scale, this.scaleToLargest);
         this.editor.add(Elements.label(IKey.lang("mclib.gui.multiskin.shift")).background(), this.shiftX, this.shiftY);
         this.editor.add(Elements.label(IKey.lang("mclib.gui.multiskin.pixelate")).background(), this.pixelate, this.erase);
@@ -106,7 +109,7 @@ public class GuiMultiSkinEditor extends GuiCanvasEditor
                 String frag = IOUtils.toString(this.getClass().getResourceAsStream("/assets/mclib/shaders/preview.frag"), StandardCharsets.UTF_8);
 
                 shader = new Shader();
-                shader.compile(vert, frag, true);
+                shader.CompileShader(vert, frag, true);
 
                 uTexture = GL20.glGetUniformLocation(shader.programId, "texture");
                 uTextureBackground = GL20.glGetUniformLocation(shader.programId, "texture_background");
@@ -178,7 +181,6 @@ public class GuiMultiSkinEditor extends GuiCanvasEditor
         this.sizeH.setValue(location.sizeH);
     }
 
-    @Override
     protected void startDragging(GuiContext context)
     {
         super.startDragging(context);
@@ -190,7 +192,6 @@ public class GuiMultiSkinEditor extends GuiCanvasEditor
         }
     }
 
-    @Override
     protected void dragging(GuiContext context)
     {
         super.dragging(context);
@@ -211,13 +212,11 @@ public class GuiMultiSkinEditor extends GuiCanvasEditor
         }
     }
 
-    @Override
     protected boolean shouldDrawCanvas(GuiContext context)
     {
         return this.picker.multiRL != null;
     }
 
-    @Override
     protected void drawCanvasFrame(GuiContext context)
     {
         for (FilteredResourceLocation child : this.picker.multiRL.children)

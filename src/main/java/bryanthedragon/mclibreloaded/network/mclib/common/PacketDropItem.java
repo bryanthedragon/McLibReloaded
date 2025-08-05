@@ -1,38 +1,54 @@
 package bryanthedragon.mclibreloaded.network.mclib.common;
 
-import io.netty.buffer.ByteBuf;
-import bryanthedragon.mclibreloaded.utils.ByteBufUtils;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-
-public class PacketDropItem implements IMessage
+public class PacketDropItem implements CustomPacketPayload
 {
     public ItemStack stack = ItemStack.EMPTY;
 
-    public PacketDropItem()
-    {}
+    public PacketDropItem() 
+    {
+        
+    }
 
-    public PacketDropItem(ItemStack stack)
+    public PacketDropItem(ItemStack stack) 
     {
         this.stack = stack;
     }
 
-    public void fromBytes(ByteBuf buf)
+    // Deserialize packet from buffer
+    @SuppressWarnings({ "unchecked", "null" })
+    public void fromBytes(FriendlyByteBuf buf) 
     {
-        CompoundTag tagCompound = ByteBufUtils.readTag(buf);
-
-        if (tagCompound != null)
-        {
-            this.stack = new ItemStack(tagCompound);
-        }
+        Registry<Item> itemRegistry = (Registry<Item>) Registries.ITEM;
+        Item item = itemRegistry.byId(buf.readVarInt());
+        int count = buf.readVarInt();
+        stack = new ItemStack(item, count);    
     }
 
-    public void toBytes(ByteBuf buf)
+    // Serialize packet to buffer
+    @SuppressWarnings("unchecked")
+    public void toBytes(FriendlyByteBuf buf) 
     {
-        if (!this.stack.isEmpty())
-        {
-            ByteBufUtils.writeTag(buf, this.stack.writeToNBT(new CompoundTag()));
-        }
+        Registry<Item> itemRegistry = (Registry<Item>) Registries.ITEM;
+        buf.writeVarInt(itemRegistry.getId(stack.getItem()));
+        buf.writeVarInt(stack.getCount());
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() 
+    {
+        // only here for inheritance
+        return null;
+    }
+    public static void encode(PacketDropItem packet, FriendlyByteBuf buffer) 
+    {
+        packet.toBytes(buffer);
     }
 }
+

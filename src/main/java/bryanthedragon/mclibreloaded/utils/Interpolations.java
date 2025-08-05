@@ -190,9 +190,9 @@ public class Interpolations
      *
      * This version only goes from 0 to duration with fade in/out being the same
      */
-    public static float envelope(float x, float duration, float fades)
+    public static float envelopeFloater(float x, float duration, float fades)
     {
-        return envelope(x, 0, fades, duration - fades, duration);
+        return envelopeFloat(x, 0, fades, duration - fades, duration);
     }
 
     /**
@@ -200,12 +200,11 @@ public class Interpolations
      *
      * This advanced version allows you to specify a more customized range
      */
-    public static float envelope(float x, float lowIn, float lowOut, float highIn, float highOut)
+    public static float envelopeFloat(float x, float lowIn, float lowOut, float highIn, float highOut)
     {
         if (x < lowIn || x > highOut) return 0;
         if (x < lowOut) return (x - lowIn) / (lowOut - lowIn);
         if (x > highIn) return 1 - (x - highIn) / (highOut - highIn);
-
         return 1;
     }
 
@@ -230,7 +229,6 @@ public class Interpolations
     {
         a = MathHelper.wrapDegrees(a);
         b = MathHelper.wrapDegrees(b);
-
         return lerp(a, normalizeYaw(a, b), position);
     }
 
@@ -248,7 +246,6 @@ public class Interpolations
         double a = y3 - y2 - y0 + y1;
         double b = y0 - y1 - a;
         double c = y2 - y0;
-
         return ((a * x + b) * x + c) * x + y1;
     }
 
@@ -325,7 +322,6 @@ public class Interpolations
         double t3 = lerp(x3, x4, t);
         double t4 = lerp(t1, t2, t);
         double t5 = lerp(t2, t3, t);
-
         return lerp(t4, t5, t);
     }
 
@@ -336,14 +332,11 @@ public class Interpolations
     public static double normalizeYaw(double a, double b)
     {
         double diff = a - b;
-
         if (diff > 180 || diff < -180)
         {
             diff = Math.copySign(360 - Math.abs(diff), diff);
-
             return a + diff;
         }
-
         return b;
     }
 
@@ -352,9 +345,9 @@ public class Interpolations
      *
      * This version only goes from 0 to duration with fade in/out being the same
      */
-    public static double envelope(double x, double duration, double fades)
+    public static double envelopeDoubler(double x, double duration, double fades)
     {
-        return envelope(x, 0, fades, duration - fades, duration);
+        return envelopeDouble(x, 0, fades, duration - fades, duration);
     }
 
     /**
@@ -362,12 +355,11 @@ public class Interpolations
      *
      * This advanced version allows you to specify a more customized range
      */
-    public static double envelope(double x, double lowIn, double lowOut, double highIn, double highOut)
+    public static double envelopeDouble(double x, double lowIn, double lowOut, double highIn, double highOut)
     {
         if (x < lowIn || x > highOut) return 0;
         if (x < lowOut) return (x - lowIn) / (lowOut - lowIn);
         if (x > highIn) return 1 - (x - highIn) / (highOut - highIn);
-
         return 1;
     }
 }

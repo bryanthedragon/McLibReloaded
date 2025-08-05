@@ -1,11 +1,11 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.input.color;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiSimpleContextMenu;
-import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTextElement;
+import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.text.GuiTextElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
@@ -14,6 +14,10 @@ import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -26,7 +30,6 @@ import java.util.function.Consumer;
 
 /**
  * Color picker element
- *
  * This is the one that is responsible for picking colors
  */
 public class GuiColorPicker extends GuiElement
@@ -64,7 +67,7 @@ public class GuiColorPicker extends GuiElement
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
-        vertexbuffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_COLOR);
+        vertexbuffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         vertexbuffer.pos(x1, y1, 0).color(color.r, color.g, color.b, 1).endVertex();
         vertexbuffer.pos(x1, y2, 0).color(color.r, color.g, color.b, 1).endVertex();
         vertexbuffer.pos(x2, y1, 0).color(color.r, color.g, color.b, 1).endVertex();
@@ -82,9 +85,7 @@ public class GuiColorPicker extends GuiElement
     public GuiColorPicker(Minecraft mc, Consumer<Integer> callback)
     {
         super(mc);
-
         this.callback = callback;
-
         this.input = new GuiTextElement(mc, 7, (string) ->
         {
             this.setValue(ColorUtils.parseColor(string));
@@ -101,21 +102,18 @@ public class GuiColorPicker extends GuiElement
         {
             GuiContext context = GuiBase.getCurrent();
             int index = this.recent.getIndex(context);
-
             if (!this.recent.hasColor(index))
             {
                 return null;
             }
-
-            return new GuiSimpleContextMenu(Minecraft.getInstance())
-                .action(Icons.FAVORITE, IKey.lang("mclib.gui.color.context.favorites.add"), () -> this.addToFavorites(this.recent.colors.get(index)));
+            return new GuiSimpleContextMenu(Minecraft.getInstance()).action(Icons.FAVORITE, IKey.lang("mclib.gui.color.context.favorites.add"), () -> this.addToFavorites(this.recent.colors.get(index)));
         });
 
         this.favorite = new GuiColorPalette(mc, (color) ->
         {
             this.setColor(color.getRGBAColor());
             this.updateColor();
-        }).colors(McLib.favoriteColors.getCurrentColors());
+        }).colors(McLibReloaded.favoriteColors.getCurrentColors());
 
         this.favorite.context(() ->
         {
@@ -126,15 +124,11 @@ public class GuiColorPicker extends GuiElement
             {
                 return null;
             }
-
-            return new GuiSimpleContextMenu(Minecraft.getInstance())
-                .action(Icons.REMOVE, IKey.lang("mclib.gui.color.context.favorites.remove"), () -> this.removeFromFavorites(index));
+            return new GuiSimpleContextMenu(Minecraft.getInstance()).action(Icons.REMOVE, IKey.lang("mclib.gui.color.context.favorites.remove"), () -> this.removeFromFavorites(index));
         });
-
         this.input.flex().relative(this).set(5, 5, 0, 20).w(1, -35);
         this.favorite.flex().relative(this).xy(5, 95).w(1F, -10);
         this.recent.flex().relative(this.favorite).w(1F);
-
         this.hideTooltip().add(this.input, this.favorite, this.recent);
     }
 
@@ -142,13 +136,12 @@ public class GuiColorPicker extends GuiElement
     {
         this.editAlpha = true;
         this.input.field.setMaxStringLength(9);
-
         return this;
     }
 
     public void updateField()
     {
-        this.input.setText(this.color.stringify(this.editAlpha));
+        this.input.setText(this.color.stringifier(this.editAlpha));
     }
 
     public void updateColor()
@@ -167,7 +160,7 @@ public class GuiColorPicker extends GuiElement
 
     public void setColor(float r, float g, float b, float a)
     {
-        this.color.set(r, g, b, a);
+        this.color.setColor(r, g, b, a);
         this.updateField();
     }
 
@@ -179,19 +172,16 @@ public class GuiColorPicker extends GuiElement
 
     public void setValue(int color)
     {
-        this.color.set(color, this.editAlpha);
+        this.color.alphaSetter(color, this.editAlpha);
     }
 
-    @Override
     public GuiContextMenu createContextMenu(GuiContext context)
     {
         if (!this.preview.isInside(context))
         {
             return super.createContextMenu(context);
         }
-
-        return new GuiSimpleContextMenu(this.mc)
-            .action(Icons.FAVORITE, IKey.lang("mclib.gui.color.context.favorites.add"), () -> this.addToFavorites(this.color));
+        return new GuiSimpleContextMenu(this.mc).action(Icons.FAVORITE, IKey.lang("mclib.gui.color.context.favorites.add"), () -> this.addToFavorites(this.color));
     }
 
     public void setup(int x, int y)
@@ -206,10 +196,8 @@ public class GuiColorPicker extends GuiElement
         int recent = this.recent.colors.isEmpty() ? 0 : this.recent.getHeight(width - 10);
         int favorite = this.favorite.colors.isEmpty() ? 0 : this.favorite.getHeight(width - 10);
         int base = 85;
-
         base += favorite > 0 ? favorite + 15 : 0;
         base += recent > 0 ? recent + 15 : 0;
-
         this.flex().h(base);
         this.favorite.flex().h(favorite);
         this.recent.flex().h(recent);
@@ -233,18 +221,16 @@ public class GuiColorPicker extends GuiElement
 
     private void addToFavorites(Color color)
     {
-        this.addColor(McLib.favoriteColors.getCurrentColors(), color);
-        McLib.favoriteColors.saveLater();
-
+        this.addColor(McLibReloaded.favoriteColors.getCurrentColors(), color);
+        McLibReloaded.favoriteColors.saveLater();
         this.setupSize();
         this.resize();
     }
 
     private void removeFromFavorites(int index)
     {
-        McLib.favoriteColors.getCurrentColors().remove(index);
-        McLib.favoriteColors.saveLater();
-
+        McLibReloaded.favoriteColors.getCurrentColors().remove(index);
+        McLibReloaded.favoriteColors.saveLater();
         this.setupSize();
         this.resize();
     }
@@ -255,7 +241,7 @@ public class GuiColorPicker extends GuiElement
 
         if (i == -1)
         {
-            colors.add(color.copy());
+            colors.add(color.copier());
         }
         else
         {
@@ -265,7 +251,6 @@ public class GuiColorPicker extends GuiElement
 
     /* GuiElement overrides */
 
-    @Override
     public void resize()
     {
         super.resize();
@@ -275,7 +260,6 @@ public class GuiColorPicker extends GuiElement
         int w = this.area.w - 10;
         int remainder = COLOR_SLIDER_HEIGHT - h * c;
         int y = this.area.y + 30;
-
         this.preview.setPoints(this.area.ex() - 25, this.area.y + 5, this.area.ex() - 5, this.area.y + 25);
         this.red.set(this.area.x + 5, y, w, h);
 
@@ -292,10 +276,9 @@ public class GuiColorPicker extends GuiElement
         }
     }
 
-    @Override
     public boolean mouseClicked(GuiContext context)
     {
-        if (super.mouseClicked(context))
+        if (super.mouseGetsClicked(context))
         {
             return true;
         }
@@ -303,25 +286,21 @@ public class GuiColorPicker extends GuiElement
         if (this.red.isInside(context))
         {
             this.dragging = 1;
-
             return true;
         }
         else if (this.green.isInside(context))
         {
             this.dragging = 2;
-
             return true;
         }
         else if (this.blue.isInside(context))
         {
             this.dragging = 3;
-
             return true;
         }
         else if (this.alpha.isInside(context) && this.editAlpha)
         {
             this.dragging = 4;
-
             return true;
         }
 
@@ -329,7 +308,6 @@ public class GuiColorPicker extends GuiElement
         {
             this.removeFromParent();
             this.addToRecent();
-
             return false;
         }
         else
@@ -338,29 +316,24 @@ public class GuiColorPicker extends GuiElement
         }
     }
 
-    @Override
     public void mouseReleased(GuiContext context)
     {
-        super.mouseReleased(context);
+        super.mouseGetsReleased(context);
         this.dragging = -1;
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         if (this.dragging >= 0)
         {
             float factor = (context.mouseX - (this.red.x + 7)) / (float) (this.red.w - 14);
-
-            this.color.set(MathUtils.clamp(factor, 0, 1), this.dragging);
+            this.color.floatSetter(MathUtils.clamperFloat(factor, 0, 1), this.dragging);
             this.updateColor();
         }
 
         int padding = GuiDraw.drawBorder(this.area, 0xffffffff);
-
         this.area.draw(0xffc6c6c6, padding + 1);
         this.drawRect(this.area.ex() - 25, this.area.y + 5, this.area.ex() - 5, this.area.y + 25);
-
         GuiDraw.drawOutline(this.area.ex() - 25, this.area.y + 5, this.area.ex() - 5, this.area.y + 25, 0x44000000);
 
         if (this.editAlpha)

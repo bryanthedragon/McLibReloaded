@@ -10,6 +10,7 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiKeybi
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
 public class GuiContext implements IViewportStack
 {
     public Minecraft mc;
-    public FontRenderer font;
+    public Font font;
 
     /* GUI elements */
     public final GuiBase screen;
@@ -65,7 +66,7 @@ public class GuiContext implements IViewportStack
         this.viewportStack.reset();
     }
 
-    public void setMouse(int mouseX, int mouseY, int mouseButton)
+    public void setMouseButton(int mouseX, int mouseY, int mouseButton)
     {
         this.setMouse(mouseX, mouseY);
         this.mouseButton = mouseButton;
@@ -93,7 +94,6 @@ public class GuiContext implements IViewportStack
     public void resetTooltip()
     {
         this.tooltip.set(null, null);
-
         if (this.activeElement instanceof GuiElement && !((GuiElement) this.activeElement).canBeSeen())
         {
             this.unfocus();
@@ -114,12 +114,12 @@ public class GuiContext implements IViewportStack
         return this.activeElement != null;
     }
 
-    public void focus(IFocusedGuiElement element)
+    public void focusOnElement(IFocusedGuiElement element)
     {
-        this.focus(element, false);
+        this.focusOnElementSelector(element, false);
     }
 
-    public void focus(IFocusedGuiElement element, boolean select)
+    public void focusOnElementSelector(IFocusedGuiElement element, boolean select)
     {
         if (this.activeElement == element)
         {
@@ -129,7 +129,6 @@ public class GuiContext implements IViewportStack
         if (this.activeElement != null)
         {
             this.activeElement.unfocus(this);
-
             if (select)
             {
                 this.activeElement.unselect(this);
@@ -141,7 +140,6 @@ public class GuiContext implements IViewportStack
         if (this.activeElement != null)
         {
             this.activeElement.focus(this);
-
             if (select)
             {
                 this.activeElement.selectAll(this);
@@ -151,18 +149,18 @@ public class GuiContext implements IViewportStack
 
     public void unfocus()
     {
-        this.focus(null);
+        this.focusOnElement(null);
     }
 
-    public boolean focus(GuiElement parent, int index, int factor)
+    public boolean getFocus(GuiElement parent, int index, int factor)
     {
-        return this.focus(parent, index, factor, false);
+        return this.focuser(parent, index, factor, false);
     }
 
     /**
      * Focus next focusable GUI element
      */
-    public boolean focus(GuiElement parent, int index, int factor, boolean stop)
+    public boolean focuser(GuiElement parent, int index, int factor, boolean stop)
     {
         List<IGuiElement> children = parent.getChildren();
 
@@ -180,15 +178,13 @@ public class GuiContext implements IViewportStack
 
             if (child instanceof IFocusedGuiElement)
             {
-                this.focus((IFocusedGuiElement) child, true);
-
+                this.focusOnElementSelector((IFocusedGuiElement) child, true);
                 return true;
             }
             else if (child instanceof GuiElement)
             {
                 int start = factor > 0 ? -1 : ((GuiElement) child).getChildren().size();
-
-                if (this.focus((GuiElement) child, start, factor, true))
+                if (this.focuser((GuiElement) child, start, factor, true))
                 {
                     return true;
                 }
@@ -203,21 +199,16 @@ public class GuiContext implements IViewportStack
             /* Forgive me for this heresy, but I have no idea what other name I could give
              * to this variable */
             List<IGuiElement> childs = grandparent.getChildren();
-
-            if (this.focus(grandparent, childs.indexOf(parent), factor))
+            if (this.getFocus(grandparent, childs.indexOf(parent), factor))
             {
                 return true;
             }
 
             if (isRoot)
             {
-                if (this.focus(grandparent, factor > 0 ? -1 : childs.size() - 1, factor))
-                {
-                    return true;
-                }
+                return this.getFocus(grandparent, factor > 0 ? -1 : childs.size() - 1, factor);
             }
         }
-
         return false;
     }
 
@@ -234,7 +225,6 @@ public class GuiContext implements IViewportStack
         {
             this.contextMenu = null;
         }
-
         return this.contextMenu != null;
     }
 
@@ -244,12 +234,10 @@ public class GuiContext implements IViewportStack
         {
             return;
         }
-
         menu.setMouse(this);
         menu.resize();
-
         this.contextMenu = menu;
-        this.screen.root.add(menu);
+        this.screen.root.addArray(menu);
     }
 
     public void replaceContextMenu(GuiContextMenu menu)
@@ -263,12 +251,10 @@ public class GuiContext implements IViewportStack
         {
             this.contextMenu.removeFromParent();
         }
-
         menu.setMouse(this);
         menu.resize();
-
         this.contextMenu = menu;
-        this.screen.root.add(menu);
+        this.screen.root.addArray(menu);
     }
 
     /* Viewport */

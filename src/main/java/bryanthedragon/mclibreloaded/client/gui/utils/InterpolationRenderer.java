@@ -61,7 +61,7 @@ public class InterpolationRenderer
         RenderSystem.enableBlend();
         RenderSystem.glLineWidth(2F);
 
-        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        builder.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
 
         builder.pos(x + 10, y + 20, 0).color(fg.r, fg.g, fg.b, 0.2F).endVertex();
         builder.pos(x + 10, y + h - 10, 0).color(fg.r, fg.g, fg.b, 0.2F).endVertex();
@@ -85,7 +85,7 @@ public class InterpolationRenderer
         Tessellator.getInstance().draw();
 
         RenderSystem.glLineWidth(3F);
-        builder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        builder.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
 
         for (int i = 1; i <= iterations; i++)
         {

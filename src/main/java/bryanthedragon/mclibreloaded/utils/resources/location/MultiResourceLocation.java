@@ -42,7 +42,7 @@ public class MultiResourceLocation
     public MultiResourceLocation(String resourceDomainIn, String resourcePathIn)
     {
         this();
-        this.children.add(new FilteredResourceLocation(RLUtils.createTexture(resourceDomainIn, resourcePathIn)));
+        this.children.add(new FilteredResourceLocation(RLUtils.createTextureLocation(resourceDomainIn, resourcePathIn)));
     }
 
     /**
@@ -133,9 +133,10 @@ public class MultiResourceLocation
      * @return the resource domain of the first child, or an empty string 
      *         if there are no children
      */
+    @SuppressWarnings("static-access")
     public String getResourceDomain()
     {
-        return this.children.isEmpty() ? "" : ((ResourceLocation) this.children.get(0).path).getNamespace();
+        return this.children.isEmpty() ? "" : (this.children.get(0).Jsonpath).getNamespace();
     }
 
     /**
@@ -147,9 +148,22 @@ public class MultiResourceLocation
      * @return the resource path of the first child, or an empty string if
      *         there are no children
      */
+    @SuppressWarnings({ "static-access" })
     public String getResourcePath()
     {
-        return this.children.isEmpty() ? "" : ((ResourceLocation) this.children.get(0).path).getPath();
+        return this.children.isEmpty() ? "" : (this.children.get(0).Jsonpath).getPath();
+    }
+
+    @SuppressWarnings("static-access")
+    public ResourceLocation toResourceLocation() 
+    {
+        if (this.children.isEmpty()) 
+        {
+            // build a safe synthetic key
+            return ResourceLocation.fromNamespaceAndPath("multiskin", "empty_" + Integer.toUnsignedString(this.hashCode()));
+        }
+        // your FilteredResourceLocation already holds a ResourceLocation
+        return this.children.get(0).Jsonpath;
     }
 
     /**
@@ -173,7 +187,6 @@ public class MultiResourceLocation
             MultiResourceLocation multi = (MultiResourceLocation) obj;
             return Objects.equal(this.children, multi.children);
         }
-
         return super.equals(obj);
     }
 
@@ -189,7 +202,6 @@ public class MultiResourceLocation
         {
             this.recalculateId();
         }
-
         return this.id;
     }
 
@@ -208,8 +220,7 @@ public class MultiResourceLocation
 
         for (int i = 0; i < list.size(); i++)
         {
-            FilteredResourceLocation location = FilteredResourceLocation.from(list.get(i));
-
+            FilteredResourceLocation location = FilteredResourceLocation.fromNBTResourceLocation(list.get(i));
             if (location != null)
             {
                 this.children.add(location);
@@ -228,8 +239,7 @@ public class MultiResourceLocation
 
         for (int i = 0; i < array.size(); i++)
         {
-            FilteredResourceLocation location = FilteredResourceLocation.from(array.get(i));
-
+            FilteredResourceLocation location = FilteredResourceLocation.fromObjectResourceLocation(array.get(i));
             if (location != null)
             {
                 this.children.add(location);
@@ -248,17 +258,14 @@ public class MultiResourceLocation
     public Tag toNbt()
     {
         ListTag list = new ListTag();
-
         for (FilteredResourceLocation child : this.children)
         {
             Tag tag = child.ToNbt();
-
             if (tag != null)
             {
                 list.add(tag);
             }
         }
-
         return list;
     }
 
@@ -277,13 +284,11 @@ public class MultiResourceLocation
         for (FilteredResourceLocation child : this.children)
         {
             JsonElement element = child.ToJson();
-
             if (element != null)
             {
                 array.add(element);
             }
         }
-
         return array;
     }
 
@@ -296,12 +301,10 @@ public class MultiResourceLocation
     public MultiResourceLocation copy()
     {
         MultiResourceLocation newMulti = new MultiResourceLocation();
-
         for (FilteredResourceLocation child : this.children)
         {
-            newMulti.children.add(child.copy());
+            newMulti.children.add(child.copier());
         }
-
         return newMulti;
     }
 

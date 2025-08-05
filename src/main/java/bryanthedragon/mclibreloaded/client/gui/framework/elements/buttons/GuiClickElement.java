@@ -22,10 +22,9 @@ public abstract class GuiClickElement<T> extends GuiElement
         this.callback = callback;
     }
 
-    @Override
     public boolean mouseClicked(GuiContext context)
     {
-        if (super.mouseClicked(context))
+        if (super.mouseGetsClicked(context))
         {
             return true;
         }
@@ -62,14 +61,12 @@ public abstract class GuiClickElement<T> extends GuiElement
 
     protected abstract T get();
 
-    @Override
     public void mouseReleased(GuiContext context)
     {
-        super.mouseReleased(context);
+        super.mouseGetsReleased(context);
         this.pressed = false;
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         this.hover = this.area.isInside(context);

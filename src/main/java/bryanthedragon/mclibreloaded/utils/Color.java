@@ -10,7 +10,9 @@ public class Color implements ICopy<Color>
     public float a = 1;
 
     public Color()
-    {}
+    {
+
+    }
 
     public Color(float r, float g, float b)
     {
@@ -22,7 +24,6 @@ public class Color implements ICopy<Color>
     public Color(float r, float g, float b, float a)
     {
         this(r, g, b);
-
         this.a = a;
     }
 
@@ -45,13 +46,12 @@ public class Color implements ICopy<Color>
      * @param a alpha component, ranges from 0 to 1
      * @return this
      */
-    public Color set(float r, float g, float b, float a)
+    public Color setColor(float r, float g, float b, float a)
     {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
-
         return this;
     }
 
@@ -69,20 +69,16 @@ public class Color implements ICopy<Color>
             case 1:
                 this.r = value;
             break;
-
             case 2:
                 this.g = value;
             break;
-
             case 3:
                 this.b = value;
             break;
-
             default:
                 this.a = value;
             break;
         }
-
         return this;
     }
 
@@ -107,7 +103,7 @@ public class Color implements ICopy<Color>
      */
     public Color alphaSetter(int color, boolean alpha)
     {
-        this.set((color >> 16 & 0xff) / 255F, (color >> 8 & 0xff) / 255F, (color & 0xff)  / 255F, alpha ? (color >> 24 & 0xff)  / 255F : 1F);
+        this.setColor((color >> 16 & 0xff) / 255F, (color >> 8 & 0xff) / 255F, (color & 0xff)  / 255F, alpha ? (color >> 24 & 0xff)  / 255F : 1F);
         return this;
     }
 
@@ -130,7 +126,7 @@ public class Color implements ICopy<Color>
      */
     public void copy(Color color)
     {
-        this.set(color.r, color.g, color.b, color.a);
+        this.setColor(color.r, color.g, color.b, color.a);
     }
 
     /**
@@ -147,7 +143,6 @@ public class Color implements ICopy<Color>
         float g = MathUtils.clamperFloat(this.g, 0, 1);
         float b = MathUtils.clamperFloat(this.b, 0, 1);
         float a = MathUtils.clamperFloat(this.a, 0, 1);
-
         return ((int) (a * 255) << 24) | ((int) (r * 255) << 16) | ((int) (g * 255) << 8) | (int) (b * 255);
     }
 
@@ -185,7 +180,6 @@ public class Color implements ICopy<Color>
         {
             return "#" + StringUtils.leftPad(Integer.toHexString(this.getRGBAColor()), 8, '0');
         }
-
         return "#" + StringUtils.leftPad(Integer.toHexString(this.getRGBColor()), 6, '0');
     }
 
@@ -200,10 +194,8 @@ public class Color implements ICopy<Color>
         if (obj instanceof Color)
         {
             Color color = (Color) obj;
-
             return color.getRGBAColor() == this.getRGBAColor();
         }
-
         return super.equals(obj);
     }
 }

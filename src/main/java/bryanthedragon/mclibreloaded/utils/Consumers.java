@@ -8,6 +8,12 @@ public class Consumers<C>
 {
     private final TreeMap<Integer, Consumer<C>> callbacks = new TreeMap<>();
 
+    /**
+     * Removes the callback associated with the given id from this consumer manager.
+     * If no callback is associated with the id, no action is taken.
+     * 
+     * @param id the unique id of the callback to remove
+     */
     public void remove(int id)
     {
         this.callbacks.remove(id);
@@ -18,7 +24,7 @@ public class Consumers<C>
      * @param id
      * @param value
      */
-    public void consume(int id, C value)
+    public void consumeID(int id, C value)
     {
         this.consume(id, value, true);
     }
@@ -32,11 +38,9 @@ public class Consumers<C>
     public void consume(int id, C value, boolean remove)
     {
         Consumer<C> callback = this.callbacks.get(id);
-
         if (callback != null)
         {
             callback.accept(value);
-
             if (remove)
             {
                 callbacks.remove(id);
@@ -54,11 +58,8 @@ public class Consumers<C>
         if (!this.callbacks.containsValue(callback))
         {
             Map.Entry<Integer, Consumer<C>> last = this.callbacks.lastEntry();
-
             int id = (last != null) ? last.getKey() + 1 : 0;
-
             this.callbacks.put(id, callback);
-
             return id;
         }
         else
@@ -71,7 +72,6 @@ public class Consumers<C>
                 }
             }
         }
-
         /* this statement should never be reached... */
         return -1;
     }

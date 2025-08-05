@@ -13,6 +13,13 @@ public interface ICopy<T>
 {
     T copier();
 
+    /**
+     * Copies the values from the specified origin to this object.
+     * If the specified origin is an instance of ICopy, it calls the copier() method.
+     * If not, it throws an UnsupportedOperationException.
+     * @param origin the origin object to copy from
+     * @throws UnsupportedOperationException if the specified origin is not an instance of ICopy
+     */
     default void copier(T origin)
     { 
         if (origin instanceof ICopy)

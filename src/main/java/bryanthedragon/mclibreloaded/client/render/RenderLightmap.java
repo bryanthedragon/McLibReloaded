@@ -1,7 +1,9 @@
 package bryanthedragon.mclibreloaded.client.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * without having to resort to straight copy-pasting the code.
  */
 @OnlyIn(Dist.CLIENT)
-public class RenderLightmap extends RenderLivingBase<EntityLivingBase>
+public class RenderLightmap extends RenderLivingBase<LivingEntity>
 {
     /**
      * Private instance 
@@ -25,18 +27,18 @@ public class RenderLightmap extends RenderLivingBase<EntityLivingBase>
     {
         if (instance == null)
         {
-            instance = new RenderLightmap(Minecraft.getInstance().getRenderManager(), null, 0);
+            instance = new RenderLightmap(Minecraft.getInstance().getEntityRenderDispatcher(), null, 0);
         }
 
         return instance;
     }
 
-    public static boolean canRenderNamePlate(EntityLivingBase entity)
+    public static boolean canRenderNamePlate(LivingEntity entity)
     {
         return getInstance().canRenderName(entity);
     }
 
-    public static boolean set(EntityLivingBase entity, float partialTicks)
+    public static boolean set(LivingEntity entity, float partialTicks)
     {
         return getInstance().setBrightness(entity, partialTicks, true);
     }
@@ -46,19 +48,19 @@ public class RenderLightmap extends RenderLivingBase<EntityLivingBase>
         getInstance().unsetBrightness();
     }
 
-    public RenderLightmap(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
+    public RenderLightmap(EntityRenderDispatcher EntityRenderDispatcherIn, ModelBase modelBaseIn, float shadowSizeIn)
     {
-        super(renderManagerIn, modelBaseIn, shadowSizeIn);
+        super(EntityRenderDispatcherIn, modelBaseIn, shadowSizeIn);
     }
 
     @Override
-    protected int getColorMultiplier(EntityLivingBase entitylivingbaseIn, float lightBrightness, float partialTickTime)
+    protected int getColorMultiplier(LivingEntity LivingEntityIn, float lightBrightness, float partialTickTime)
     {
         return 0;
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityLivingBase entity)
+    protected ResourceLocation getEntityTexture(LivingEntity entity)
     {
         return null;
     }

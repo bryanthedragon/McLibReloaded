@@ -23,7 +23,6 @@ public class CompoundUndo <T> implements IUndo<T>
             {
                 continue;
             }
-
             this.undos.add(undo);
         }
     }
@@ -47,19 +46,15 @@ public class CompoundUndo <T> implements IUndo<T>
     public IUndo<T> getFirst(Class<? extends IUndo<T>> clazz)
     {
         int i = 0;
-
         while (i < this.undos.size())
         {
             IUndo<T> undo = this.undos.get(i);
-
             if (clazz.isAssignableFrom(undo.getClass()))
             {
                 return undo;
             }
-
             i += 1;
         }
-
         return null;
     }
 
@@ -72,19 +67,15 @@ public class CompoundUndo <T> implements IUndo<T>
     public IUndo<T> getLast(Class<? extends IUndo<T>> clazz)
     {
         int i = this.undos.size() - 1;
-
         while (i >= 0)
         {
             IUndo<T> undo = this.undos.get(i);
-
             if (clazz.isAssignableFrom(undo.getClass()))
             {
                 return undo;
             }
-
             i -= 1;
         }
-
         return null;
     }
 
@@ -103,7 +94,6 @@ public class CompoundUndo <T> implements IUndo<T>
                 return true;
             }
         }
-
         return false;
     }
 
@@ -116,7 +106,6 @@ public class CompoundUndo <T> implements IUndo<T>
     public IUndo<T> noMerging()
     {
         this.mergable = false;
-
         return this;
     }
 
@@ -137,7 +126,6 @@ public class CompoundUndo <T> implements IUndo<T>
         if (this.mergable && undo instanceof CompoundUndo && ((CompoundUndo<T>) undo).undos.size() == this.undos.size())
         {
             CompoundUndo<T> compound = (CompoundUndo<T>) undo;
-
             for (int i = 0; i < this.undos.size(); i++)
             {
                 if (!this.undos.get(i).isMergeable(compound.undos.get(i)))
@@ -145,10 +133,8 @@ public class CompoundUndo <T> implements IUndo<T>
                     return false;
                 }
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -165,12 +151,10 @@ public class CompoundUndo <T> implements IUndo<T>
     public void merge(IUndo<T> undo)
     {
         CompoundUndo<T> theUndo = (CompoundUndo<T>) undo;
-
         for (int i = 0, c = this.undos.size(); i < c; i++)
         {
             IUndo<T> otherChildUndo = theUndo.undos.get(i);
             IUndo<T> myUndo = this.undos.get(i);
-
             if (myUndo.isMergeable(otherChildUndo))
             {
                 myUndo.merge(otherChildUndo);

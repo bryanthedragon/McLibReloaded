@@ -1,6 +1,5 @@
 package bryanthedragon.mclibreloaded.utils;
 
-
 import net.minecraft.client.resources.language.I18n;
 
 import net.minecraftforge.api.distmarker.Dist;

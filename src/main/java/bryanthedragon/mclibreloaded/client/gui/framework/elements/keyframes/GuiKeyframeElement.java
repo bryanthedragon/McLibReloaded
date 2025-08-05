@@ -10,6 +10,7 @@ import bryanthedragon.mclibreloaded.utils.keyframes.Keyframe;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeEasing;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
@@ -392,7 +393,7 @@ public abstract class GuiKeyframeElement extends GuiElement
 
     protected void drawRect(BufferBuilder builder, int x, int y, int offset, int c)
     {
-        COLOR.set(c, false);
+        COLOR.alphaSetter(c, false);
 
         builder.pos(x - offset, y + offset, 0.0D).color(COLOR.r, COLOR.g, COLOR.b, 1F).endVertex();
         builder.pos(x + offset, y + offset, 0.0D).color(COLOR.r, COLOR.g, COLOR.b, 1F).endVertex();

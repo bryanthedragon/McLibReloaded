@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiSimpleContextMenu;
@@ -20,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
 public class GuiSlotElement extends GuiClickElement<ItemStack>
 {
     public static final ResourceLocation SHIELD = new ResourceLocation("minecraft:textures/items/empty_armor_slot_shield.png");
@@ -27,22 +29,17 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
     public static final ResourceLocation LEGGINGS = new ResourceLocation("minecraft:textures/items/empty_armor_slot_leggings.png");
     public static final ResourceLocation CHESTPLATE = new ResourceLocation("minecraft:textures/items/empty_armor_slot_chestplate.png");
     public static final ResourceLocation HELMET = new ResourceLocation("minecraft:textures/items/empty_armor_slot_helmet.png");
-
     public GuiInventoryElement inventory;
     public final int slot;
-
     private ItemStack stack = ItemStack.EMPTY;
-
     public boolean drawDisabled = true;
     public int lastSlot;
 
     public GuiSlotElement(Minecraft mc, int slot, Consumer<ItemStack> callback)
     {
         super(mc, callback);
-
         this.slot = slot;
         this.inventory = new GuiInventoryElement(mc, this);
-
         this.flex().wh(24, 24);
     }
 
@@ -98,11 +95,10 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
             }
         }
         catch (Exception e)
-        {}
+        {
 
-        return menu
-            .action(Icons.DOWNLOAD, IKey.lang("mclib.gui.item_slot.context.drop"), this::dropItem)
-            .action(Icons.CLOSE, IKey.lang("mclib.gui.item_slot.context.clear"), this::clearItem);
+        }
+        return menu.action(Icons.DOWNLOAD, IKey.lang("mclib.gui.item_slot.context.drop"), this::dropItem).action(Icons.CLOSE, IKey.lang("mclib.gui.item_slot.context.clear"), this::clearItem);
     }
 
     private void copyNBT()
@@ -142,7 +138,7 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
         this.inventory.resize();
         this.inventory.updateInventory();
 
-        context.screen.root.add(this.inventory);
+        context.screen.root.addArray(this.inventory);
     }
 
     @Override
@@ -154,9 +150,9 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
     @Override
     protected void drawSkin(GuiContext context)
     {
-        int border = this.inventory.hasParent() ? 0xff000000 + McLib.primaryColor.get() : 0xffffffff;
+        int border = this.inventory.hasParent() ? 0xff000000 + McLibReloaded.primaryColor.get() : 0xffffffff;
 
-        if (McLib.enableBorders.get())
+        if (McLibReloaded.enableBorders.get())
         {
             Gui.drawRect(this.area.x + 1, this.area.y, this.area.ex() - 1, this.area.ey(), 0xff000000);
             Gui.drawRect(this.area.x, this.area.y + 1, this.area.ex(), this.area.ey() - 1, 0xff000000);
@@ -205,7 +201,6 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
             RenderHelper.enableGUIStandardItemLighting();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
             RenderSystem.enableDepth();
-
             GuiInventoryElement.drawItemStack(this.stack, x, y, null);
 
             if (this.area.isInside(context))
@@ -219,7 +214,7 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
 
         if (this.drawDisabled)
         {
-            GuiDraw.drawLockedArea(this, McLib.enableBorders.get() ? 1 : 0);
+            GuiDraw.drawLockedArea(this, McLibReloaded.enableBorders.get() ? 1 : 0);
         }
     }
 
@@ -227,9 +222,7 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
     public void drawTooltip(GuiContext context, Area area)
     {
         super.drawTooltip(context, area);
-
         GuiInventoryElement.drawItemTooltip(this.stack, this.mc.player, this.font, context.mouseX, context.mouseY);
-
         RenderSystem.disableLighting();
     }
 }

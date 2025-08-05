@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
@@ -33,13 +33,13 @@ public class GuiKeybindElement extends GuiElement
 
     public GuiKeybindElement(Minecraft mc, ValueInt value, Consumer<Integer> callback)
     {
-        this(mc, callback == null ? value::set : (integer) ->
+        this(mc, callback == null ? value::setBaseValue : (integer) ->
         {
-            value.set(integer);
+            value.setBaseValue(integer);
             callback.accept(integer);
         });
         this.setKeybind(value.get());
-        this.tooltip(IKey.lang(value.getCommentKey()));
+        this.tooltipLabel(IKey.lang(value.getCommentKey()));
 
         if (value.getSubtype() == Subtype.COMBOKEY)
         {
@@ -61,10 +61,9 @@ public class GuiKeybindElement extends GuiElement
         this.keybind = keybind;
     }
 
-    @Override
     public boolean mouseClicked(GuiContext context)
     {
-        if (super.mouseClicked(context))
+        if (super.mouseGetsClicked(context))
         {
             return true;
         }
@@ -77,7 +76,6 @@ public class GuiKeybindElement extends GuiElement
         return this.area.isInside(context);
     }
 
-    @Override
     public boolean keyTyped(GuiContext context)
     {
         if (super.keyTyped(context))
@@ -95,7 +93,7 @@ public class GuiKeybindElement extends GuiElement
             {
                 if (context.keyCode == GLFW.GLFW_KEY_ESCAPE)
                 {
-                    this.keybind = GLFW.GLFW_KEY_NONE;
+                    this.keybind = GLFW.GLFW_KEY_UNKNOWN;
                 }
                 else
                 {
@@ -117,10 +115,8 @@ public class GuiKeybindElement extends GuiElement
                     this.callback.accept(this.keybind);
                 }
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -138,23 +134,19 @@ public class GuiKeybindElement extends GuiElement
                 {
                     this.callback.accept(this.keybind);
                 }
-
                 return;
             }
         }
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         if (this.enabled)
         {
-            GuiDraw.drawBorder(this.area, 0xff000000 + McLib.primaryColor.get());
-
+            GuiDraw.drawBorder(this.area, 0xff000000 + McLibReloaded.primaryColor.get());
             int x = this.area.mx();
             int y = this.area.my();
             int a = (int) (Math.sin((context.tick + context.partialTicks) / 2D) * 127.5 + 127.5) << 24;
-
             Gui.drawRect(x - 1, y - 6, x + 1, y + 6, a + 0xffffff);
 
             if (this.comboKey)
@@ -165,10 +157,8 @@ public class GuiKeybindElement extends GuiElement
         else
         {
             this.area.draw(0xff000000);
-
             this.drawCenteredString(this.font, Keys.getComboKeyName(this.keybind), this.area.mx(), this.area.my() - this.font.FONT_HEIGHT / 2, 0xffffff);
         }
-
         super.draw(context);
     }
 }

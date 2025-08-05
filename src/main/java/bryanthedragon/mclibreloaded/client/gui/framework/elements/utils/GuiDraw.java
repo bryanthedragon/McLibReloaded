@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
@@ -40,10 +40,10 @@ public class GuiDraw
         {
             w += Math.min(x - scissor.x, 0);
             h += Math.min(y - scissor.y, 0);
-            x = MathUtils.clamp(x, scissor.x, scissor.ex());
-            y = MathUtils.clamp(y, scissor.y, scissor.ey());
-            w = MathUtils.clamp(w, 0, scissor.ex() - x);
-            h = MathUtils.clamp(h, 0, scissor.ey() - y);
+            x = MathUtils.clampInt(x, scissor.x, scissor.ex());
+            y = MathUtils.clampInt(y, scissor.y, scissor.ey());
+            w = MathUtils.clampInt(w, 0, scissor.ex() - x);
+            h = MathUtils.clampInt(h, 0, scissor.ey() - y);
         }
 
         scissor = new Area(x, y, w, h);
@@ -126,7 +126,7 @@ public class GuiDraw
         Tessellator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
         buffer.pos(right, top, zLevel).color(r2, g2, b2, a2).endVertex();
         buffer.pos(left, top, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.pos(left, bottom, zLevel).color(r1, g1, b1, a1).endVertex();
@@ -169,7 +169,7 @@ public class GuiDraw
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
         buffer.pos(right, top, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.pos(left, top, zLevel).color(r1, g1, b1, a1).endVertex();
         buffer.pos(left, bottom, zLevel).color(r2, g2, b2, a2).endVertex();
@@ -196,7 +196,7 @@ public class GuiDraw
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
         drawBillboard(buffer, x, y, u, v, w, h, textureW, textureH, z);
         tessellator.draw();
     }
@@ -225,7 +225,7 @@ public class GuiDraw
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
         drawBillboard(buffer, x, y, u, v, w, h, textureW, textureH, tu, tv, z);
         tessellator.draw();
     }
@@ -345,7 +345,7 @@ public class GuiDraw
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         /* Draw opaque part */
         buffer.pos(right - offset, top + offset, 0).color(r1, g1, b1, a1).endVertex();
@@ -405,7 +405,7 @@ public class GuiDraw
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
         buffer.pos(x, y, 0).color(r1, g1, b1, a1).endVertex();
 
@@ -452,7 +452,7 @@ public class GuiDraw
         BufferBuilder buffer = tessellator.getBuffer();
 
         /* Draw opaque base */
-        buffer.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
         buffer.pos(x, y, 0).color(r1, g1, b1, a1).endVertex();
 
         for (int i = 0; i <= segments; i ++)
@@ -465,7 +465,7 @@ public class GuiDraw
         tessellator.draw();
 
         /* Draw outer shadow */
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         for (int i = 0; i < segments; i ++)
         {
@@ -486,17 +486,17 @@ public class GuiDraw
         RenderSystem.enableTexture2D();
     }
 
-    public static int drawMultiText(FontRenderer font, String text, int x, int y, int color, int width)
+    public static int drawMultiText(Font font, String text, int x, int y, int color, int width)
     {
         return drawMultiText(font, text, x, y, color, width, 12);
     }
 
-    public static int drawMultiText(FontRenderer font, String text, int x, int y, int color, int width, int lineHeight)
+    public static int drawMultiText(Font font, String text, int x, int y, int color, int width, int lineHeight)
     {
         return drawMultiText(font, text, x, y, color, width, lineHeight, 0F, 0F);
     }
 
-    public static int drawMultiText(FontRenderer font, String text, int x, int y, int color, int width, int lineHeight, float ax, float ay)
+    public static int drawMultiText(Font font, String text, int x, int y, int color, int width, int lineHeight, float ax, float ay)
     {
         List<String> list = font.listFormattedStringToWidth(text, width);
         int h = (lineHeight * (list.size() - 1)) + font.FONT_HEIGHT;
@@ -513,17 +513,17 @@ public class GuiDraw
         return h;
     }
 
-    public static void drawTextBackground(FontRenderer font, String text, int x, int y, int color, int background)
+    public static void drawTextBackground(Font font, String text, int x, int y, int color, int background)
     {
         drawTextBackground(font, text, x, y, color, background, 3);
     }
 
-    public static void drawTextBackground(FontRenderer font, String text, int x, int y, int color, int background, int offset)
+    public static void drawTextBackground(Font font, String text, int x, int y, int color, int background, int offset)
     {
         drawTextBackground(font, text, x, y, color, background, offset, true);
     }
 
-    public static void drawTextBackground(FontRenderer font, String text, int x, int y, int color, int background, int offset, boolean shadow)
+    public static void drawTextBackground(Font font, String text, int x, int y, int color, int background, int offset, boolean shadow)
     {
         int a = background >> 24 & 0xff;
 
@@ -567,7 +567,7 @@ public class GuiDraw
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
 
         for (int i = 0, c = countX * countY; i < c; i ++)
         {

@@ -64,7 +64,6 @@ public enum Direction
         {
             return  RIGHT;
         }
-
         /* this == RIGHT */
         return LEFT;
     }

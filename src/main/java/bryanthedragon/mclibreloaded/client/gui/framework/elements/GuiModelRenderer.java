@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.utils.DummyEntity;
@@ -8,6 +8,11 @@ import bryanthedragon.mclibreloaded.utils.MathUtils;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState; 
+import net.minecraft.world.level.block.Blocks;
 
 import org.joml.Matrix3d;
 import org.joml.Matrix4d;
@@ -17,8 +22,12 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.opengl.RenderSystem;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
@@ -35,9 +44,10 @@ public abstract class GuiModelRenderer extends GuiElement
     private static Matrix3d mat = new Matrix3d();
     protected Matrix4d cameraMatrix = new Matrix4d();
 
-    protected EntityLivingBase entity;
-    protected IBlockState block = Blocks.GRASS.getDefaultState();
+    protected LivingEntity entity;
+    protected BlockState block = Blocks.GRASS_BLOCK.defaultBlockState();
 
+    protected PoseStack poseStack = new PoseStack();
     protected int timer;
     protected boolean dragging;
     protected boolean position;
@@ -102,7 +112,6 @@ public abstract class GuiModelRenderer extends GuiElement
     public GuiModelRenderer picker(Consumer<String> callback)
     {
         this.callback = callback;
-
         return this;
     }
 
@@ -122,7 +131,7 @@ public abstract class GuiModelRenderer extends GuiElement
         this.scale = scale;
     }
 
-    public EntityLivingBase getEntity()
+    public LivingEntity getEntity()
     {
         return this.entity;
     }
@@ -133,13 +142,10 @@ public abstract class GuiModelRenderer extends GuiElement
         this.pitch = 0;
         this.scale = 2;
         this.pos = new Vector3f(0, 1, 0);
-
         this.hideModel = false;
         this.fullScreen = false;
-
         this.beforeRender = null;
         this.afterRender = null;
-
         this.customEntity = false;
         this.entityPitch = 0F;
         this.entityYawHead = 0F;
@@ -147,10 +153,9 @@ public abstract class GuiModelRenderer extends GuiElement
         this.entityTicksExisted = 0;
     }
 
-    @Override
     public boolean mouseClicked(GuiContext context)
     {
-        if (super.mouseClicked(context))
+        if (super.mouseGetsClicked(context))
         {
             return true;
         }
@@ -159,17 +164,16 @@ public abstract class GuiModelRenderer extends GuiElement
         {
             this.dragging = true;
             this.flight = false;
-            this.position = GuiScreen.isShiftKeyDown() || context.mouseButton == 2;
+            this.position = Screen.hasShiftDown() || context.mouseButton == 2;
             this.lastX = context.mouseX;
             this.lastY = context.mouseY;
 
-            if (GuiScreen.isCtrlKeyDown())
+            if (Screen.hasControlDown())
             {
                 this.tryPicking = true;
                 this.dragging = false;
             }
         }
-
         return this.area.isInside(context);
     }
 
@@ -184,23 +188,33 @@ public abstract class GuiModelRenderer extends GuiElement
         if (this.area.isInside(context))
         {
             this.scale += Math.copySign(this.getZoomFactor(), context.mouseWheel);
-            this.scale = MathUtils.clamp(this.scale, 0, 100);
+            this.scale = MathUtils.clampInt((int) this.scale, 0, 100);
         }
-
         return this.area.isInside(context);
     }
 
     protected float getZoomFactor()
     {
-        if (this.scale < 1) return 0.05F;
-        if (this.scale > 30) return 5F;
-        if (this.scale > 10) return 1F;
-        if (this.scale > 3) return 0.5F;
-
+        if (this.scale < 1) 
+        {
+            return 0.05F;
+        }
+        if (this.scale > 30) 
+        {
+            return 5F;
+        }
+        if (this.scale > 10) 
+        {
+            return 1F;
+        }
+        if (this.scale > 3) 
+        {
+            return 0.5F;
+        }
         return 0.1F;
     }
 
-    @Override
+
     public void mouseReleased(GuiContext context)
     {
         this.dragging = false;
@@ -209,16 +223,13 @@ public abstract class GuiModelRenderer extends GuiElement
         if (this.flight)
         {
             this.flight = false;
-
             vec.set(0, 0, -this.scale);
             this.rotateVector(vec);
-
             this.pos.x -= vec.x;
             this.pos.y -= vec.y;
             this.pos.z -= vec.z;
         }
-
-        super.mouseReleased(context);
+        super.mouseGetsReleased(context);
     }
 
     @Override
@@ -226,25 +237,20 @@ public abstract class GuiModelRenderer extends GuiElement
     {
         if (this.dragging && !this.position)
         {
-            if (context.keyCode == GLFW.GLFW.KEY_W || context.keyCode == GLFW.GLFW_KEY_S || context.keyCode == GLFW.GLFW_KEY_A ||
-                    context.keyCode == GLFW.GLFW_KEY_D || context.keyCode == GLFW.GLFW_KEY_LSHIFT || context.keyCode == GLFW.GLFW_KEY_SPACE)
+            if (context.keyCode == GLFW.GLFW_KEY_W || context.keyCode == GLFW.GLFW_KEY_S || context.keyCode == GLFW.GLFW_KEY_A || context.keyCode == GLFW.GLFW_KEY_D || context.keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || context.keyCode == GLFW.GLFW_KEY_SPACE)
             {
                 if (!this.flight)
                 {
                     this.flight = true;
-
                     vec.set(0, 0, -this.scale);
                     this.rotateVector(vec);
-
                     this.pos.x += vec.x;
                     this.pos.y += vec.y;
                     this.pos.z += vec.z;
                 }
-
                 return true;
             }
         }
-
         return super.keyTyped(context);
     }
 
@@ -252,17 +258,12 @@ public abstract class GuiModelRenderer extends GuiElement
     public void draw(GuiContext context)
     {
         this.updateLogic(context);
-
         rendering = true;
-
         GuiDraw.scissor(this.area.x, this.area.y, this.area.w, this.area.h, context);
         this.drawModel(context);
         GuiDraw.unscissor(context);
-
         rendering = false;
-
         super.draw(context);
-
         this.updatePosition(context);
     }
 
@@ -280,7 +281,6 @@ public abstract class GuiModelRenderer extends GuiElement
             this.update();
             i --;
         }
-
         this.tick = context.tick;
     }
 
@@ -289,8 +289,8 @@ public abstract class GuiModelRenderer extends GuiElement
      */
     protected void update()
     {
-        this.timer = this.mc.player != null ? this.mc.player.ticksExisted : this.timer + 1;
-        this.entity.ticksExisted = this.timer;
+        this.timer = this.mc.player != null ? this.mc.player.tickCount : this.timer + 1;
+        this.entity.tickCount = this.timer;
     }
 
     /**
@@ -303,7 +303,7 @@ public abstract class GuiModelRenderer extends GuiElement
         this.setupEntity();
 
         /* Enable rendering states */
-        RenderHelper.enableStandardItemLighting();
+        Lighting.enableGuiDepthLighting();
         RenderSystem.enableAlpha();
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableDepth();
@@ -315,7 +315,7 @@ public abstract class GuiModelRenderer extends GuiElement
         RenderSystem.loadIdentity();
         RenderSystem.rotate(this.pitch, 1.0F, 0.0F, 0.0F);
         RenderSystem.rotate(this.yaw, 0.0F, 1.0F, 0.0F);
-        RenderSystem.translate(-this.temp.x, -this.temp.y, -this.temp.z);
+        poseStack.translate(-this.temp.x, -this.temp.y, -this.temp.z);
         this.cameraMatrix = MatrixUtils.readModelViewDouble();
 
         /* Custom render settings */
@@ -345,14 +345,14 @@ public abstract class GuiModelRenderer extends GuiElement
             RenderSystem.depthFunc(GL11.GL_LEQUAL);
         }
 
-        RenderSystem.popMatrix();
+        poseStack.popPose();
 
         /* Disable rendering states */
         RenderSystem.enableCull();
         RenderSystem.disableDepth();
         RenderSystem.disableRescaleNormal();
         RenderSystem.disableAlpha();
-        RenderHelper.disableStandardItemLighting();
+        Lighting.disableStandardItemLighting();
 
         RenderSystem.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         RenderSystem.disableTexture2D();
@@ -378,23 +378,18 @@ public abstract class GuiModelRenderer extends GuiElement
                 float x = this.pos.x;
                 float y = this.pos.y;
                 float z = this.pos.z;
-
                 double xx = -(this.lastX - mouseX) / 60F;
                 double yy = -(this.lastY - mouseY) / 60F;
                 float factor = this.getZoomFactor();
-
                 xx *= factor / 0.1F;
                 yy *= factor / 0.1F;
-
                 if (xx != 0 || yy != 0)
                 {
                     vec.set(xx, yy, 0);
                     this.rotateVector(vec);
-
                     x += vec.x;
                     y += vec.y;
                     z += vec.z;
-
                     this.pos.set(x, y, z);
                 }
             }
@@ -403,7 +398,6 @@ public abstract class GuiModelRenderer extends GuiElement
                 this.yaw -= this.lastX - mouseX;
                 this.pitch -= this.lastY - mouseY;
             }
-
             this.lastX = mouseX;
             this.lastY = mouseY;
         }
@@ -443,7 +437,7 @@ public abstract class GuiModelRenderer extends GuiElement
                 vec.x--;
             }
 
-            mat.rotY((180 - this.yaw) / 180 * (float) Math.PI);
+            mat.rotateY((180 - this.yaw) / 180 * (float) Math.PI);
             mat.transform(vec);
 
             if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_SPACE))
@@ -460,7 +454,6 @@ public abstract class GuiModelRenderer extends GuiElement
             {
                 vec.normalize();
             }
-
             this.pos.x += vec.x * multiplier;
             this.pos.y += vec.y * multiplier;
             this.pos.z += vec.z * multiplier;
@@ -478,7 +471,6 @@ public abstract class GuiModelRenderer extends GuiElement
 
         vec.set(0, 0, -this.scale);
         this.rotateVector(vec);
-
         this.temp.x += vec.x;
         this.temp.y += vec.y;
         this.temp.z += vec.z;
@@ -486,9 +478,9 @@ public abstract class GuiModelRenderer extends GuiElement
 
     private void rotateVector(Vector3d vec)
     {
-        mat.rotX(this.pitch / 180 * (float) Math.PI);
+        mat.rotateX(this.pitch / 180 * (float) Math.PI);
         mat.transform(vec);
-        mat.rotY((180 - this.yaw) / 180 * (float) Math.PI);
+        mat.rotateY((180 - this.yaw) / 180 * (float) Math.PI);
         mat.transform(vec);
     }
 
@@ -581,13 +573,11 @@ public abstract class GuiModelRenderer extends GuiElement
         if (this.callback != null)
         {
             int value = buffer.get();
-
             if (value > 0)
             {
                 this.callback.accept(this.getStencilValue(value));
             }
         }
-
         this.tryPicking = false;
     }
 
@@ -595,7 +585,9 @@ public abstract class GuiModelRenderer extends GuiElement
      * Here you should draw your own things into stencil
      */
     protected void drawForStencil(GuiContext context)
-    {}
+    {
+
+    }
 
     protected String getStencilValue(int value)
     {
@@ -608,17 +600,17 @@ public abstract class GuiModelRenderer extends GuiElement
      */
     protected void drawGround()
     {
-        if (McLib.enableGridRendering.get())
+        if (McLibReloaded.enableGridRendering.get())
         {
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder buffer = tessellator.getBuffer();
+            Tesselator tess = Tesselator.getInstance();
+            BufferBuilder buffer = tess.getBuffer();
 
             GL11.glLineWidth(3);
             RenderSystem.disableTexture2D();
             RenderSystem.enableAlpha();
             RenderSystem.enableBlend();
             RenderSystem.disableLighting();
-            buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+            buffer.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
 
             for (int x = 0; x <= 10; x ++)
             {
@@ -655,17 +647,15 @@ public abstract class GuiModelRenderer extends GuiElement
         }
         else
         {
-            BlockRendererDispatcher renderer = this.mc.getBlockRendererDispatcher();
-
+            BlockRenderDispatcher renderer = this.mc.getBlockRenderer();
             this.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
             RenderSystem.pushMatrix();
-            RenderSystem.translate(0, -0.5F, 0);
+            poseStack.translate(0, -0.5F, 0);
             RenderSystem.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
-            RenderSystem.translate(-0.5F, -0.5F, 0.5F);
+            poseStack.translate(-0.5F, -0.5F, 0.5F);
             renderer.renderBlockBrightness(this.block, 1.0F);
-            RenderSystem.translate(0.0F, 0.0F, 1.0F);
-            RenderSystem.popMatrix();
+            poseStack.translate(0.0F, 0.0F, 1.0F);
+            poseStack.popPose();
         }
     }
 }

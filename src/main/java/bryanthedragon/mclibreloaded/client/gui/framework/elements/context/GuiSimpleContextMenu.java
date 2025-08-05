@@ -1,24 +1,28 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.context;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.list.GuiListElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
+import bryanthedragon.mclibreloaded.utils.ColorUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
 public class GuiSimpleContextMenu extends GuiContextMenu
 {
     public GuiListElement<Action> actions;
-
+    private Font font;
     private boolean shadow;
 
     public GuiSimpleContextMenu(Minecraft mc)
@@ -31,18 +35,15 @@ public class GuiSimpleContextMenu extends GuiContextMenu
             {
                 action.get(0).runnable.run();
             }
-
             this.removeFromParent();
         });
-
         this.actions.flex().relative(this).w(1, 0).h(1, 0);
-        this.add(this.actions);
+        this.addArray(this.actions);
     }
 
     public GuiSimpleContextMenu shadow()
     {
         this.shadow = true;
-
         return this;
     }
 
@@ -57,7 +58,6 @@ public class GuiSimpleContextMenu extends GuiContextMenu
         {
             return this;
         }
-
         return this.action(new Action(icon, label, runnable));
     }
 
@@ -67,14 +67,12 @@ public class GuiSimpleContextMenu extends GuiContextMenu
         {
             return this;
         }
-
         return this.action(new ColorfulAction(icon, label, runnable, color));
     }
 
     public GuiSimpleContextMenu action(Action action)
     {
         this.actions.add(action);
-
         return this;
     }
 
@@ -92,7 +90,6 @@ public class GuiSimpleContextMenu extends GuiContextMenu
         {
             return (float) Math.min(this.actions.scroll.scrollSize, context.screen.height - 10);
         };
-
         this.flex().set(context.mouseX(), context.mouseY(), w, 0).h(h).bounds(context.screen.root, 5);
     }
 
@@ -101,11 +98,9 @@ public class GuiSimpleContextMenu extends GuiContextMenu
     {
         if (this.shadow)
         {
-            int color = McLib.primaryColor.get();
-
+            int color = McLibReloaded.primaryColor.get();
             GuiDraw.drawDropShadow(this.area.x, this.area.y, this.area.ex(), this.area.ey(), 10, 0x44000000 + color, color);
         }
-
         super.draw(context);
     }
 
@@ -140,12 +135,12 @@ public class GuiSimpleContextMenu extends GuiContextMenu
             this.runnable = runnable;
         }
 
-        public int getWidth(FontRenderer font)
+        public int getWidth(Font font)
         {
             return 28 + font.getStringWidth(this.label.get());
         }
 
-        public void draw(FontRenderer font, int x, int y, int w, int h, boolean hover, boolean selected)
+        public void draw(Font font, int x, int y, int w, int h, boolean hover, boolean selected)
         {
             this.drawBackground(font, x, y, w, h, hover, selected);
 
@@ -154,11 +149,11 @@ public class GuiSimpleContextMenu extends GuiContextMenu
             font.drawString(this.label.get(), x + 22, y + (h - font.FONT_HEIGHT) / 2 + 1, 0xffffff);
         }
 
-        protected void drawBackground(FontRenderer font, int x, int y, int w, int h, boolean hover, boolean selected)
+        protected void drawBackground(Font font, int x, int y, int w, int h, boolean hover, boolean selected)
         {
             if (hover)
             {
-                Gui.drawRect(x, y, x + w, y + h, ColorUtils.HALF_BLACK + McLib.primaryColor.get());
+                Gui.drawRect(x, y, x + w, y + h, ColorUtils.HALF_BLACK + McLibReloaded.primaryColor.get());
             }
         }
     }
@@ -170,15 +165,13 @@ public class GuiSimpleContextMenu extends GuiContextMenu
         public ColorfulAction(Icon icon, IKey label, Runnable runnable, int color)
         {
             super(icon, label, runnable);
-
             this.color = color;
         }
 
         @Override
-        protected void drawBackground(FontRenderer font, int x, int y, int w, int h, boolean hover, boolean selected)
+        protected void drawBackground(Font font, int x, int y, int w, int h, boolean hover, boolean selected)
         {
             super.drawBackground(font, x, y, w, h, hover, selected);
-
             drawRect(x, y, x + 2, y + h, 0xff000000 + this.color);
             GuiDraw.drawHorizontalGradientRect(x + 2, y, x + 24, y + h, 0x44000000 + this.color, this.color);
         }

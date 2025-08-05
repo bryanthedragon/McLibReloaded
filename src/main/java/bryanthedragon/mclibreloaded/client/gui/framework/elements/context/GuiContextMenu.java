@@ -14,16 +14,15 @@ public abstract class GuiContextMenu extends GuiElement
     }
 
     /**
-     * Set mouse coordiante
+     * Set mouse coordinate
      *
      * In this method for subclasses, you should setup the resizer
      */
     public abstract void setMouse(GuiContext context);
 
-    @Override
     public boolean mouseClicked(GuiContext context)
     {
-        if (super.mouseClicked(context))
+        if (super.mouseGetsClicked(context))
         {
             return true;
         }
@@ -36,7 +35,6 @@ public abstract class GuiContextMenu extends GuiElement
         return false;
     }
 
-    @Override
     public void draw(GuiContext context)
     {
         this.area.draw(0xff000000);

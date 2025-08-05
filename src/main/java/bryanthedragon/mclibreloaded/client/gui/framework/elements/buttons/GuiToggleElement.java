@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.ITextColoring;
@@ -8,6 +8,7 @@ import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.values.ValueBoolean;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
@@ -19,6 +20,7 @@ public class GuiToggleElement extends GuiClickElement<GuiToggleElement> implemen
     public IKey label;
     public int color = 0xffffff;
     public boolean textShadow = true;
+    public boolean Shadow = true;
     private boolean state;
 
     public GuiToggleElement(Minecraft mc, ValueBoolean value)
@@ -28,12 +30,12 @@ public class GuiToggleElement extends GuiClickElement<GuiToggleElement> implemen
 
     public GuiToggleElement(Minecraft mc, ValueBoolean value, @Nullable Consumer<GuiToggleElement> callback)
     {
-        this(mc, IKey.lang(value.getLabelKey()), value.get(), callback == null ? (toggle) -> value.set(toggle.isToggled()) : (toggle) ->
+        this(mc, IKey.lang(value.getLabelKey()), value.get(), callback == null ? (toggle) -> value.setBaseValue(toggle.isToggled()) : (toggle) ->
         {
-            value.set(toggle.isToggled());
+            value.setBaseValue(toggle.isToggled());
             callback.accept(toggle);
         });
-        this.tooltip(IKey.lang(value.getCommentKey()));
+        this.tooltipLabel(IKey.lang(value.getCommentKey()));
     }
 
     public GuiToggleElement(Minecraft mc, IKey label, @Nullable Consumer<GuiToggleElement> callback)
@@ -44,42 +46,47 @@ public class GuiToggleElement extends GuiClickElement<GuiToggleElement> implemen
     public GuiToggleElement(Minecraft mc, IKey label, boolean state, @Nullable Consumer<GuiToggleElement> callback)
     {
         super(mc, callback);
-
         this.label = label;
         this.state = state;
         this.flex().h(14);
     }
 
-    @Override
-    public void setColor(int color, boolean shadow)
+    public void setColorWithShadow(int color, boolean shadow)
     {
-        this.color(color, shadow);
+        this.colorWithShadow(color, shadow);
+    }
+    public void setColorWithTextShadow(int color, boolean textShadow)
+    {
+        this.colorWithTextShadow(color, textShadow);
     }
 
     public GuiToggleElement label(IKey label)
     {
         this.label = label;
-
         return this;
     }
 
     public GuiToggleElement toggled(boolean state)
     {
         this.state = state;
-
         return this;
     }
 
     public GuiToggleElement color(int color)
     {
-        return this.color(color, true);
+        return this.colorWithTextShadow(color, true);
     }
 
-    public GuiToggleElement color(int color, boolean textShadow)
+    public GuiToggleElement colorWithTextShadow(int color, boolean textShadow)
     {
         this.color = color;
         this.textShadow = textShadow;
-
+        return this;
+    }
+    public GuiToggleElement colorWithShadow(int color, boolean Shadow)
+    {
+        this.color = color;
+        this.Shadow = Shadow;
         return this;
     }
 
@@ -88,30 +95,26 @@ public class GuiToggleElement extends GuiClickElement<GuiToggleElement> implemen
         return this.state;
     }
 
-    @Override
     protected void click(int mouseWheel)
     {
         this.state = !this.state;
-
         super.click(mouseWheel);
     }
 
-    @Override
     protected GuiToggleElement get()
     {
         return this;
     }
 
-    @Override
     protected void drawSkin(GuiContext context)
     {
-        if (McLib.enableCheckboxRendering.get())
+        if (McLibReloaded.enableCheckboxRendering.get())
         {
             int y = this.area.my(this.font.FONT_HEIGHT - 1);
 
-            Gui.drawRect(this.area.x, y - 3, this.area.x + 11, y + 8, 0xff000000 + McLib.primaryColor.get());
+            Gui.drawRect(this.area.x, y - 3, this.area.x + 11, y + 8, 0xff000000 + McLibReloaded.primaryColor.get());
 
-            if (McLib.enableBorders.get())
+            if (McLibReloaded.enableBorders.get())
             {
                 GuiDraw.drawOutline(this.area.x, y - 3, this.area.x + 11, y + 8, 0xff000000);
             }
@@ -138,7 +141,7 @@ public class GuiToggleElement extends GuiClickElement<GuiToggleElement> implemen
             int h = 10;
             int x = this.area.ex() - w - 2;
             int y = this.area.my();
-            int color = McLib.primaryColor.get();
+            int color = McLibReloaded.primaryColor.get();
 
             if (this.hover)
             {
@@ -174,7 +177,6 @@ public class GuiToggleElement extends GuiClickElement<GuiToggleElement> implemen
             if (!this.isEnabled())
             {
                 Gui.drawRect(x - 4, y - 8, x + 4, y + 8, ColorUtils.HALF_BLACK);
-
                 GuiDraw.drawOutlinedIcon(Icons.LOCKED, this.area.ex() - w / 2 - 2, y, 0xffffffff, 0.5F, 0.5F);
             }
         }
