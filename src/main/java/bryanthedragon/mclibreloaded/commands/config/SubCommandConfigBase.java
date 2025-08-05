@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.commands.config;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.commands.McCommandBase;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
 import bryanthedragon.mclibreloaded.config.Config;
@@ -26,7 +26,7 @@ public abstract class SubCommandConfigBase extends McCommandBase
     @Override
     public L10n getL10n()
     {
-        return McLib.l10n;
+        return McLibReloaded.l10n;
     }
 
     public List<String> getTabCompletions(MinecraftServer server, CommandSourceStack sender, String[] args, @Nullable BlockPos targetPos)
@@ -35,7 +35,7 @@ public abstract class SubCommandConfigBase extends McCommandBase
         {
             List<String> ids = new ArrayList<>();
 
-            for (Config config : McLib.proxy.configs.modules.values())
+            for (Config config : McLibReloaded.commonproxy.configs.modules.values())
             {
                 for (Value category : config.values.values())
                 {

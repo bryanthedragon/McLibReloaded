@@ -1,16 +1,17 @@
 package bryanthedragon.mclibreloaded.client;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
+import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.Interpolation;
 import bryanthedragon.mclibreloaded.utils.Keys;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-
 import net.minecraft.client.gui.screens.Screen;
+
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -114,7 +115,7 @@ public class InputRenderer
 
     public static void renderMouseWheel(int x, int y, int scroll, long current)
     {
-        int color = McLib.primaryColor.get();
+        int color = McLibReloaded.primaryColor.get();
 
         GuiDraw.drawDropShadow(x, y, x + 4, y + 16, 2, ColorUtils.HALF_BLACK + color, color);
         Gui.drawRect(x, y, x + 4, y + 16, 0xff111111);
@@ -284,7 +285,7 @@ public class InputRenderer
                 int y = my + (int) (Interpolation.EXP_INOUT.interpolate(0, 1, key.getFactor()) * 50 * fy) + (key.i % 2 == 0 ? -1 : 0);
 
                 GuiDraw.drawDropShadow(x, y, x + 10 + key.width, y + 20, 4, 0x44000000, 0);
-                Gui.drawRect(x, y, x + 10 + key.width, y + 20, 0xff000000 + McLib.primaryColor.get());
+                Gui.drawRect(x, y, x + 10 + key.width, y + 20, 0xff000000 + McLibReloaded.primaryColor.get());
                 font.drawStringWithShadow(key.getLabel(), x + 5, y + 6, 0xffffff);
             }
         }
@@ -302,8 +303,10 @@ public class InputRenderer
         if (event.getAction() == GLFW.GLFW_PRESS)
         {
             int key = event.getKey();
-            if (key == GLFW.GLFW_KEY_UNKNOWN) return;
-
+            if (key == GLFW.GLFW_KEY_UNKNOWN)
+            {
+                return;
+            }
             // Then do your PressedKey logic here...
         }
     }

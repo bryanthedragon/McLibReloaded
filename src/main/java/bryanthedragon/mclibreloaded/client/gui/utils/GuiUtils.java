@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.client.gui.utils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 
@@ -23,7 +24,7 @@ public class GuiUtils
     }
 
     /**
-     * Draw a {@link ModelBase} without using the {@link RenderManager} (which 
+     * Draw a {@link ModelBase} without using the {@link EntityRenderDispatcher} (which 
      * adds a lot of useless transformations and stuff to the screen rendering).
      */
     public static void drawModel(ModelBase model, Player player, int x, int y, float scale, float alpha)
@@ -120,11 +121,11 @@ public class GuiUtils
 
         RenderSystem.translate(0.0F, 0.0F, 0.0F);
 
-        RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
-        rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
-        rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        rendermanager.setRenderShadow(true);
+        EntityRenderDispatcher EntityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        EntityRenderDispatcher.setPlayerViewY(180.0F);
+        EntityRenderDispatcher.setRenderShadow(false);
+        EntityRenderDispatcher.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        EntityRenderDispatcher.setRenderShadow(true);
 
         ent.renderYawOffset = f;
         ent.rotationYaw = f1;
@@ -175,11 +176,11 @@ public class GuiUtils
 
         RenderSystem.translate(0.0F, 0.0F, 0.0F);
 
-        RenderManager rendermanager = Minecraft.getInstance().getRenderManager();
-        rendermanager.setPlayerViewY(180.0F);
-        rendermanager.setRenderShadow(false);
-        rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-        rendermanager.setRenderShadow(true);
+        EntityRenderDispatcher EntityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        EntityRenderDispatcher.setPlayerViewY(180.0F);
+        EntityRenderDispatcher.setRenderShadow(false);
+        EntityRenderDispatcher.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        EntityRenderDispatcher.setRenderShadow(true);
 
         ent.renderYawOffset = f;
         ent.rotationYaw = f1;

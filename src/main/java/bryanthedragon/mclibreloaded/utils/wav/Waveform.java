@@ -1,11 +1,13 @@
 package bryanthedragon.mclibreloaded.utils.wav;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -46,9 +48,8 @@ public class Waveform
         {
             throw new IllegalStateException("Waveform generation doesn't support non 16-bit audio data!");
         }
-
-        this.populate(data, pixelsPerSecond, height);
-        this.render();
+        this.populateWaveform(data, pixelsPerSecond, height);
+        this.renderWaveform();
     }
 
     private final List<ResourceLocation> textureLocations = new ArrayList<>();
@@ -61,32 +62,25 @@ public class Waveform
      * 
      * @since 1.0
      */
-    public void render() 
+    public void renderWaveform() 
     {
-        this.delete();
-
+        this.deleteWaveform();
         int maxTextureSize = 16384;  // Hard-coded or query via caps if needed
         int count = (int) Math.ceil(this.w / (double) maxTextureSize);
         int offset = 0;
-
         for (int t = 0; t < count; t++) 
         {
             int width = Math.min(this.w - offset, maxTextureSize);
-
             NativeImage image = new NativeImage(NativeImage.Format.RGBA, width, this.h, true);
-
             for (int i = offset, j = 0, c = Math.min(offset + width, this.average.length); i < c; i++, j++) 
             {
                 float average = this.average[i];
                 float maximum = this.maximum[i];
-
                 int maxHeight = (int) (maximum * this.h);
                 int avgHeight = (int) (average * (this.h - 1)) + 1;
-
                 if (avgHeight > 0) 
                 {
                     int center = this.h / 2;
-
                     int yStartMax = center - maxHeight / 2;
                     int yEndMax = yStartMax + maxHeight;
                     for (int y = yStartMax; y < yEndMax; y++) 
@@ -96,7 +90,6 @@ public class Waveform
                             image.setPixelABGR(j, y, 0xFFFFFFFF);
                         }
                     }
-
                     int yStartAvg = center - avgHeight / 2;
                     int yEndAvg = yStartAvg + avgHeight;
                     for (int y = yStartAvg; y < yEndAvg; y++) 
@@ -108,17 +101,14 @@ public class Waveform
                     }
                 }
             }
-
             // Wrap in DynamicTexture
             String namespace = "mclibreloaded";
             String path = "waveform/" + System.nanoTime();
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, path);
-
             DynamicTexture dynTex = new DynamicTexture(() -> "waveform", image);
             this.dynamicTextures.add(dynTex);
             
             Minecraft.getInstance().getTextureManager().register(id, dynTex);
-
             this.sprites.add(new WaveformSprite(id, width));
             this.textureLocations.add(id);
         }
@@ -132,43 +122,36 @@ public class Waveform
      * @param pixelsPerSecond the number of pixels representing each second of audio
      * @param height the height of the waveform to generate
      */
-    public void populate(Wave data, int pixelsPerSecond, int height)
+    public void populateWaveform(Wave data, int pixelsPerSecond, int height)
     {
         this.pixelsPerSecond = pixelsPerSecond;
         this.w = (int) (data.getDuration() * pixelsPerSecond);
         this.h = height;
         this.average = new float[this.w];
         this.maximum = new float[this.w];
-
         int region = data.getScanRegion(pixelsPerSecond);
-
         for (int i = 0; i < this.w; i ++)
         {
             int offset = i * region;
             int count = 0;
             float average = 0;
             float maximum = 0;
-
             for (int j = 0; j < region; j += 2 * data.numChannels)
             {
                 if (offset + j + 1 >= data.data.length)
                 {
                     break;
                 }
-
                 byte a = data.data[offset + j];
                 byte b = data.data[offset + j + 1];
                 float sample = a + (b << 8);
-
                 maximum = Math.max(maximum, Math.abs(sample));
                 average += Math.abs(sample);
                 count++;
             }
-
             average /= count;
             average /= 0xffff / 2;
             maximum /= 0xffff / 2;
-
             this.average[i] = average;
             this.maximum[i] = maximum;
         }
@@ -179,7 +162,7 @@ public class Waveform
      * This should be called when the waveform is no longer needed to free up
      * OpenGL resources.
      */
-    public void delete() 
+    public void deleteWaveform() 
     {
         for (DynamicTexture tex : this.dynamicTextures) 
         {
@@ -278,32 +261,25 @@ public class Waveform
     public void drawer(int x, int y, int u, int v, int w, int h, int height)
     {
         int offset = 0;
-
         for (WaveformSprite sprite : this.sprites)
         {
             int sw = sprite.width;
             offset += sw;
-
             if (w <= 0)
             {
                 break;
             }
-
             if (u >= offset)
             {
                 continue;
             }
-
             int so = offset - u;
-
             GpuTexture gpuTex = getGpuTexture(sprite.texture);
             if (gpuTex != null) 
             {
                 RenderSystem.setShaderTexture(0, gpuTex);
             }
-
             GuiDraw.drawBillboard(x, y, u, v, Math.min(w, so), h, sw, height);
-
             x += so;
             u += so;
             w -= so;
@@ -336,7 +312,6 @@ public class Waveform
     {
         public final ResourceLocation texture;
         public final int width;
-
         public WaveformSprite(ResourceLocation texture, int width) 
         {
             this.texture = texture;

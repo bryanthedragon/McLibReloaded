@@ -1,9 +1,10 @@
 package bryanthedragon.mclibreloaded.utils.resources;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.events.MultiskinProcessedEvent;
 import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.resources.location.MultiResourceLocation;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.Resource;
@@ -37,10 +38,8 @@ public class TextureProcessor
      */
     public static BufferedImage postProcess(MultiResourceLocation multi)
     {
-        BufferedImage image = process(multi);
-
-        Minecraft.getInstance().execute(() -> {McLib.EVENT_BUS.post(new MultiskinProcessedEvent(multi, image));});
-
+        BufferedImage image = processMultiResourceLocation(multi);
+        Minecraft.getInstance().execute(() -> {McLibReloaded.EVENT_BUS.post(new MultiskinProcessedEvent(multi, image));});
         return image;
     }
 
@@ -57,29 +56,25 @@ public class TextureProcessor
      * All of the above steps are done in the order in which they appear in the list.
      */
     @SuppressWarnings("null")
-    public static BufferedImage process(MultiResourceLocation multi)
+    public static BufferedImage processMultiResourceLocation(MultiResourceLocation multi)
     {
         ResourceManager manager = Minecraft.getInstance().getResourceManager();
         List<BufferedImage> images = new ArrayList<BufferedImage>();
-
         int w = 0;
         int h = 0;
-
         for (int i = 0; i < multi.children.size(); i++)
         {
             FilteredResourceLocation child = multi.children.get(i);
             BufferedImage image = null;
-
             try
             {
-                Optional<Resource> opt = manager.getResource(child.path);
+                Optional<Resource> opt = manager.getResource(FilteredResourceLocation.Jsonpath);
                 if (opt.isPresent()) 
                 {
                     Resource resource = opt.get();
                     InputStream stream = resource.open();  // Not getInputStream()
                     image = ImageIO.read(stream);
                 }
-
                 w = Math.max(w, child.getWidth(image.getWidth()));
                 h = Math.max(h, child.getHeight(image.getHeight()));
             }
@@ -87,26 +82,20 @@ public class TextureProcessor
             {
                 e.printStackTrace();
             }
-
             images.add(image);
         }
-
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
-
         for (int i = 0; i < multi.children.size(); i++)
         {
             BufferedImage child = images.get(i);
-
             if (child == null)
             {
                 continue;
             }
-
             FilteredResourceLocation filter = multi.children.get(i);
             int iw = child.getWidth();
             int ih = child.getHeight();
-
             if (filter.scaleToLargest)
             {
                 iw = w;
@@ -117,7 +106,6 @@ public class TextureProcessor
                 iw = (int) (iw * filter.scale);
                 ih = (int) (ih * filter.scale);
             }
-
             if (iw > 0 && ih > 0)
             {
                 if (filter.erase)
@@ -130,14 +118,11 @@ public class TextureProcessor
                     {
                         processImage(child, filter);
                     }
-
                     g.drawImage(child, filter.shiftX, filter.shiftY, iw, ih, null);
                 }
             }
         }
-
         g.dispose();
-
         return image;
     }
 
@@ -157,20 +142,16 @@ public class TextureProcessor
     {
         BufferedImage mask = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
         Graphics g2 = mask.getGraphics();
-
         g2.drawImage(child, filter.shiftX, filter.shiftY, iw, ih, null);
         g2.dispose();
-
         target.set(mask);
         pixels.set(image);
-
         for (int p = 0, c = target.getCount(); p < c; p++)
         {
-            Color pixel = target.getColor(p);
-
+            Color pixel = target.getColorIndex(p);
             if (pixel.a > 0.999F)
             {
-                pixel = pixels.getColor(p);
+                pixel = pixels.getColorIndex(p);
                 pixel.a = 0;
                 pixels.setColor(p, pixel);
             }
@@ -193,14 +174,11 @@ public class TextureProcessor
     private static void processImage(BufferedImage child, FilteredResourceLocation frl)
     {
         pixels.set(child);
-
-        Color filter = new Color().set(frl.color);
+        Color filter = new Color().setInt(frl.color);
         Color pixel = new Color();
-
         for (int i = 0, c = pixels.getCount(); i < c; i++)
         {
-            pixel.copy(pixels.getColor(i));
-
+            pixel.copy(pixels.getColorIndex(i));
             if (pixels.hasAlpha())
             {
                 if (pixel.a <= 0)
@@ -208,25 +186,20 @@ public class TextureProcessor
                     continue;
                 }
             }
-
             if (frl.pixelate > 1)
             {
                 int x = pixels.toX(i);
                 int y = pixels.toY(i);
                 boolean origin = x % frl.pixelate == 0 && y % frl.pixelate == 0;
-
                 x -= x % frl.pixelate;
                 y -= y % frl.pixelate;
-
                 pixel.copy(pixels.getColor(x, y));
                 pixels.setColor(i, pixel);
-
                 if (!origin)
                 {
                     continue;
                 }
             }
-
             pixel.r *= filter.r;
             pixel.g *= filter.g;
             pixel.b *= filter.b;

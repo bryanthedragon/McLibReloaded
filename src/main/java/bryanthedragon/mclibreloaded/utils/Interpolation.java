@@ -8,12 +8,28 @@ public enum Interpolation implements IInterpolation
     LINEAR("linear")
     {
 
+        /**
+         * Interpolates a value between a and b using linear interpolation.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the interpolation factor between 0 and 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             return Interpolations.lerp(a, b, x);
         }
 
 
+        /**
+         * Interpolates a value between a and b using linear interpolation.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the interpolation factor between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             return Interpolations.lerp(a, b, x);
@@ -22,12 +38,27 @@ public enum Interpolation implements IInterpolation
     QUAD_IN("quad_in")
     {
 
+        /**
+         * Interpolates a value between a and b using a quadratic easing-in function.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the interpolation factor, between 0 and 1 inclusive
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             return a + (b - a) * x * x;
         }
 
-
+        /**
+         * Interpolates a value between a and b using a quadratic easing-in function.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the interpolation factor between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             return a + (b - a) * x * x;
@@ -36,18 +67,26 @@ public enum Interpolation implements IInterpolation
     QUAD_OUT("quad_out")
     {
         /**
-         * {@inheritDoc}
+         * Interpolates a value between a and b using a quadratic easing-inout function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the interpolation factor, in the range [0, 1]
+         * @return the interpolated value
          */
-
         public float interpolateFloat(float a, float b, float x)
         {
             return a - (b - a) * x * (x - 2);
         }
 
         /**
-         * {@inheritDoc}
+         * Interpolates a value between a and b using a quadratic easing-out function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the interpolation factor, in the range [0, 1]
+         * @return the interpolated value
          */
-
         public double interpolateDouble(double a, double b, double x)
         {
             return a - (b - a) * x * (x - 2);
@@ -55,44 +94,75 @@ public enum Interpolation implements IInterpolation
     },
     QUAD_INOUT("quad_inout")
     {
+        /**
+         * Interpolates a value between a and b using a quadratic easing-in/out function.
+         *
+         * @param a The starting value.
+         * @param b The ending value.
+         * @param x A value from 0 to 1.
+         * @return The interpolated value between a and b.
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             x *= 2;
-
             if (x < 1F) 
             {
                 return a + (b - a) / 2 * x * x;
             }
-
             x -= 1;
-
             return a - (b - a) / 2 * (x * (x - 2) - 1);
         }
 
-
+        /**
+         * Interpolates between two double values using a cubic easing function.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the interpolation factor between 0 and 1
+         * @return the interpolated value between a and b
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             x *= 2;
-
             if (x < 1F) 
             {
                 return a + (b - a) / 2 * x * x;
             }
-
             x -= 1;
-
             return a - (b - a) / 2 * (x * (x - 2) - 1);
         }
     },
     CUBIC_IN("cubic_in")
     {
 
+        /**
+         * Interpolates between two float values using a cubic easing function.
+         * The provided value, x, is expected to be between 0 and 1, where 0 is the start value and 1 is the end value.
+         * This function will return the interpolated value between the two provided values based on the given easing function.
+         * The easing function in this case is a cubic function, which means that the interpolation starts slowly, accelerates,
+         * and then decelerates before coming to a stop at the end value.
+         *
+         * @param a The start value of the interpolation.
+         * @param b The end value of the interpolation.
+         * @param x The value to interpolate between the start and end values, expected to be between 0 and 1.
+         * @return The interpolated float value between the start and end values.
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             return a + (b - a) * x * x * x;
         }
 
-
+        /**
+         * Interpolates between two double values using a cubic easing function.
+         * The provided value, x, is expected to be between 0 and 1, where 0 is the start value and 1 is the end value.
+         * This function will return the interpolated value between the two provided values based on the given easing function.
+         * The easing function is a cubic function, which is a ease-in function that starts and ends slow and then accelerates in the middle.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the value to interpolate between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             return a + (b - a) * x * x * x;
@@ -101,13 +171,34 @@ public enum Interpolation implements IInterpolation
     CUBIC_OUT("cubic_out")
     {
 
+        /**
+         * Interpolates between two float values using a cubic easing out function.
+         * The provided value, x, is expected to be between 0 and 1, where 0 is the start value and 1 is the end value.
+         * This function will return the interpolated value between the two provided values based on the given easing function.
+         * The easing function is a cubic function, which is a ease-out function that accelerates and then decelerates.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the value to interpolate between 0 and 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             x -= 1;
             return a + (b - a) * (x * x * x + 1);
         }
 
-
+        /**
+         * Interpolates between two double values using a cubic easing out function.
+         * The provided value, x, is expected to be between 0 and 1, where 0 is the start value and 1 is the end value.
+         * This function will return the interpolated value between the two provided values based on the given easing function.
+         * The easing function is a cubic function, which is a ease-out function that accelerates and then decelerates.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the value to interpolate between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             x -= 1;
@@ -116,53 +207,82 @@ public enum Interpolation implements IInterpolation
     },
     CUBIC_INOUT("cubic_inout")
     {
+
+        /**
+         * Interpolates between two float values using a cubic easing in/out function.
+         * The provided value, x, is expected to be between 0 and 1, where 0 is the start value and 1 is the end value.
+         * This function will return the interpolated value between the two provided values based on the given easing function.
+         * The easing function is a cubic function, which is a ease-in, ease-out function that accelerates and decelerates.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the value to interpolate between 0 and 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             x *= 2;
-
             if (x < 1F) 
             {
                 return a + (b - a) / 2 * x * x * x;
             }
-
             x -= 2;
-
             return a + (b - a) / 2 * (x * x * x + 2);
         }
 
-
+        /**
+         * Interpolates between two double values using a cubic easing in/out function.
+         * The provided value, x, is expected to be between 0 and 1, where 0 is the start value and 1 is the end value.
+         * This function will return the interpolated value between the two provided values based on the given easing function.
+         * The easing function is a cubic function, which is a ease-in, ease-out function that accelerates and decelerates.
+         *
+         * @param a the start value
+         * @param b the end value
+         * @param x the value to interpolate between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             x *= 2;
-
             if (x < 1F) 
             {
                 return a + (b - a) / 2 * x * x * x;
             }
-
             x -= 2;
-
             return a + (b - a) / 2 * (x * x * x + 2);
         }
     },
     EXP_IN("exp_in")
     {
 
+        /**
+         * Interpolates between two float values using exponential in function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             return (float) this.interpolateDouble((double) a, b, x);
         }
 
-
+        /**
+         * Interpolates between two double values using exponential in function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             if (x == 0) 
             {
                 return a;
             }
-
             double pow0 = Math.pow(2, -10);
-
             /*
              * The restrictions f(0) = a and f(1) = b will lead to the following formula instead of plain
              * 2^10*(x-1). This would change the derivative,
@@ -174,40 +294,82 @@ public enum Interpolation implements IInterpolation
     EXP_OUT("exp_out")
     {
 
+        /**
+         * Interpolates a float value between the given a and b values by given x factor using
+         * the exponential out function. The function is defined as follows:
+         * - if x is equal to 0, it returns a
+         * - otherwise, it returns a + (b - a) * (1 - ((2^(-10 * x) - pow0) / (1 - pow0))),
+         * where pow0 is 2^(-10).
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             return (float) this.interpolateDouble((double) a, b, x);
         }
 
-
+        /**
+         * Interpolates a double value between the given a and b values by given x factor using
+         * the exponential out function. The function is defined as follows:
+         * - if x is equal to 0, it returns a
+         * - otherwise, it returns a + (b - a) * (1 - ((2^(-10 * x) - pow0) / (1 - pow0))),
+         *   where pow0 is 2^(-10)
+         *
+         * @param a the initial value
+         * @param b the final value
+         * @param x the interpolation factor, ranged from 0 to 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             if (x == 0)
             {
                 return a;
             }
-
             double pow0 = Math.pow(2, -10);
-
             return a + (b - a) * (1 - (Math.pow(2, -10 * x) - pow0) * 1 / (1 - pow0));
         }
     },
     EXP_INOUT("exp_inout")
     {
 
+        /**
+         * Interpolates a float value between the given a and b values by given x factor using
+         * the exponential in function. The function is defined as follows:
+         * - it uses the exponential in function with the parameters a and b and x
+         *
+         * @param a the initial value
+         * @param b the final value
+         * @param x the interpolation factor, ranged from 0 to 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             return (float) this.interpolateDouble((double) a, b, x);
         }
 
-
+        /**
+         * Interpolates a double value between the given a and b values by given x factor using
+         * the exponential in/out function. The function is defined as follows:
+         * - if x is less than or equal to 0.5, it uses the exponential in function with the
+         *   parameters a and a + (b - a) / 2 and x * 2
+         * - if x is greater than 0.5, it uses the exponential out function with the parameters
+         *   a + (b - a) / 2 and b and x * 2 - 1
+         *
+         * @param a the initial value
+         * @param b the final value
+         * @param x the interpolation factor, ranged from 0 to 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             if (x <= 0.5D) 
             {
                 return Interpolation.EXP_IN.interpolateDouble(a, a + (b - a) / 2, x * 2);
             }
-
             return Interpolation.EXP_OUT.interpolateDouble(a + (b - a) / 2, b, x * 2 - 1);
         }
     },
@@ -215,120 +377,191 @@ public enum Interpolation implements IInterpolation
     BACK_IN("back_in")
     {
 
+        /**
+         * Cubic easing function that starts slowly and then accelerates.
+         * 
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             final float c1 = 1.70158F;
             final float c3 = c1 + 1;
-
             return Interpolations.lerp(a, b, c3 * x * x * x - c1 * x * x);
         }
 
-
+        /**
+         * Cubic easing function that starts slowly and then accelerates.
+         *
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             final double c1 = 1.70158D;
             final double c3 = c1 + 1;
-
             return Interpolations.lerp(a, b, c3 * x * x * x - c1 * x * x);
         }
     },
     BACK_OUT("back_out")
     {
 
+        /**
+         * Cubic easing function that starts quickly and then decelerates.
+         * 
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             final float c1 = 1.70158F;
             final float c3 = c1 + 1;
-
             return Interpolations.lerp(a, b, 1 + c3 * (float) Math.pow(x - 1, 3) + c1 * (float) Math.pow(x - 1, 2));
         }
 
-
+        /**
+         * Cubic easing function that starts slowly and then accelerates.
+         * 
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             final double c1 = 1.70158D;
             final double c3 = c1 + 1;
-
             return Interpolations.lerp(a, b, 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2));
         }
     },
     BACK_INOUT("back_inout")
     {
 
+        /**
+         * Cubic easing function that starts slowly, then quickly, and finally decelerates.
+         *
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             final float c1 = 1.70158F;
             final float c2 = c1 * 1.525F;
-
             float factor = x < 0.5 ? ((float) Math.pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2 : ((float) Math.pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
 
 
+        /**
+         * Cubic easing function that starts slowly, then quickly, and finally decelerates.
+         *
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             final double c1 = 1.70158D;
             final double c2 = c1 * 1.525D;
-
             double factor = x < 0.5 ? (Math.pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2 : (Math.pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
     },
     ELASTIC_IN("elastic_in")
     {
 
+        /**
+         * Cubic easing function that starts slowly, then accelerates.
+         *
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             final float c4 = (2 * (float) Math.PI) / 3;
-
             float factor = x == 0 ? 0 : (x == 1 ? 1 : -(float) Math.pow(2, 10 * x - 10) * (float) Math.sin((x * 10 - 10.75) * c4));
-
             return Interpolations.lerp(a, b, factor);
         }
 
-
+        /**
+         * Cubic easing function that starts quickly, then decelerates.
+         *
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             final double c4 = (2 * (float) Math.PI) / 3;
-
             double factor = x == 0 ? 0 : (x == 1 ? 1 : -Math.pow(2, 10 * x - 10) * Math.sin((x * 10 - 10.75) * c4));
-
             return Interpolations.lerp(a, b, factor);
         }
     },
     ELASTIC_OUT("elastic_out")
     {
 
+        /**
+         * Cubic easing function that starts quickly, then decelerates.
+         *
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             final float c4 = (2 * (float) Math.PI) / 3;
-
             float factor = x == 0 ? 0 : (x == 1 ? 1 : (float) Math.pow(2, -10 * x) * (float) Math.sin((x * 10 - 0.75) * c4) + 1);
-
             return Interpolations.lerp(a, b, factor);
         }
 
 
+        /**
+         * Cubic easing function that starts slowly, then accelerates and decelerates.
+         *
+         * @param a start value
+         * @param b end value
+         * @param x step between 0 and 1
+         * @return interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             final double c4 = (2 * Math.PI) / 3;
-
             double factor = x == 0 ? 0 : (x == 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1);
-
             return Interpolations.lerp(a, b, factor);
         }
     },
     ELASTIC_INOUT("elastic_inout")
     {
 
+        /**
+         * Performs a bounce-in interpolation between two float values.
+         *
+         * This method calculates a bouncing effect for the interpolation factor `x`,
+         * which ranges from 0 to 1. The bouncing effect starts slowly, then quickly,
+         * and finally decelerates back to the target value.
+         *
+         * @param a the starting float value
+         * @param b the ending float value
+         * @param x the interpolation position, where 0 <= x <= 1
+         * @return the interpolated float value with a bounce-in effect
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             final float c5 = (2 * (float) Math.PI) / 4.5F;
-
             float factor = x == 0 ? 0 : (x == 1 ? 1 : (x < 0.5 ? -((float) Math.pow(2, 20 * x - 10) * (float) Math.sin((20 * x - 11.125) * c5)) / 2 : ((float) Math.pow(2, -20 * x + 10) * (float) Math.sin((20 * x - 11.125) * c5)) / 2 + 1));
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -349,9 +582,7 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             final double c5 = (2 * Math.PI) / 4.5;
-
             double factor = x == 0 ? 0 : (x == 1 ? 1 : (x < 0.5 ? -(Math.pow(2, 20 * x - 10) * Math.sin((20 * x - 11.125) * c5)) / 2 : (Math.pow(2, -20 * x + 10) * Math.sin((20 * x - 11.125) * c5)) / 2 + 1));
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -445,7 +676,6 @@ public enum Interpolation implements IInterpolation
             final double n1 = 7.5625;
             final double d1 = 2.75;
             double factor;
-
             if (x < 1 / d1)
             {
                 factor = n1 * x * x;
@@ -462,7 +692,6 @@ public enum Interpolation implements IInterpolation
             {
                 factor = n1 * (x -= 2.625 / d1) * x + 0.984375;
             }
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -480,10 +709,7 @@ public enum Interpolation implements IInterpolation
          */
         public float interpolateFloat(float a, float b, float x)
         {
-            float factor = x < 0.5
-                ? (1 - BOUNCE_OUT.interpolateFloat(0, 1, 1 - 2 * x)) / 2
-                : (1 + BOUNCE_OUT.interpolateFloat(0, 1, 2 * x - 1)) / 2;
-
+            float factor = x < 0.5 ? (1 - BOUNCE_OUT.interpolateFloat(0, 1, 1 - 2 * x)) / 2 : (1 + BOUNCE_OUT.interpolateFloat(0, 1, 2 * x - 1)) / 2;
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -498,10 +724,7 @@ public enum Interpolation implements IInterpolation
          */
         public double interpolateDouble(double a, double b, double x)
         {
-            double factor = x < 0.5
-                ? (1 - BOUNCE_OUT.interpolateDouble(0, 1, 1 - 2 * x)) / 2
-                : (1 + BOUNCE_OUT.interpolateDouble(0, 1, 2 * x - 1)) / 2;
-
+            double factor = x < 0.5 ? (1 - BOUNCE_OUT.interpolateDouble(0, 1, 1 - 2 * x)) / 2 : (1 + BOUNCE_OUT.interpolateDouble(0, 1, 2 * x - 1)) / 2;
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -519,7 +742,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = 1 - (float) Math.cos((x * Math.PI) / 2);
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -533,7 +755,6 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = 1 - (float) Math.cos((x * Math.PI) / 2);
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -551,7 +772,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = (float) Math.sin((x * Math.PI) / 2);
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -567,7 +787,6 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = Math.sin((x * Math.PI) / 2);
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -585,7 +804,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = (float) (-(Math.cos(Math.PI * x) - 1) / 2);
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -601,7 +819,6 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = -(Math.cos(Math.PI * x) - 1) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -619,7 +836,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = x * x * x * x;
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -635,7 +851,6 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = x * x * x * x;
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -653,7 +868,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = 1 - (float) Math.pow(1 - x, 4);
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -669,7 +883,6 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = 1 - Math.pow(1 - x, 4);
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -687,7 +900,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = x < 0.5 ? 8 * x * x * x * x : 1 - (float) Math.pow(-2 * x + 2, 4) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -703,7 +915,6 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -721,7 +932,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = x * x * x * x * x;
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -737,7 +947,6 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = x * x * x * x * x;
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -755,7 +964,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = 1 - (float) Math.pow(1 - x, 5);
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -771,7 +979,6 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = 1 - Math.pow(1 - x, 5);
-
             return Interpolations.lerp(a, b, factor);
         }
     },
@@ -791,7 +998,6 @@ public enum Interpolation implements IInterpolation
         public float interpolateFloat(float a, float b, float x)
         {
             float factor = x < 0.5 ? 16 * x * x * x * x * x : 1 - (float) Math.pow(-2 * x + 2, 5) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
 
@@ -809,73 +1015,106 @@ public enum Interpolation implements IInterpolation
         public double interpolateDouble(double a, double b, double x)
         {
             double factor = x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
     },
     CIRCLE_IN("circle_in")
     {
 
+        /**
+         * Interpolates between two float values using a circular easing in function.
+         * 
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             x = MathUtils.clamperFloat(x, 0, 1);
-
             float factor = 1 - (float) Math.sqrt(1 - Math.pow(x, 2));
-
             return Interpolations.lerp(a, b, factor);
         }
 
-
+        /**
+         * Interpolates between two double values using a circular easing in function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             x = MathUtils.clamperDouble(x, 0, 1);
-
             double factor = 1 - (float) Math.sqrt(1 - Math.pow(x, 2));
-
             return Interpolations.lerp(a, b, factor);
         }
     },
     CIRCLE_OUT("circle_out")
     {
 
+        /**
+         * Interpolates between two float values using a circular easing out function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             x = MathUtils.clamperFloat(x, 0, 1);
-
             float factor = (float) Math.sqrt(1 - Math.pow(x - 1, 2));
-
             return Interpolations.lerp(a, b, factor);
         }
 
-
+        /**
+         * Interpolates between two double values using a circular easing out function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             x = MathUtils.clamperDouble(x, 0, 1);
-
             double factor = Math.sqrt(1 - Math.pow(x - 1, 2));
-
             return Interpolations.lerp(a, b, factor);
         }
     },
     CIRCLE_INOUT("circle_inout")
     {
 
+        /**
+         * Interpolates between two float values using a circular easing in-out function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public float interpolateFloat(float a, float b, float x)
         {
             x = MathUtils.clamperFloat(x, 0, 1);
-
             float factor = x < 0.5 ? (float) (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2 : (float) (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
 
 
+        /**
+         * Interpolates between two double values using a circular easing in-out function.
+         *
+         * @param a the starting value
+         * @param b the ending value
+         * @param x the progress between the two values, typically between 0 and 1
+         * @return the interpolated value
+         */
         public double interpolateDouble(double a, double b, double x)
         {
             x = MathUtils.clamperDouble(x, 0, 1);
-
             double factor = x < 0.5 ? (1 - Math.sqrt(1 - Math.pow(2 * x, 2))) / 2 : (Math.sqrt(1 - Math.pow(-2 * x + 2, 2)) + 1) / 2;
-
             return Interpolations.lerp(a, b, factor);
         }
     };
@@ -900,6 +1139,12 @@ public enum Interpolation implements IInterpolation
         return "mclibreloaded.interpolations." + this.key;
     }
 
+    /**
+     * Returns the key for the interpolation's tooltip, which is the translated
+     * string used to display the interpolation's description in the tooltip.
+     * 
+     * @return the key for the interpolation's tooltip
+     */
     @OnlyIn(Dist.CLIENT)
     public String getTooltipKey()
     {

@@ -30,7 +30,6 @@ public class Keys
         {
             return null;
         }
-
 	// Adding this line prevents a null-pointer exception
         if (KEYS[key] == null)
         {
@@ -40,7 +39,6 @@ public class Keys
                 return "Unknown key";
             }
         }
-
         return KEYS[key];
     }
 
@@ -108,23 +106,19 @@ public class Keys
             case GLFW.GLFW_KEY_KP_DECIMAL:
                 return "Numpad .";
         }
-
         String name = GLFW.glfwGetKeyName(key,0);
         if (name != null)
         {
             return name;
         }
-
         if (name.length() > 1)
         {
             name = name.substring(0, 1) + name.substring(1).toLowerCase();
         }
-
         if (name.startsWith("Numpad"))
         {
             name = name.replace("Numpad", "Numpad ");
         }
-
         return name;
     }
 
@@ -153,20 +147,17 @@ public class Keys
     {
         int comboKey = keyCode;
         int modifierIndex = MODIFIERS.indexOf(keyCode) % 3;
-
         if (held != null)
         {
             for (int heldKey : held)
             {
                 int index = MODIFIERS.indexOf(heldKey) % 3;
-
                 if (index >= 0 && index != modifierIndex)
                 {
                     comboKey |= 1 << 31 - index;
                 }
             }
         }
-
         return comboKey;
     }
 
@@ -195,12 +186,10 @@ public class Keys
     public static int getMainKey(int comboKey)
     {
         int key = comboKey & 0x1FFFFFFF;
-
         if (key >= KEYBOARD_SIZE)
         {
             key = GLFW.GLFW_KEY_UNKNOWN;
         }
-
         return key;
     }
 
@@ -215,12 +204,10 @@ public class Keys
     {
         StringBuilder builder = new StringBuilder();
         int mainKey = getMainKey(comboKey);
-
         if (mainKey == GLFW.GLFW_KEY_UNKNOWN)
         {
             return getKeyName(mainKey);
         }
-
         for (int i = 0; i < 3; i++)
         {
             if ((comboKey & 1 << 31 - i) != 0)
@@ -228,9 +215,7 @@ public class Keys
                 builder.append(MODNAME[i]).append(" + ");
             }
         }
-
         builder.append(getKeyName(mainKey));
-
         return builder.toString();
     }
 
@@ -244,20 +229,17 @@ public class Keys
     public static boolean checkModifierKeys(int comboKey)
     {
         int index = MODIFIERS.indexOf(getMainKey(comboKey)) % 3;
-
         for (int i = 0; i < 3; i++)
         {
             if (i == index)
             {
                 continue;
             }
-
             if ((comboKey & 1 << 31 - i) != 0 != isKeyDown(MODIFIERS.get(i)))
             {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -271,15 +253,18 @@ public class Keys
     public static boolean isKeyDown(int key)
     {
         long window = Minecraft.getInstance().getWindow().getWindow();
-
-        if (key == GLFW.GLFW_KEY_LEFT_SHIFT || key == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+        if (key == GLFW.GLFW_KEY_LEFT_SHIFT || key == GLFW.GLFW_KEY_RIGHT_SHIFT) 
+        {
             return glfwKeyPressed(window, GLFW.GLFW_KEY_LEFT_SHIFT) || glfwKeyPressed(window, GLFW.GLFW_KEY_RIGHT_SHIFT);
-        } else if (key == GLFW.GLFW_KEY_LEFT_CONTROL || key == GLFW.GLFW_KEY_RIGHT_CONTROL) {
+        } 
+        else if (key == GLFW.GLFW_KEY_LEFT_CONTROL || key == GLFW.GLFW_KEY_RIGHT_CONTROL) 
+        {
             return glfwKeyPressed(window, GLFW.GLFW_KEY_LEFT_CONTROL) || glfwKeyPressed(window, GLFW.GLFW_KEY_RIGHT_CONTROL);
-        } else if (key == GLFW.GLFW_KEY_LEFT_ALT || key == GLFW.GLFW_KEY_RIGHT_ALT) {
+        } 
+        else if (key == GLFW.GLFW_KEY_LEFT_ALT || key == GLFW.GLFW_KEY_RIGHT_ALT) 
+        {
             return glfwKeyPressed(window, GLFW.GLFW_KEY_LEFT_ALT) || glfwKeyPressed(window, GLFW.GLFW_KEY_RIGHT_ALT);
         }
-
         return glfwKeyPressed(window, key);
     }
 
@@ -299,7 +284,8 @@ public class Keys
      * @param key the key to check
      * @return true if the key is currently pressed (or repeating)
      */
-    private static boolean glfwKeyPressed(long window, int key) {
+    private static boolean glfwKeyPressed(long window, int key) 
+    {
         int state = GLFW.glfwGetKey(window, key);
         return state == GLFW.GLFW_PRESS || state == GLFW.GLFW_REPEAT;
     }

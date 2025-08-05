@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.commands.config;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.commands.SubCommandBase;
 import bryanthedragon.mclibreloaded.config.ConfigManager;
 import bryanthedragon.mclibreloaded.config.values.IServerValue;
@@ -47,7 +47,7 @@ public class SubCommandConfigSet extends SubCommandConfigBase
                 {
                     String mod = args[0].substring(0, args[0].indexOf("."));
 
-                    ConfigManager.synchronizeConfig(McLib.proxy.configs.modules.get(mod).filterSyncable(), server);
+                    ConfigManager.synchronizeConfig(McLibReloaded.commonproxy.configs.modules.get(mod).filterSyncable(), server);
                 }
 
                 this.getL10n().info(String.valueOf(sender), "config.set", args[0], value.toString());

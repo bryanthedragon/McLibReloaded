@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.color.GuiColorPicker;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 
 /**
  * Color GUI element
- *
  * This class is responsible for providing a way to edit colors, this element
  * itself is not editing the color, the picker element is the one that does color editing
  */
@@ -33,9 +32,9 @@ public class GuiColorElement extends GuiElement
 
     public GuiColorElement(Minecraft mc, ValueInt value, Consumer<Integer> callback)
     {
-        this(mc, callback == null ? value::set : (integer) ->
+        this(mc, callback == null ? value::setValue : (integer) ->
         {
-            value.set(integer);
+            value.setValue(integer);
             callback.accept(integer);
         });
         this.tooltip(IKey.lang(value.getCommentKey()));
@@ -127,7 +126,7 @@ public class GuiColorElement extends GuiElement
     {
         int padding = 0;
 
-        if (McLib.enableBorders.get())
+        if (McLibReloaded.enableBorders.get())
         {
             this.area.draw(0xff000000);
 
@@ -148,7 +147,7 @@ public class GuiColorElement extends GuiElement
 
         if (this.label)
         {
-            String label = this.picker.color.stringify(this.picker.editAlpha);
+            String label = this.picker.color.stringifier(this.picker.editAlpha);
 
             GuiDraw.drawTextBackground(this.font, label, this.area.mx(this.font.getStringWidth(label)), this.area.my(this.font.FONT_HEIGHT - 1), 0xffffff, 0x55000000, 1);
         }

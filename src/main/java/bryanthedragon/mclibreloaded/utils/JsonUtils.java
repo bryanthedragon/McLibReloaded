@@ -24,10 +24,8 @@ public class JsonUtils
         StringWriter writer = new StringWriter();
         JsonWriter jsonWriter = new JsonWriter(writer);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         jsonWriter.setIndent("    ");
         gson.toJson(element, jsonWriter);
-
         /* Prettify arrays */
         return writer.toString();
     }

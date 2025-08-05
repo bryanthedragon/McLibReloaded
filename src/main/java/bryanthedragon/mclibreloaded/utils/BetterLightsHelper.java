@@ -8,7 +8,6 @@ public class BetterLightsHelper
     private static ReflectionElement<Class> betterLightsClass = new ReflectionElement<>();
     private static ReflectionElement<Field> shadowPass = new ReflectionElement<>();
 
-
     /**
      * Checks whether BetterLights is currently rendering shadow map. Thanks to
      * BetterLights mod author for suggesting how to do it!
@@ -24,7 +23,6 @@ public class BetterLightsHelper
             try
             {
                 Class context = Class.forName("dz.betterlights.utils.BetterLightsContext");
-
                 shadowPass.element = context.getDeclaredField("isBlShadowPass");
                 shadowPass.element.setAccessible(true);
             }
@@ -33,10 +31,8 @@ public class BetterLightsHelper
                 shadowPass.element = null;
                 e.printStackTrace();
             }
-
             shadowPass.checked = true;
         }
-
         if (shadowPass.element != null)
         {
             try
@@ -48,7 +44,6 @@ public class BetterLightsHelper
                 e.printStackTrace();
             }
         }
-
         return false;
     }
 
@@ -81,10 +76,8 @@ public class BetterLightsHelper
                 betterLightsClass.element = null;
                 e.printStackTrace();
             }
-
             betterLightsClass.checked = true;
         }
-
         return betterLightsClass.element != null;
     }
 

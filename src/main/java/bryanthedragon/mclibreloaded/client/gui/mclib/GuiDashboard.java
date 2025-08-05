@@ -1,9 +1,10 @@
 package bryanthedragon.mclibreloaded.client.gui.mclib;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icons;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
+
 import net.minecraft.client.Minecraft;
 
 public class GuiDashboard extends GuiAbstractDashboard
@@ -41,7 +42,7 @@ public class GuiDashboard extends GuiAbstractDashboard
         this.panels.registerPanel(this.config = new GuiConfigPanel(mc, this), IKey.lang("mclib.gui.config.tooltip"), Icons.GEAR);
         this.defaultPanel = this.config;
 
-        if (McLib.debugPanel.get())
+        if (McLibReloaded.debugPanel.get())
         {
             this.panels.registerPanel(new GuiDebugPanel(mc, this), IKey.str("Debug"), Icons.POSE);
         }

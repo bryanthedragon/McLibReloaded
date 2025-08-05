@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.utils;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
@@ -10,7 +10,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 /**
  * Scrollable area
- * 
  * This class is responsible for storing information for scrollable one 
  * directional objects. 
  */
@@ -78,7 +77,7 @@ public class ScrollArea extends Area
 
     public int getScrollbarWidth()
     {
-        return this.scrollbarWidth <= 0 ? McLib.scrollbarWidth.get() : this.scrollbarWidth;
+        return this.scrollbarWidth <= 0 ? McLibReloaded.scrollbarWidth.get() : this.scrollbarWidth;
     }
 
     public void setSize(int items)
@@ -139,7 +138,7 @@ public class ScrollArea extends Area
         }
         else
         {
-            this.scroll = MathUtils.clamp(this.scroll, 0, this.scrollSize - size);
+            this.scroll = MathUtils.clamper(this.scroll, 0, this.scrollSize - size);
         }
     }
 
@@ -301,13 +300,13 @@ public class ScrollArea extends Area
             ry = y + scrollbar;
         }
 
-        if (McLib.scrollbarFlat.get())
+        if (McLibReloaded.scrollbarFlat.get())
         {
             Gui.drawRect(x, y, rx, ry, -6250336);
         }
         else
         {
-            int color = McLib.scrollbarShadow.get();
+            int color = McLibReloaded.scrollbarShadow.get();
 
             GuiDraw.drawDropShadow(x, y, rx, ry, 5, color, ColorUtils.setAlpha(color, 0F));
 

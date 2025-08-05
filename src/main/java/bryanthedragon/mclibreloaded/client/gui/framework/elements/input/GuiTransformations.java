@@ -2,7 +2,7 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
 import java.util.function.Consumer;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiCirculateElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -15,8 +15,15 @@ import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils.Transformation;
 import bryanthedragon.mclibreloaded.utils.MatrixUtils.RotationOrder;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 
 /**
  * Transformation editor GUI
@@ -295,15 +302,15 @@ public class GuiTransformations extends GuiElement
     {
         ListTag list = new ListTag();
 
-        list.appendTag(new NBTTagDouble(this.tx.value));
-        list.appendTag(new NBTTagDouble(this.ty.value));
-        list.appendTag(new NBTTagDouble(this.tz.value));
-        list.appendTag(new NBTTagDouble(this.sx.value));
-        list.appendTag(new NBTTagDouble(this.sy.value));
-        list.appendTag(new NBTTagDouble(this.sz.value));
-        list.appendTag(new NBTTagDouble(this.rx.value));
-        list.appendTag(new NBTTagDouble(this.ry.value));
-        list.appendTag(new NBTTagDouble(this.rz.value));
+        list.appendTag(new DoubleTag(this.tx.value));
+        list.appendTag(new DoubleTag(this.ty.value));
+        list.appendTag(new DoubleTag(this.tz.value));
+        list.appendTag(new DoubleTag(this.sx.value));
+        list.appendTag(new DoubleTag(this.sy.value));
+        list.appendTag(new DoubleTag(this.sz.value));
+        list.appendTag(new DoubleTag(this.rx.value));
+        list.appendTag(new DoubleTag(this.ry.value));
+        list.appendTag(new DoubleTag(this.rz.value));
 
         GuiScreen.setClipboardString(list.toString());
     }
@@ -363,11 +370,11 @@ public class GuiTransformations extends GuiElement
     protected void prepareRotation(Matrix4f mat)
     {
         Matrix4f rot = new Matrix4f();
-        rot.rotZ((float) Math.toRadians(this.rz.value));
+        rot.rotateZ((float) Math.toRadians(this.rz.value));
         mat.mul(rot);
-        rot.rotY((float) Math.toRadians(this.ry.value));
+        rot.rotateY((float) Math.toRadians(this.ry.value));
         mat.mul(rot);
-        rot.rotX((float) Math.toRadians(this.rx.value));
+        rot.rotateX((float) Math.toRadians(this.rx.value));
         mat.mul(rot);
     }
     
@@ -380,7 +387,9 @@ public class GuiTransformations extends GuiElement
     }
 
     protected void localTranslate(double x, double y, double z)
-    { }
+    {
+
+    }
 
     protected void deltaRotate(double x, double y, double z)
     {

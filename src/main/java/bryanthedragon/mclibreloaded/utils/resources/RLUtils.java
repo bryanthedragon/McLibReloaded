@@ -61,12 +61,11 @@ public class RLUtils
         {
             throw new IOException("Multi-skin is empty!");
         }
-
         try
         {
             if (McLibReloaded.multiskinMultiThreaded.get())
             {
-                MultiskinThread.add(multi);
+                MultiskinThread.addMultiResourceLocation(multi);
                 return Minecraft.getInstance().getResourceManager().getResource(PIXEL);
             }
             else
@@ -121,7 +120,7 @@ public class RLUtils
      * @param path the path to transform
      * @return a {@link TextureLocationFinder} using the transformed domain and path
      */
-    public static TextureLocationFinder createTexture(String domain, String path)
+    public static TextureLocationFinder createTextureLocation(String domain, String path)
     {
         for (IResourceTransformer transformer : transformers)
         {
@@ -201,18 +200,15 @@ public class RLUtils
         if (path instanceof IWritableLocation)
         {
             Object copy = ((IWritableLocation) path).copier();
-
             if (copy instanceof ResourceLocation)
             {
                 return (ResourceLocation) copy;
             }
         }
-
         if (path != null)
         {
             return TextureLocations.fromTransformer(path.toString());
         }
-
         return null;
     }
 }

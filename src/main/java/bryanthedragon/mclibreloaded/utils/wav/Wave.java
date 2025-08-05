@@ -13,7 +13,6 @@ public class Wave
     public int byteRate;
     public int blockAlign;
     public int bitsPerSample;
-
     public byte[] data;
 
     public Wave(int audioFormat, int numChannels, int sampleRate, int byteRate, int blockAlign, int bitsPerSample, byte[] data)
@@ -63,7 +62,6 @@ public class Wave
     public int getALFormat()
     {
         int bytes = this.getBytesPerSample();
-
         if (bytes == 1)
         {
             if (this.numChannels == 2)
@@ -86,7 +84,6 @@ public class Wave
                 return AL10.AL_FORMAT_MONO16;
             }
         }
-
         throw new IllegalStateException("Current WAV file has unusual configuration... channels: " + this.numChannels + ", BPS: " + bytes);
     }
 
@@ -110,26 +107,20 @@ public class Wave
     public Wave convertTo16()
     {
         final int bytes = 16 / 8;
-
         int c = this.data.length / this.numChannels / this.getBytesPerSample();
         int byteRate = c * this.numChannels * bytes ;
         byte[] data = new byte[byteRate];
         boolean isFloat = this.getBytesPerSample() == 4;
-
         Wave wave = new Wave(this.audioFormat, this.numChannels, this.sampleRate, byteRate, bytes * this.numChannels, 16, data);
-
         ByteBuffer sample = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
         ByteBuffer dataBuffer = ByteBuffer.allocateDirect(data.length).order(ByteOrder.nativeOrder());
-
         for (int i = 0; i < c * this.numChannels; i++)
         {
             sample.clear();
-
             for (int j = 0; j < this.getBytesPerSample(); j++)
             {
                 sample.put(this.data[i * this.getBytesPerSample() + j]);
             }
-
             if (isFloat)
             {
                 sample.flip();
@@ -142,10 +133,8 @@ public class Wave
                 dataBuffer.putShort((short) ((int) (sample.getInt() / (0xffffff / 2F) * (0xffff / 2F))));
             }
         }
-
         dataBuffer.flip();
         dataBuffer.get(data);
-
         return wave;
     }
 }

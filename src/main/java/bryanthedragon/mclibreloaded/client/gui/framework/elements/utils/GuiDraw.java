@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.utils.Area;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
@@ -40,10 +40,10 @@ public class GuiDraw
         {
             w += Math.min(x - scissor.x, 0);
             h += Math.min(y - scissor.y, 0);
-            x = MathUtils.clamp(x, scissor.x, scissor.ex());
-            y = MathUtils.clamp(y, scissor.y, scissor.ey());
-            w = MathUtils.clamp(w, 0, scissor.ex() - x);
-            h = MathUtils.clamp(h, 0, scissor.ey() - y);
+            x = MathUtils.clampInt(x, scissor.x, scissor.ex());
+            y = MathUtils.clampInt(y, scissor.y, scissor.ey());
+            w = MathUtils.clampInt(w, 0, scissor.ex() - x);
+            h = MathUtils.clampInt(h, 0, scissor.ey() - y);
         }
 
         scissor = new Area(x, y, w, h);

@@ -1,5 +1,7 @@
 package bryanthedragon.mclibreloaded.core;
 
+import jdk.jfr.Name;
+
 import java.util.Map;
 
 @Name("McLib core mod")

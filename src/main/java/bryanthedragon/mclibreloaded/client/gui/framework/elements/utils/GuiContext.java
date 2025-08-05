@@ -211,10 +211,7 @@ public class GuiContext implements IViewportStack
 
             if (isRoot)
             {
-                if (this.focus(grandparent, factor > 0 ? -1 : childs.size() - 1, factor))
-                {
-                    return true;
-                }
+                return this.focus(grandparent, factor > 0 ? -1 : childs.size() - 1, factor);
             }
         }
 

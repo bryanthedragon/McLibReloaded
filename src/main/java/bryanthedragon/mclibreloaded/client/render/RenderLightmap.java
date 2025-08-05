@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.client.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,7 +26,7 @@ public class RenderLightmap extends RenderLivingBase<EntityLivingBase>
     {
         if (instance == null)
         {
-            instance = new RenderLightmap(Minecraft.getInstance().getRenderManager(), null, 0);
+            instance = new RenderLightmap(Minecraft.getInstance().getEntityRenderDispatcher(), null, 0);
         }
 
         return instance;
@@ -46,9 +47,9 @@ public class RenderLightmap extends RenderLivingBase<EntityLivingBase>
         getInstance().unsetBrightness();
     }
 
-    public RenderLightmap(RenderManager renderManagerIn, ModelBase modelBaseIn, float shadowSizeIn)
+    public RenderLightmap(EntityRenderDispatcher EntityRenderDispatcherIn, ModelBase modelBaseIn, float shadowSizeIn)
     {
-        super(renderManagerIn, modelBaseIn, shadowSizeIn);
+        super(EntityRenderDispatcherIn, modelBaseIn, shadowSizeIn);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.events;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.permissions.PermissionCategory;
 import bryanthedragon.mclibreloaded.forge.permissions.DefaultPermissionLevel;
 
@@ -66,7 +66,7 @@ public class RegisterPermissionsEvent extends Event
 
     /**
      * Register the permissions in the API, see {@link PermissionAPI#registerNode(String, DefaultPermissionLevel, String)}
-     * and register them into the permission factory {@link bryanthedragon.mclibreloaded.McLib#permissionFactory}.
+     * and register them into the permission factory {@link bryanthedragon.mclibreloaded.McLibReloaded#permissionFactory}.
      */
     public void loadPermissions()
     {
@@ -75,7 +75,7 @@ public class RegisterPermissionsEvent extends Event
             if (permission.hasChildren()) continue;
 
             PermissionAPI.registerNode(permission.toString(), permission.getDefaultPermission(), "");
-            McLib.permissionFactory.registerPermission(permission);
+            McLibReloaded.permissionFactory.registerPermission(permission);
         }
     }
 

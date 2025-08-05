@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiContextMenu;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiSimpleContextMenu;
@@ -98,7 +98,9 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
             }
         }
         catch (Exception e)
-        {}
+        {
+
+        }
 
         return menu
             .action(Icons.DOWNLOAD, IKey.lang("mclib.gui.item_slot.context.drop"), this::dropItem)
@@ -154,9 +156,9 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
     @Override
     protected void drawSkin(GuiContext context)
     {
-        int border = this.inventory.hasParent() ? 0xff000000 + McLib.primaryColor.get() : 0xffffffff;
+        int border = this.inventory.hasParent() ? 0xff000000 + McLibReloaded.primaryColor.get() : 0xffffffff;
 
-        if (McLib.enableBorders.get())
+        if (McLibReloaded.enableBorders.get())
         {
             Gui.drawRect(this.area.x + 1, this.area.y, this.area.ex() - 1, this.area.ey(), 0xff000000);
             Gui.drawRect(this.area.x, this.area.y + 1, this.area.ex(), this.area.ey() - 1, 0xff000000);
@@ -219,7 +221,7 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
 
         if (this.drawDisabled)
         {
-            GuiDraw.drawLockedArea(this, McLib.enableBorders.get() ? 1 : 0);
+            GuiDraw.drawLockedArea(this, McLibReloaded.enableBorders.get() ? 1 : 0);
         }
     }
 

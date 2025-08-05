@@ -1,10 +1,11 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
+
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public class GuiCirculateElement extends GuiClickElement<GuiCirculateElement>
     @Override
     protected void drawSkin(GuiContext context)
     {
-        int color = 0xff000000 + (this.custom ? this.customColor : McLib.primaryColor.get());
+        int color = 0xff000000 + (this.custom ? this.customColor : McLibReloaded.primaryColor.get());
 
         if (this.hover)
         {

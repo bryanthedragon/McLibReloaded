@@ -1,15 +1,19 @@
 package bryanthedragon.mclibreloaded.client;
 
 import javax.swing.text.JTextComponent.KeyBinding;
-import bryanthedragon.mclibreloaded.McLib;
+
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiInventoryElement;
 import bryanthedragon.mclibreloaded.client.gui.mclib.GuiDashboard;
 import bryanthedragon.mclibreloaded.config.values.ValueRL;
 import bryanthedragon.mclibreloaded.events.RemoveDashboardPanels;
+
 import net.minecraft.client.Minecraft;
+
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import org.lwjgl.glfw.GLFW;
 
 public class KeyboardHandler
@@ -50,7 +54,7 @@ public class KeyboardHandler
             {
                 this.lastGuiScale = Minecraft.getInstance().gameSettings.guiScale;
 
-                int scale = McLib.userIntefaceScale.get();
+                int scale = McLibReloaded.userIntefaceScale.get();
 
                 if (scale > 0)
                 {
@@ -66,14 +70,14 @@ public class KeyboardHandler
                 this.lastGuiScale = -1;
             }
 
-            if (Minecraft.getInstance().world == null)
+            if (Minecraft.getInstance().level == null)
             {
                 GuiDashboard.dashboard = null;
                 ValueRL.picker = null;
                 GuiInventoryElement.container = null;
 
-                McLib.proxy.configs.resetServerValues();
-                McLib.EVENT_BUS.post(new RemoveDashboardPanels());
+                McLibReloaded.proxy.configs.resetServerValues();
+                McLibReloaded.EVENT_BUS.post(new RemoveDashboardPanels());
             }
         }
     }

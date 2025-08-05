@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.input;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiScrollElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
@@ -99,7 +99,7 @@ public class GuiKeybinds extends GuiScrollElement
 
         public int draw(GuiContext context, int x, int y, int i)
         {
-            int color = 0xff000000 + McLib.primaryColor.get();
+            int color = 0xff000000 + McLibReloaded.primaryColor.get();
 
             String title = this.title.get();
 

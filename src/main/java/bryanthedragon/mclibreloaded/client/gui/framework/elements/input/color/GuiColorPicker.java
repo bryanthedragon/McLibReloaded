@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.input.color;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.GuiBase;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.context.GuiContextMenu;
@@ -15,6 +15,7 @@ import bryanthedragon.mclibreloaded.utils.Color;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
 import bryanthedragon.mclibreloaded.utils.MathUtils;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
@@ -26,7 +27,6 @@ import java.util.function.Consumer;
 
 /**
  * Color picker element
- *
  * This is the one that is responsible for picking colors
  */
 public class GuiColorPicker extends GuiElement
@@ -115,7 +115,7 @@ public class GuiColorPicker extends GuiElement
         {
             this.setColor(color.getRGBAColor());
             this.updateColor();
-        }).colors(McLib.favoriteColors.getCurrentColors());
+        }).colors(McLibReloaded.favoriteColors.getCurrentColors());
 
         this.favorite.context(() ->
         {
@@ -148,7 +148,7 @@ public class GuiColorPicker extends GuiElement
 
     public void updateField()
     {
-        this.input.setText(this.color.stringify(this.editAlpha));
+        this.input.setText(this.color.stringifier(this.editAlpha));
     }
 
     public void updateColor()
@@ -167,7 +167,7 @@ public class GuiColorPicker extends GuiElement
 
     public void setColor(float r, float g, float b, float a)
     {
-        this.color.set(r, g, b, a);
+        this.color.setColor(r, g, b, a);
         this.updateField();
     }
 
@@ -179,7 +179,7 @@ public class GuiColorPicker extends GuiElement
 
     public void setValue(int color)
     {
-        this.color.set(color, this.editAlpha);
+        this.color.alphaSetter(color, this.editAlpha);
     }
 
     @Override
@@ -233,8 +233,8 @@ public class GuiColorPicker extends GuiElement
 
     private void addToFavorites(Color color)
     {
-        this.addColor(McLib.favoriteColors.getCurrentColors(), color);
-        McLib.favoriteColors.saveLater();
+        this.addColor(McLibReloaded.favoriteColors.getCurrentColors(), color);
+        McLibReloaded.favoriteColors.saveLater();
 
         this.setupSize();
         this.resize();
@@ -242,8 +242,8 @@ public class GuiColorPicker extends GuiElement
 
     private void removeFromFavorites(int index)
     {
-        McLib.favoriteColors.getCurrentColors().remove(index);
-        McLib.favoriteColors.saveLater();
+        McLibReloaded.favoriteColors.getCurrentColors().remove(index);
+        McLibReloaded.favoriteColors.saveLater();
 
         this.setupSize();
         this.resize();
@@ -255,7 +255,7 @@ public class GuiColorPicker extends GuiElement
 
         if (i == -1)
         {
-            colors.add(color.copy());
+            colors.add(color.copier());
         }
         else
         {
@@ -352,7 +352,7 @@ public class GuiColorPicker extends GuiElement
         {
             float factor = (context.mouseX - (this.red.x + 7)) / (float) (this.red.w - 14);
 
-            this.color.set(MathUtils.clamp(factor, 0, 1), this.dragging);
+            this.color.floatSetter(MathUtils.clamperFloat(factor, 0, 1), this.dragging);
             this.updateColor();
         }
 

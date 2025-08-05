@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.commands.config;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.commands.SubCommandBase;
 import bryanthedragon.mclibreloaded.commands.utils.L10n;
 import bryanthedragon.mclibreloaded.config.values.Value;
@@ -20,7 +20,7 @@ public class SubCommandConfig extends SubCommandBase
                 throw new Exception("Identifier should have exactly 3 strings separated by a period!");
             }
 
-            return McLib.proxy.configs.modules.get(splits[0]).values.get(splits[1]).getSubValue(splits[2]);
+            return McLibReloaded.commonproxy.configs.modules.get(splits[0]).values.get(splits[1]).getSubValue(splits[2]);
         }
         catch (Exception e)
         {
@@ -51,6 +51,6 @@ public class SubCommandConfig extends SubCommandBase
 
     public L10n getL10n()
     {
-        return McLib.l10n;
+        return McLibReloaded.l10n;
     }
 }

@@ -13,7 +13,6 @@ public class Pixels
     public int pixelLength;
     public int width;
     public int height;
-
     public Color color = new Color();
     private PixelAccessor accessor;
 
@@ -39,7 +38,6 @@ public class Pixels
             this.pixelBytes = null;
             this.accessor = PixelAccessor.INT;
         }
-
         this.pixelLength = image.getAlphaRaster() != null ? 4 : 3;
         this.width = image.getWidth();
         this.height = image.getHeight();
@@ -105,10 +103,9 @@ public class Pixels
      * @param index the index of the pixel in the array
      * @return the color at the specified index
      */
-    public Color getColor(int index)
+    public Color getColorIndex(int index)
     {
-        this.accessor.get(this, index, this.color);
-
+        this.accessor.getPixelColor(this, index, this.color);
         return this.color;
     }
 
@@ -121,7 +118,7 @@ public class Pixels
      */
     public Color getColor(int x, int y)
     {
-        return this.getColor(this.toIndex(x, y));
+        return this.getColorIndex(this.toIndex(x, y));
     }
 
     /**
@@ -132,7 +129,7 @@ public class Pixels
      */
     public void setColor(int index, Color color)
     {
-        this.accessor.set(this, index, color);
+        this.accessor.setPixelColor(this, index, color);
     }
 
     /**

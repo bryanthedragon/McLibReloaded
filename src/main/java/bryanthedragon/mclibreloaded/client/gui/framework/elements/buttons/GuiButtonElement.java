@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.ITextColoring;
@@ -68,7 +68,7 @@ public class GuiButtonElement extends GuiClickElement<GuiButtonElement> implemen
     @Override
     protected void drawSkin(GuiContext context)
     {
-        int color = 0xff000000 + (this.custom ? this.customColor : McLib.primaryColor.get());
+        int color = 0xff000000 + (this.custom ? this.customColor : McLibReloaded.primaryColor.get());
 
         if (this.hover)
         {

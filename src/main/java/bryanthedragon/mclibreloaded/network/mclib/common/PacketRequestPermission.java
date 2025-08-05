@@ -1,19 +1,25 @@
 package bryanthedragon.mclibreloaded.network.mclib.common;
 
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+
 import io.netty.buffer.ByteBuf;
-import bryanthedragon.mclibreloaded.McLib;
+
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.permissions.PermissionCategory;
+
 import javax.annotation.Nullable;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class PacketRequestPermission implements IAnswerRequest<Boolean>
+public class PacketRequestPermission implements CustomPacketPayload, IAnswerRequest<Boolean>
 {
     private PermissionCategory request;
     private int callbackID = -1;
 
     public PacketRequestPermission()
-    { }
+    { 
+
+    }
 
     public PacketRequestPermission(int callbackID, PermissionCategory permission)
     {
@@ -45,12 +51,19 @@ public class PacketRequestPermission implements IAnswerRequest<Boolean>
     public void fromBytes(ByteBuf buf)
     {
         this.callbackID = buf.readInt();
-        this.request = McLib.permissionFactory.getPermission(buf.readInt());
+        this.request = McLibReloaded.permissionFactory.getPermission(buf.readInt());
     }
 
     public void toBytes(ByteBuf buf)
     {
         buf.writeInt(this.callbackID);
-        buf.writeInt(McLib.permissionFactory.getPermissionID(this.request));
+        buf.writeInt(McLibReloaded.permissionFactory.getPermissionID(this.request));
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() 
+    {
+        // only for implementation
+        return null;
     }
 }

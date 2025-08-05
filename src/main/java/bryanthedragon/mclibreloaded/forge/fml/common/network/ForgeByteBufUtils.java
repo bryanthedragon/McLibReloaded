@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 import org.apache.commons.lang3.Validate;
 
@@ -23,6 +24,7 @@ public class ForgeByteBufUtils
     {
         return (toCount & 0xFFFFFF80) == 0 ? 1 : ((toCount & 0xFFFFC000) == 0 ? 2 : ((toCount & 0xFFE00000) == 0 ? 3 : ((toCount & 0xF0000000) == 0 ? 4 : 5)));
     }
+    
     /**
      * Read a varint from the supplied buffer.
      *
@@ -48,9 +50,12 @@ public class ForgeByteBufUtils
         while ((b0 & 128) == 128);
         return i;
     }
+
     /**
-     * An extended length short. Used by custom payload packets to extend size.
+     * Read a short from the buffer using variable length encoding.
      *
+     * @param buf The buffer to read from
+     * @return The short
      */
     public static int readVarShort(ByteBuf buf)
     {
@@ -64,6 +69,12 @@ public class ForgeByteBufUtils
         return ((high & 0xFF) << 15) | low;
     }
 
+    /**
+     * Write a short to the buffer using variable length encoding.
+     *
+     * @param buf The buffer to write to
+     * @param toWrite The short to write
+     */
     public static void writeVarShort(ByteBuf buf, int toWrite)
     {
         int low = toWrite & 0x7FFF;
@@ -166,8 +177,7 @@ public class ForgeByteBufUtils
     */
     public static void writeTag(ByteBuf to, CompoundTag tag)
     {
-        ForgeByteBufUtils fbb = new ForgeByteBufUtils();
-        fbb.writeNbt(tag);
+        ForgeByteBufUtils.writeTag(to, tag);
     }
 
     /**
@@ -177,18 +187,94 @@ public class ForgeByteBufUtils
      * @return The read tag
      */
     @Nullable
-    public static CompoundTag readTag(ByteBuf from)
+    public static ItemLike readTag(ByteBuf from)
     {
-        ForgeByteBufUtils fbb = new ForgeByteBufUtils();
         try
         {
-            return fbb.readNbt(from);
-        } catch (Exception e)
+            return ForgeByteBufUtils.readTag(from);
+        } 
+        catch (Exception e)
         {
             // Unpossible?
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Returns a string representation of the contents of the given ByteBuf. Each line shows 16 bytes of the buffer,
+     * represented in hexadecimal, followed by the ASCII representation of that line. Additionally, the length of the
+     * buffer is included at the end.
+     * @param buffer the ByteBuf to get the contents of
+     * @return a string representation of the contents of the ByteBuf
+     */
+    public static String getContentDump(ByteBuf buffer)
+    {
+        int currentLength = buffer.readableBytes();
+        StringBuilder returnString = new StringBuilder((currentLength * 3) + (currentLength) + (currentLength / 4) + 30); // The hex + // The ascii + // The tabs/\n's + // The text
+        returnString.append("Buffer contents:\n");
+        int i, j; // Loop variables
+        for (i = 0; i < currentLength; i++)
+        {
+            if ((i != 0) && (i % 16 == 0))
+            {
+                // If it's a multiple of 16 and i isn't null, show the ascii
+                returnString.append('\t');
+                for (j = i - 16; j < i; j++)
+                {
+                    if (buffer.getByte(j) < 0x20 || buffer.getByte(j) > 0x7F)
+                    {
+                        returnString.append('.');
+                    }
+                    else
+                    {
+                        returnString.append((char) buffer.getByte(j));
+                    }
+                }
+                // Add a linefeed after the string
+                returnString.append("\n");
+            }
+            returnString.append(Integer.toString((buffer.getByte(i) & 0xF0) >> 4, 16)).append(Integer.toString((buffer.getByte(i) & 0x0F) >> 0, 16));
+            returnString.append(' ');
+        }
+        // Add padding spaces if it's not a multiple of 16
+        if (i != 0 && i % 16 != 0)
+        {
+            for (j = 0; j < ((16 - (i % 16)) * 3); j++)
+            {
+                returnString.append(' ');
+            }
+        }
+        // Add the tab for alignment
+        returnString.append('\t');
+
+        // Add final characters at right, after padding
+
+        // If it was at the end of a line, print out the full line
+        if (i > 0 && (i % 16) == 0)
+        {
+            j = i - 16;
+        } 
+        else
+        {
+            j = (i - (i % 16));
+        }
+        for (; i >= 0 && j < i; j++)
+        {
+            if (buffer.getByte(j) < 0x20 || buffer.getByte(j) > 0x7F)
+            {
+                returnString.append('.');
+            }
+            else
+            {
+                returnString.append((char) buffer.getByte(j));
+            }
+        }
+        // Finally, tidy it all up with a newline
+        returnString.append('\n');
+        returnString.append("Length: ").append(currentLength);
+        return returnString.toString();
+    }
+}
 
 // //    /**
 // //     * Write a registry entry to the stream. The serialized format is not specified and must not be relied upon.
@@ -290,72 +376,3 @@ public class ForgeByteBufUtils
 // //            return b.build();
 // //        }
 // //    }
-
-    public static String getContentDump(ByteBuf buffer)
-    {
-        int currentLength = buffer.readableBytes();
-        StringBuilder returnString = new StringBuilder((currentLength * 3) + (currentLength) + (currentLength / 4) + 30); // The hex + // The ascii + // The tabs/\n's + // The text
-        returnString.append("Buffer contents:\n");
-        int i, j; // Loop variables
-        for (i = 0; i < currentLength; i++)
-        {
-            if ((i != 0) && (i % 16 == 0))
-            {
-                // If it's a multiple of 16 and i isn't null, show the ascii
-                returnString.append('\t');
-                for (j = i - 16; j < i; j++)
-                {
-                    if (buffer.getByte(j) < 0x20 || buffer.getByte(j) > 0x7F)
-                    {
-                        returnString.append('.');
-                    }
-                    else
-                    {
-                        returnString.append((char) buffer.getByte(j));
-                    }
-                }
-                // Add a linefeed after the string
-                returnString.append("\n");
-            }
-            returnString.append(Integer.toString((buffer.getByte(i) & 0xF0) >> 4, 16)).append(Integer.toString((buffer.getByte(i) & 0x0F) >> 0, 16));
-            returnString.append(' ');
-        }
-        // Add padding spaces if it's not a multiple of 16
-        if (i != 0 && i % 16 != 0)
-        {
-            for (j = 0; j < ((16 - (i % 16)) * 3); j++)
-            {
-                returnString.append(' ');
-            }
-        }
-        // Add the tab for alignment
-        returnString.append('\t');
-
-        // Add final characters at right, after padding
-
-        // If it was at the end of a line, print out the full line
-        if (i > 0 && (i % 16) == 0)
-        {
-            j = i - 16;
-        } 
-        else
-        {
-            j = (i - (i % 16));
-        }
-        for (; i >= 0 && j < i; j++)
-        {
-            if (buffer.getByte(j) < 0x20 || buffer.getByte(j) > 0x7F)
-            {
-                returnString.append('.');
-            }
-            else
-            {
-                returnString.append((char) buffer.getByte(j));
-            }
-        }
-        // Finally, tidy it all up with a newline
-        returnString.append('\n');
-        returnString.append("Length: ").append(currentLength);
-        return returnString.toString();
-    }
-}

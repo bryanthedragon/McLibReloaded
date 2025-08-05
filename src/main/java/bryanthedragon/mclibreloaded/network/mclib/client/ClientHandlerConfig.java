@@ -1,13 +1,15 @@
 package bryanthedragon.mclibreloaded.network.mclib.client;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.mclib.GuiDashboard;
 import bryanthedragon.mclibreloaded.config.Config;
 import bryanthedragon.mclibreloaded.config.gui.GuiConfigPanel;
 import bryanthedragon.mclibreloaded.network.ClientMessageHandler;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfig;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.server.level.ServerPlayer;
 
 
 public class ClientHandlerConfig extends ClientMessageHandler<PacketConfig> 
@@ -17,7 +19,7 @@ public class ClientHandlerConfig extends ClientMessageHandler<PacketConfig>
     {
         if (message.overwrite) 
         {
-            Config present = McLib.proxy.configs.modules.get(message.config.id);
+            Config present = McLibReloaded.commonproxy.configs.modules.get(message.config.id);
             present.copyServer(message.config);
         } 
         else 
@@ -30,5 +32,11 @@ public class ClientHandlerConfig extends ClientMessageHandler<PacketConfig>
                 panel.storeServerConfig(message.config);
             }
         }
+    }
+
+    @Override
+    public void handleServerMessage(ServerPlayer player, PacketConfig message) 
+    {
+        // only here for inheritance
     }
 }

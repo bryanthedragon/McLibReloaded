@@ -39,6 +39,7 @@ public class McLibReloaded
     public static final EventBus EVENT_BUS = new EventBus();
     public static final Logger LOGGER = LogManager.getLogger(McLibReloaded.MOD_ID);
     public static L10n l10n = new L10n(MOD_ID);
+    public static CommonProxy commonproxy;
 
     /**
      * A factory containing all permissions that have been registered through the {@link RegisterPermissionsEvent}.

@@ -1,6 +1,5 @@
 package bryanthedragon.mclibreloaded.utils;
 
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -10,10 +9,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 /**
  * A class that uses reflection to access functionalities of the Optifine mod
  */
+@SuppressWarnings("rawtypes")
 public class OptifineHelper
 {
     private static ReflectionElement<Field> shadowPass = new ReflectionElement<>();
-    @SuppressWarnings("rawtypes")
     private static ReflectionElement<Class> shadersClass = new ReflectionElement<>();
     private static ReflectionElement<Method> nextEntity = new ReflectionElement<>();
     private static ReflectionElement<Method> nextBlockEntity = new ReflectionElement<>();
@@ -35,11 +34,11 @@ public class OptifineHelper
                 }
             }
             catch (Exception e)
-            {}
-
+            {
+                e.printStackTrace();
+            }
             shadowPass.checked = true;
         }
-
         if (shadowPass.element != null)
         {
             try
@@ -47,9 +46,10 @@ public class OptifineHelper
                 return (boolean) shadowPass.element.get(null);
             }
             catch (Exception e)
-            {}
+            {
+                e.printStackTrace();
+            }
         }
-
         return false;
     }
 
@@ -70,11 +70,11 @@ public class OptifineHelper
                 }
             }
             catch (Exception var1)
-            { }
-
+            {
+                var1.printStackTrace();
+            }
             nextEntity.checked = true;
         }
-
         if (nextEntity.element != null)
         {
             try
@@ -82,7 +82,9 @@ public class OptifineHelper
                 nextEntity.element.invoke(null, entity);
             }
             catch (Exception e)
-            { }
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -107,10 +109,8 @@ public class OptifineHelper
                 nextBlockEntity.element = null;
                 e.printStackTrace();
             }
-
             nextBlockEntity.checked = true;
         }
-
         if (nextBlockEntity.element != null)
         {
             try
@@ -144,7 +144,6 @@ public class OptifineHelper
             }
             shadersClass.checked = true;
         }
-
         return shadersClass.element != null;
     }
 

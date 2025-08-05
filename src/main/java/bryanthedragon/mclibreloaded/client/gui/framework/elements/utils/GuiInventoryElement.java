@@ -1,6 +1,6 @@
 package bryanthedragon.mclibreloaded.client.gui.framework.elements.utils;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.GuiElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiIconElement;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons.GuiSlotElement;
@@ -279,7 +279,7 @@ public class GuiInventoryElement extends GuiElement
         int border = 0xffffffff;
         int fourth = this.area.y(0.75F);
 
-        if (McLib.enableBorders.get())
+        if (McLibReloaded.enableBorders.get())
         {
             Gui.drawRect(this.area.x + 1, this.area.y, this.area.ex() - 1, this.area.ey(), 0xff000000);
             Gui.drawRect(this.area.x, this.area.y + 1, this.area.ex(), this.area.ey() - 1, 0xff000000);
@@ -348,7 +348,7 @@ public class GuiInventoryElement extends GuiElement
         RenderSystem.disableDepth();
         RenderHelper.disableStandardItemLighting();
 
-        GuiDraw.drawLockedArea(this, McLib.enableBorders.get() ? 1 : 0);
+        GuiDraw.drawLockedArea(this, McLibReloaded.enableBorders.get() ? 1 : 0);
 
         if (this.searching)
         {
@@ -392,7 +392,7 @@ public class GuiInventoryElement extends GuiElement
 
             if (hover)
             {
-                Gui.drawRect(x - 2, y - 2, x + 18, y + 18, 0xcc000000 + McLib.primaryColor.get());
+                Gui.drawRect(x - 2, y - 2, x + 18, y + 18, 0xcc000000 + McLibReloaded.primaryColor.get());
                 index = k;
             }
         }

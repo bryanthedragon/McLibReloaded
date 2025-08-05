@@ -1,11 +1,7 @@
 package bryanthedragon.mclibreloaded.network.mclib;
 
-import bryanthedragon.mclibreloaded.McLib;
+import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.network.AbstractDispatcher;
-import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerAnswer;
-import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerBoolean;
-import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerConfig;
-import bryanthedragon.mclibreloaded.network.mclib.client.ClientHandlerConfirm;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketAnswer;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketBoolean;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfig;
@@ -13,70 +9,60 @@ import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfirm;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketDropItem;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketRequestConfigs;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketRequestPermission;
-import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerConfig;
-import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerConfirm;
-import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerDropItem;
-import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerPermissionRequest;
-import bryanthedragon.mclibreloaded.network.mclib.server.ServerHandlerRequestConfigs;
+
+import net.minecraft.network.Connection;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
 
+import net.minecraftforge.network.PacketDistributor;
 
-public class Dispatcher
+import java.util.function.Supplier;
+
+public class Dispatcher 
 {
-    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(McLib.MOD_ID)
+
+    public static final AbstractDispatcher DISPATCHER = new AbstractDispatcher(McLibReloaded.MOD_ID) 
     {
-        @Override
-        public void register()
+        public void register() 
         {
-            register(PacketDropItem.class, ServerHandlerDropItem.class, Dist.DEDICATED_SERVER);
 
-            /* Config related packets */
-            register(PacketRequestConfigs.class, ServerHandlerRequestConfigs.class, Dist.DEDICATED_SERVER);
-            register(PacketConfig.class, ServerHandlerConfig.class, Dist.DEDICATED_SERVER);
-            register(PacketConfig.class, ClientHandlerConfig.class, Dist.CLIENT);
+            // Drop item packet
+            register(PacketDropItem.class, PacketDropItem::encode, PacketDropItem::new, PacketDropItem::handle);
 
-            //TODO abstract confirm thing into server to client to server answer thing - see IAnswerRequest etc.
-            /* Confirm related packets */
-            register(PacketConfirm.class, ClientHandlerConfirm.class, Dist.CLIENT);
-            register(PacketConfirm.class, ServerHandlerConfirm.class, Dist.DEDICATED_SERVER);
+            // Config packets
+            register(PacketRequestConfigs.class, PacketRequestConfigs::encode, PacketRequestConfigs::new, PacketRequestConfigs::handle);
+            register(PacketConfig.class, PacketConfig::encode, PacketConfig::new, PacketConfig::handle);
 
-            /* client answer related packets */
-            register(PacketAnswer.class, ClientHandlerAnswer.class, Dist.CLIENT);
-            register(PacketBoolean.class, ClientHandlerBoolean.class, Dist.CLIENT);
+            // Confirm packets
+            register(PacketConfirm.class, PacketConfirm::encode, PacketConfirm::new, PacketConfirm::handle);
 
-            register(PacketRequestPermission.class, ServerHandlerPermissionRequest.class, Dist.DEDICATED_SERVER);
+            // Client answer packets
+            register(PacketAnswer.class, PacketAnswer::encode, PacketAnswer::new, PacketAnswer::handle);
+            register(PacketBoolean.class, PacketBoolean::encode, PacketBoolean::new, PacketBoolean::handle);
+            register(PacketRequestPermission.class, PacketRequestPermission::encode, PacketRequestPermission::new, PacketRequestPermission::handle);
         }
     };
 
-    /**
-     * Send message to players who are tracking given entity
-     */
-    public static void sendToTracked(Entity entity, IMessage message)
+    /** Send message to players tracking given entity */
+    public static void sendToTracked(Entity entity, Object message) 
     {
-        DISPATCHER.sendToTracked(entity, message);
+        DISPATCHER.getChannel().send(PacketDistributor.TRACKING_ENTITY.with(entity), (Connection) message);
     }
 
-    /**
-     * Send message to given player
-     */
-    public static void sendTo(IMessage message, PlayerMP player)
+    /** Send message to given player */
+    public static void sendTo(Object message, ServerPlayer player) 
     {
-        DISPATCHER.sendTo(message, player);
+        DISPATCHER.getChannel().send(PacketDistributor.PLAYER.with(player), (Connection) message);
     }
 
-    /**
-     * Send message to the server
-     */
-    public static void sendToServer(IMessage message)
+    /** Send message to the server */
+    public static void sendToServer(Object message) 
     {
-        DISPATCHER.sendToServer(message);
+        Dispatcher.sendToServer(message);
     }
 
-    /**
-     * Register all the networking messages and message handlers
-     */
-    public static void register()
+    /** Register all packets */
+    public static void register() 
     {
         DISPATCHER.register();
     }
