@@ -6,6 +6,7 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiConte
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.utils.Keybind;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
@@ -21,7 +22,6 @@ public class GuiKeybinds extends GuiScrollElement
     public GuiKeybinds(Minecraft mc)
     {
         super(mc);
-
         this.hideTooltip();
         this.scroll.opposite = true;
     }
@@ -35,7 +35,6 @@ public class GuiKeybinds extends GuiScrollElement
             category = new KeybindCategory(keybind.category);
             this.keybinds.put(keybind.category.get(), category);
         }
-
         category.add(keybind);
     }
 
@@ -45,7 +44,6 @@ public class GuiKeybinds extends GuiScrollElement
         int cx = 40;
         Gui.drawRect(this.area.x, this.area.y, cx, this.area.ey(), 0xdd000000);
         GuiDraw.drawHorizontalGradientRect(cx, this.area.y, this.area.ex(), this.area.ey(), 0xdd000000, 0);
-
         super.draw(context);
     }
 
@@ -53,13 +51,10 @@ public class GuiKeybinds extends GuiScrollElement
     protected void preDraw(GuiContext context)
     {
         super.preDraw(context);
-
         int x = this.area.x + 10;
         int y = this.area.y + 10;
         int i = 0;
-
         KeybindCategory general = this.keybinds.get("");
-
         i = general.draw(context, x, y, i) + 10;
 
         for (KeybindCategory category : this.keybinds.values())
@@ -69,7 +64,6 @@ public class GuiKeybinds extends GuiScrollElement
                 i = category.draw(context, x, y, i) + 10;
             }
         }
-
         this.keybinds.clear();
         this.scroll.scrollSize = i + 3;
         this.scroll.clamp();
@@ -86,21 +80,19 @@ public class GuiKeybinds extends GuiScrollElement
             this.title = title;
         }
 
-        public void add(Keybind keybind)
+        public void addKeybind(Keybind keybind)
         {
             if (this.shouldClean)
             {
                 this.keybinds.clear();
                 this.shouldClean = false;
             }
-
             this.keybinds.add(keybind);
         }
 
-        public int draw(GuiContext context, int x, int y, int i)
+        public int drawer(GuiContext context, int x, int y, int i)
         {
             int color = 0xff000000 + McLibReloaded.primaryColor.get();
-
             String title = this.title.get();
 
             if (!title.isEmpty())
@@ -114,13 +106,11 @@ public class GuiKeybinds extends GuiScrollElement
             {
                 String combo = keybind.getKeyCombo();
                 int w = context.font.getStringWidth(combo);
-
                 Gui.drawRect(x - 2, y + i - 2, x + w + 2, y + i + context.font.FONT_HEIGHT + 2, color);
                 context.font.drawString(combo, x, y + i, 0xffffff);
                 context.font.drawStringWithShadow(keybind.label.get(), x + w + 5, y + i, 0xffffff);
                 i += 14;
             }
-
             return i;
         }
     }

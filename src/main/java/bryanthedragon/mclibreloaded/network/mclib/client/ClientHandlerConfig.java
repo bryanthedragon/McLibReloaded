@@ -15,7 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class ClientHandlerConfig extends ClientMessageHandler<PacketConfig> 
 {
 
-    public void run(LocalPlayer player, PacketConfig message) 
+    public void runLocalPlayer(LocalPlayer player, PacketConfig message) 
     {
         if (message.overwrite) 
         {
@@ -25,7 +25,24 @@ public class ClientHandlerConfig extends ClientMessageHandler<PacketConfig>
         else 
         {
             var screen = Minecraft.getInstance().screen;
+            if (screen instanceof GuiDashboard dashboard) 
+            {
+                GuiConfigPanel panel = dashboard.config;
+                panel.storeServerConfig(message.config);
+            }
+        }
+    }
 
+    public void runServerPlayer(ServerPlayer player, PacketConfig message) 
+    {
+        if (message.overwrite) 
+        {
+            Config present = McLibReloaded.commonproxy.configs.modules.get(message.config.id);
+            present.copyServer(message.config);
+        } 
+        else 
+        {
+            var screen = Minecraft.getInstance().screen;
             if (screen instanceof GuiDashboard dashboard) 
             {
                 GuiConfigPanel panel = dashboard.config;

@@ -21,7 +21,7 @@ public class ServerHandlerDropItem extends ServerMessageHandler<PacketDropItem>
      * @param player the player who sent the packet
      * @param message the packet containing the item to be dropped
      */
-    public void run(ServerPlayer player, PacketDropItem message)
+    public void runServerPlayer(ServerPlayer player, PacketDropItem message)
     {
         if (player.isCreative() && McLibReloaded.opDropItems.get() || OpHelper.isPlayerOp(player))
         {

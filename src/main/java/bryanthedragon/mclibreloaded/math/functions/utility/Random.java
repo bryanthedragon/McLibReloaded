@@ -33,10 +33,8 @@ public class Random extends NNFunction
         {
             double a = this.getArg(0).doubleValue();
             double b = this.getArg(1).doubleValue();
-
             double min = Math.min(a, b);
             double max = Math.max(a, b);
-
             random = random * (max - min) + min;
         }
         else if (this.args.length >= 1)

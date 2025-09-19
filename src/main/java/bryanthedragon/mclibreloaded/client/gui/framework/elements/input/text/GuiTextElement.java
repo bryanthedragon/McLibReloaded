@@ -28,7 +28,6 @@ import org.lwjgl.glfw.GLFW;
 public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, ITextColoring
 {
     public static final Predicate<String> FILENAME_PREDICATE = (s) -> Patterns.FILENAME.matcher(s).find();
-
     public Consumer<String> callback;
 
     public GuiTextElement(Minecraft mc, ValueString value)
@@ -56,10 +55,8 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
     public GuiTextElement(Minecraft mc, Consumer<String> callback)
     {
         super(mc);
-
         this.field.setGuiResponder(this);
         this.callback = callback;
-
         this.flex().h(20);
     }
 
@@ -71,7 +68,6 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
     public GuiTextElement validator(Predicate<String> validator)
     {
         this.field.setValidator(validator);
-
         return this;
     }
 
@@ -79,7 +75,6 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
     {
         this.field.setEnableBackgroundDrawing(background);
         this.resize();
-
         return this;
     }
 
@@ -95,10 +90,21 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
     }
 
     public void setEntryValue(int id, boolean value)
-    {}
+    {
+        if (this.callback != null)
+        {
+            this.callback.accept(value ? "true" : "false");
+        }
+
+    }
 
     public void setEntryValue(int id, float value)
-    {}
+    {
+        if (this.callback != null)
+        {
+            this.callback.accept(String.valueOf(value));
+        }
+    }
 
     public void setEntryValue(int id, String value)
     {
@@ -116,7 +122,6 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
     public void resize()
     {
         super.resize();
-
         this.field.x = this.area.x + 1;
         this.field.y = this.area.y + 1;
         this.field.width = this.area.w - 2;
@@ -139,14 +144,12 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
         }
 
         boolean wasFocused = this.field.isFocused();
-
         this.field.mouseClicked(context.mouseX, context.mouseY, context.mouseButton);
 
         if (wasFocused != this.field.isFocused())
         {
             context.focus(wasFocused ? null : this);
         }
-
         return context.mouseButton == 0 && this.area.isInside(context);
     }
 
@@ -157,26 +160,21 @@ public class GuiTextElement extends GuiBaseTextElement implements GuiResponder, 
             if (context.keyCode == GLFW.GLFW_KEY_TAB)
             {
                 context.focus(this, -1, GuiScreen.isShiftKeyDown() ? -1 : 1);
-
                 return true;
             }
             else if (context.keyCode == GLFW.GLFW_KEY_ESCAPE)
             {
                 context.unfocus();
-
                 return true;
             }
         }
-
         return this.field.textboxKeyTyped(context.typedChar, context.keyCode) || super.keyTyped(context);
     }
 
     public void draw(GuiContext context)
     {
         this.field.drawTextBox();
-
         GuiDraw.drawLockedArea(this);
-
         super.draw(context);
     }
 }

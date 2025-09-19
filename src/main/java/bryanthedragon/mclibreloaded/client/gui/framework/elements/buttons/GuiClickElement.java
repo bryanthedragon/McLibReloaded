@@ -11,14 +11,12 @@ import java.util.function.Consumer;
 public abstract class GuiClickElement<T> extends GuiElement
 {
     public Consumer<T> callback;
-
     protected boolean hover;
     protected boolean pressed;
 
     public GuiClickElement(Minecraft mc, Consumer<T> callback)
     {
         super(mc);
-
         this.callback = callback;
     }
 
@@ -39,10 +37,8 @@ public abstract class GuiClickElement<T> extends GuiElement
             this.pressed = true;
             GuiUtils.playClick();
             this.click(context.mouseButton);
-
             return true;
         }
-
         return false;
     }
 
@@ -70,7 +66,6 @@ public abstract class GuiClickElement<T> extends GuiElement
     public void draw(GuiContext context)
     {
         this.hover = this.area.isInside(context);
-
         this.drawSkin(context);
         super.draw(context);
     }

@@ -121,14 +121,14 @@ public class MathBuilder
     public MathBuilder lenient()
     {
         this.strict = false;
-
         return this;
     }
 
     /**
      * Register a variable 
      */
-    public void register(Variable variable)
+
+    public void registerVariable(Variable variable)
     {
         this.variables.put(variable.getName(), variable);
     }
@@ -137,15 +137,15 @@ public class MathBuilder
      * Parse given math expression into a {@link IValue} which can be 
      * used to execute math.
      */
-    public IValue parse(String expression) throws Exception
+    public IValue parseString(String expression) throws Exception
     {
-        return this.parseSymbols(this.breakdownChars(this.breakdown(expression)));
+        return this.parseSymbols(this.breakdownChars(this.breakdownString(expression)));
     }
 
     /**
      * Breakdown an expression
      */
-    public String[] breakdown(String expression) throws Exception
+    public String[] breakdownString(String expression) throws Exception
     {
         /* If given string have illegal characters, then it can't be parsed */
         if (this.strict && !expression.matches("^[\\w\\d\\s_+-/*%^&|<>=!?:.,()\"'@~\\[\\]]+$"))
@@ -175,13 +175,13 @@ public class MathBuilder
         {
             throw new Exception("Given expression '" + expression + "' has more uneven amount of parenthesis, there are " + left + " open and " + right + " closed!");
         }
-
         return chars;
     }
 
     /**
      * Breakdown characters into a list of math expression symbols. 
      */
+
     public List<Object> breakdownChars(String[] chars)
     {
         List<Object> symbols = new ArrayList<Object>();
@@ -218,7 +218,6 @@ public class MathBuilder
                     if (isFirst || isOperatorBehind)
                     {
                         buffer += s;
-
                         continue;
                     }
                 }
@@ -290,7 +289,6 @@ public class MathBuilder
         {
             symbols.add(buffer);
         }
-
         return this.trimSymbols(symbols);
     }
 
@@ -331,10 +329,10 @@ public class MathBuilder
      * responsible for turning list of symbols into {@link IValue}. This 
      * is done by constructing a binary tree-like {@link IValue} based on 
      * {@link Operator} class.
-     * 
      * However, beside parsing operations, it's also can return one or 
      * two item sized symbol lists.
      */
+
     @SuppressWarnings("unchecked")
     public IValue parseSymbols(List<Object> symbols) throws Exception
     {
@@ -382,7 +380,6 @@ public class MathBuilder
                 {
                     IValue leftValue = this.parseSymbols(symbols.subList(0, leftOp));
                     IValue rightValue = this.parseSymbols(symbols.subList(leftOp + 1, size));
-
                     return new Operator(left, leftValue, rightValue);
                 }
                 else if (left.value > right.value)
@@ -399,28 +396,24 @@ public class MathBuilder
 
                     IValue leftValue = this.parseSymbols(symbols.subList(0, op));
                     IValue rightValue = this.parseSymbols(symbols.subList(op + 1, size));
-
                     return new Operator(right, leftValue, rightValue);
                 }
             }
-
             op = leftOp;
         }
-
         Operation operation = this.operationForOperator((String) symbols.get(lastOp));
-
         return new Operator(operation, this.parseSymbols(symbols.subList(0, lastOp)), this.parseSymbols(symbols.subList(lastOp + 1, size)));
     }
 
     protected int seekLastOperator(List<Object> symbols)
     {
-        return this.seekLastOperator(symbols, symbols.size() - 1);
+        return this.LastOperatorSeeker(symbols, symbols.size() - 1);
     }
 
     /**
      * Find the index of the first operator
      */
-    protected int seekLastOperator(List<Object> symbols, int offset)
+    protected int LastOperatorSeeker(List<Object> symbols, int offset)
     {
         for (int i = offset; i >= 0; i--)
         {
@@ -439,11 +432,9 @@ public class MathBuilder
                         continue;
                     }
                 }
-
                 return i;
             }
         }
-
         return -1;
     }
 
@@ -454,6 +445,7 @@ public class MathBuilder
      * and some elements from beginning till ?, in between ? and :, and also some
      * remaining elements after :.
      */
+
     protected IValue tryTernary(List<Object> symbols) throws Exception
     {
         int question = -1;
@@ -474,7 +466,6 @@ public class MathBuilder
                     {
                         question = i;
                     }
-
                     questions ++;
                 }
                 else if (object.equals(":"))
@@ -483,7 +474,6 @@ public class MathBuilder
                     {
                         colon = i;
                     }
-
                     colons ++;
                 }
             }
@@ -491,23 +481,16 @@ public class MathBuilder
 
         if (questions == colons && question > 0 && question + 1 < colon && colon < size - 1)
         {
-            return new Ternary(
-                this.parseSymbols(symbols.subList(0, question)),
-                this.parseSymbols(symbols.subList(question + 1, colon)),
-                this.parseSymbols(symbols.subList(colon + 1, size))
-            );
+            return new Ternary(this.parseSymbols(symbols.subList(0, question)), this.parseSymbols(symbols.subList(question + 1, colon)), this.parseSymbols(symbols.subList(colon + 1, size)));
         }
-
         return null;
     }
 
     /**
      * Create a function value
-     * 
      * This method in comparison to {@link #valueFromObject(Object)} 
      * needs the name of the function and list of args (which can't be 
      * stored in one object).
-     * 
      * This method will constructs {@link IValue}s from list of args 
      * mixed with operators, groups, values and commas. And then plug it 
      * in to a class constructor with given name. 
@@ -565,7 +548,6 @@ public class MathBuilder
         Class<? extends Function> function = this.functions.get(first);
         Constructor<? extends Function> ctor = function.getConstructor(IValue[].class, String.class);
         Function func = ctor.newInstance(values.toArray(new IValue[values.size()]), first);
-
         return func;
     }
 
@@ -642,6 +624,7 @@ public class MathBuilder
     /**
      * Get operation for given operator strings 
      */
+
     protected Operation operationForOperator(String op) throws Exception
     {
         for (Operation operation : Operation.values())
@@ -651,13 +634,13 @@ public class MathBuilder
                 return operation;
             }
         }
-
         throw new Exception("There is no such operator '" + op + "'!");
     }
 
     /**
      * Whether given object is a variable 
      */
+
     protected boolean isVariable(Object o)
     {
         return o instanceof String && !this.isDecimal((String) o) && !this.isOperator((String) o);
@@ -671,15 +654,17 @@ public class MathBuilder
     /**
      * Whether string is an operator 
      */
-    protected boolean isOperator(String s)
+
+    protected boolean isAnOperator(String str)
     {
-        return Operation.OPERATORS.contains(s) || s.equals("?") || s.equals(":");
+        return Operation.OPERATORS.contains(str) || str.equals("?") || str.equals(":");
     }
 
     /**
      * Whether string is numeric (including whether it's a floating 
      * number) 
      */
+
     protected boolean isDecimal(String s)
     {
         return s.matches("^-?\\d+(\\.\\d+)?$");

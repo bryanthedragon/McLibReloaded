@@ -15,7 +15,6 @@ public abstract class GuiBaseTextElement extends GuiElement implements IFocusedG
     public GuiBaseTextElement(Minecraft mc)
     {
         super(mc);
-
         this.field = new GuiTextField(0, this.font, 0, 0, 0, 0);
     }
 

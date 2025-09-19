@@ -16,7 +16,6 @@ public abstract class ClassMethodTransformer extends ClassTransformer
     {
         this.mcp = name;
         this.mcpSign = signature;
-
         return this;
     }
 
@@ -24,7 +23,6 @@ public abstract class ClassMethodTransformer extends ClassTransformer
     {
         this.notch = name;
         this.notchSign = signature;
-
         return this;
     }
 

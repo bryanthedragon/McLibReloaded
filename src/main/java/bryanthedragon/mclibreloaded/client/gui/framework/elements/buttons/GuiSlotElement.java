@@ -77,7 +77,6 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
         {
             return this.createDefaultSlotContextMenu();
         }
-
         return super.createContextMenu(context);
     }
 
@@ -131,13 +130,10 @@ public class GuiSlotElement extends GuiClickElement<ItemStack>
     protected void click(int mouseButton)
     {
         this.inventory.removeFromParent();
-
         GuiContext context = GuiBase.getCurrent();
-
         this.inventory.flex().relative(context.screen.root).xy(0.5F, 0.5F).anchor(0.5F, 0.5F);
         this.inventory.resize();
         this.inventory.updateInventory();
-
         context.screen.root.addArray(this.inventory);
     }
 

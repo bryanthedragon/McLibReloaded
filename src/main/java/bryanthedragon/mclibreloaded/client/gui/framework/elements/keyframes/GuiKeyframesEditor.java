@@ -36,12 +36,9 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
     public GuiButtonElement interp;
     public GuiListElement<KeyframeInterpolation> interpolations;
     public GuiCirculateElement easing;
-
     public T graph;
-
     private int clicks;
     private long clickTimer;
-
     private IAxisConverter converter;
 
     public GuiKeyframesEditor(Minecraft mc)
@@ -56,7 +53,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
             {
                 return null;
             }
-
             return keyframe.interp.from(keyframe.easing);
         }, null);
 
@@ -71,7 +67,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
         this.interp.tooltip(tooltip);
         this.interpolations = new GuiKeyframeInterpolationsList(mc, (interp) -> this.pickInterpolation(interp.get(0)));
         this.interpolations.tooltip(tooltip).setVisible(false);
-
         this.easing = new GuiCirculateElement(mc, (b) -> this.changeEasing());
         this.easing.tooltip(tooltip);
 
@@ -85,7 +80,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
         /* Position the elements */
         this.tick.flex().relative(this).set(0, 10, 80, 20).x(1, -90);
         this.value.flex().relative(this).set(0, 35, 80, 20).x(1, -90);
-
         this.interp.flex().relative(this.tick).set(-90, 0, 80, 20);
         this.easing.flex().relative(this.value).set(-90, 0, 80, 20);
         this.interpolations.flex().relative(this).set(0, 30, 80, 20).x(1, -180).h(1, -30).maxH(16 * 7);
@@ -94,7 +88,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
         /* Add all elements */
         this.add(this.graph, this.frameButtons);
         this.frameButtons.add(this.tick, this.value, this.interp, this.easing, this.interpolations);
-
         this.keys().register(IKey.lang("mclib.gui.keyframes.context.maximize"), GLFW.GLFW_KEY_HOME, this::resetView).inside();
         this.keys().register(IKey.lang("mclib.gui.keyframes.context.select_all"), GLFW.GLFW_KEY_A, this::selectAll).held(GLFW.GLFW_KEY_LEFT_CONTROL).inside();
     }
@@ -169,11 +162,9 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
                 {
                     this.clicks = 0;
                 }
-
                 this.clickTimer = time;
             }
         }
-
         return this.area.isInside(mouseX, mouseY);
     }
 
@@ -181,7 +172,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
     public GuiContextMenu createContextMenu(GuiContext context)
     {
         GuiSimpleContextMenu menu = new GuiSimpleContextMenu(this.mc);
-
         menu.action(Icons.MAXIMIZE, IKey.lang("mclib.gui.keyframes.context.maximize"), this::resetView);
         menu.action(Icons.FULLSCREEN, IKey.lang("mclib.gui.keyframes.context.select_all"), this::selectAll);
 
@@ -198,7 +188,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
             final Map<String, List<Keyframe>> keyframes = pasted;
             double offset = this.graph.scaleX.from(context.mouseX);
             int mouseY = context.mouseY;
-
             menu.action(Icons.PASTE, IKey.lang("mclib.gui.keyframes.context.paste"), () -> this.pasteKeyframes(keyframes, (long) offset, mouseY));
         }
 
@@ -208,7 +197,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
             menu.action(Icons.MAIN_HANDLE, IKey.lang("mclib.gui.keyframes.context.to_main"), () -> this.graph.which = Selection.KEYFRAME);
             menu.action(Icons.RIGHT_HANDLE, IKey.lang("mclib.gui.keyframes.context.to_right"), () -> this.graph.which = Selection.RIGHT_HANDLE);
         }
-
         return menu;
     }
 
@@ -233,12 +221,9 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
                     if (keyframes == null)
                     {
                         keyframes = new ArrayList<Keyframe>();
-
                         temp.put(key, keyframes);
                     }
-
                     Keyframe keyframe = new Keyframe();
-
                     keyframe.fromNBT(list.getCompoundTagAt(i));
                     keyframes.add(keyframe);
                 }
@@ -250,8 +235,9 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
             }
         }
         catch (Exception e)
-        {}
+        {
 
+        }
         return null;
     }
 
@@ -273,7 +259,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
                 for (int i = 0; i < c; i++)
                 {
                     Keyframe keyframe = sheet.channel.get(sheet.selected.get(i));
-
                     list.appendTag(keyframe.toNBT());
                 }
 
@@ -304,9 +289,7 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
             {
                 current =  sheets.get(0);
             }
-
             this.pasteKeyframesTo(current, keyframes.get(keyframes.keySet().iterator().next()), offset);
-
             return;
         }
 
@@ -318,7 +301,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
                 {
                     continue;
                 }
-
                 this.pasteKeyframesTo(sheet, entry.getValue(), offset);
             }
         }
@@ -337,10 +319,8 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
         for (Keyframe keyframe : keyframes)
         {
             keyframe.tick = keyframe.tick - firstX + offset;
-
             int index = sheet.channel.insert(keyframe.tick, keyframe.value);
             Keyframe inserted = sheet.channel.get(index);
-
             inserted.copy(keyframe);
             toSelect.add(inserted);
         }
@@ -349,7 +329,6 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
         {
             sheet.selected.add(sheet.channel.getKeyframes().indexOf(select));
         }
-
         this.graph.which = Selection.KEYFRAME;
         this.graph.setKeyframe(this.graph.getCurrent());
     }
@@ -406,17 +385,14 @@ public abstract class GuiKeyframesEditor<T extends GuiKeyframeElement> extends G
     public void fillData(Keyframe frame)
     {
         boolean show = frame != null && this.graph.which != Selection.NOT_SELECTED;
-
         this.frameButtons.setVisible(show);
 
         if (!show)
         {
             return;
         }
-
         double tick = this.graph.which.getX(frame);
         boolean forceInteger = this.graph.which == Selection.KEYFRAME;
-
         this.tick.integer = this.converter == null ? forceInteger : this.converter.forceInteger(frame, this.graph.which, forceInteger);
         this.tick.setValue(this.converter == null ? tick : this.converter.to(tick));
         this.value.setValue(this.graph.which.getY(frame));

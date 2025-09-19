@@ -33,14 +33,14 @@ public class Constant implements IValue
     }
 
     @Override
-    public void set(double value)
+    public void setDouble(double value)
     {
         this.doubleValue = value;
         this.stringValue = null;
     }
 
     @Override
-    public void set(String value)
+    public void setString(String value)
     {
         this.doubleValue = 0;
         this.stringValue = value;
@@ -59,7 +59,6 @@ public class Constant implements IValue
         {
             return Operation.isTrue(this.doubleValue);
         }
-
         return this.stringValue.equalsIgnoreCase("true");
     }
 

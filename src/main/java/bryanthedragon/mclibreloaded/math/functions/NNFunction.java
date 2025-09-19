@@ -26,7 +26,6 @@ public abstract class NNFunction extends Function
     public IValue get()
     {
         this.result.set(this.doubleValue());
-
         return this.result;
     }
 

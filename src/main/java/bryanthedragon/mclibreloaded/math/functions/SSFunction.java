@@ -25,7 +25,6 @@ public abstract class SSFunction extends Function
     public IValue get()
     {
         this.result.set(this.stringValue());
-
         return this.result;
     }
 

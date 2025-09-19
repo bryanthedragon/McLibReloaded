@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  */
 public abstract class ServerMessageHandler<T extends CustomPacketPayload> extends AbstractMessageHandler<T>
 {
-    public abstract void run(final ServerPlayer player, final T message);
+    public abstract void runServerPlayer(final ServerPlayer player, final T message);
 
     /**
      * Handles a server-side message by scheduling it to be processed on the main server thread.

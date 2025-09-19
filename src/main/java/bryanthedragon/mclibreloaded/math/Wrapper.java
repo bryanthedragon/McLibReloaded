@@ -3,7 +3,6 @@ package bryanthedragon.mclibreloaded.math;
 public abstract class Wrapper implements IValue
 {
     public IValue value;
-
     protected IValue result = new Constant(0);
 
     public Wrapper(IValue value)
@@ -15,7 +14,6 @@ public abstract class Wrapper implements IValue
     public IValue get()
     {
         this.process();
-
         return this.result;
     }
 

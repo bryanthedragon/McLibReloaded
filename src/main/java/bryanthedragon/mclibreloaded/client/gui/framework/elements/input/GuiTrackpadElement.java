@@ -22,7 +22,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.function.Consumer;
@@ -30,9 +29,7 @@ import java.util.function.Consumer;
 public class GuiTrackpadElement extends GuiBaseTextElement
 {
     public static final DecimalFormat FORMAT;
-
     public Consumer<Double> callback;
-
     public double value;
 
     /* Trackpad options */
@@ -51,9 +48,7 @@ public class GuiTrackpadElement extends GuiBaseTextElement
     private int initialY;
     private double lastValue;
     private double valueBeforeDrag;
-
     private Timer changed = new Timer(30);
-
     private long time;
     private Area plusOne = new Area();
     private Area minusOne = new Area();
@@ -68,7 +63,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
 
     {
         this.decimalPlaces = McLibReloaded.trackpadDecimalPlaces.get();
-
         this.getRoundingFormat(true);
     }
 
@@ -143,55 +137,46 @@ public class GuiTrackpadElement extends GuiBaseTextElement
     public GuiTrackpadElement(Minecraft mc, @Nullable Consumer<Double> callback)
     {
         super(mc);
-
         this.callback = callback;
-
         this.field.setEnableBackgroundDrawing(false);
         this.setValue(0);
-
         this.flex().h(20);
     }
 
     public GuiTrackpadElement max(double max)
     {
         this.max = max;
-
         return this;
     }
 
-    public GuiTrackpadElement limit(double min)
+    public GuiTrackpadElement min(double min)
     {
         this.min = min;
-
         return this;
     }
 
-    public GuiTrackpadElement limit(double min, double max)
+    public GuiTrackpadElement limiter(double min, double max)
     {
         this.min = min;
         this.max = max;
-
         return this;
     }
 
     public GuiTrackpadElement limit(double min, double max, boolean integer)
     {
         this.integer = integer;
-
         return this.limit(min, max);
     }
 
     public GuiTrackpadElement integer()
     {
         this.integer = true;
-
         return this;
     }
 
     public GuiTrackpadElement increment(double increment)
     {
         this.increment = increment;
-
         return this;
     }
 
@@ -200,7 +185,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         this.normal = normal;
         this.weak = normal / 5D;
         this.strong = normal * 5D;
-
         return this;
     }
 
@@ -209,7 +193,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         this.normal = normal;
         this.weak = weak;
         this.strong = strong;
-
         return this;
     }
 
@@ -263,7 +246,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         {
             value = (int) value;
         }
-
         this.value = value;
     }
 
@@ -285,10 +267,8 @@ public class GuiTrackpadElement extends GuiBaseTextElement
     public void unfocus(GuiContext context)
     {
         super.unfocus(context);
-
         /* Reset the value in case it's out of range */
         this.setValue(this.value);
-
         this.field.setText(this.integer ? String.valueOf((int) this.value) : FORMAT.format(this.value));
     }
 
@@ -296,9 +276,7 @@ public class GuiTrackpadElement extends GuiBaseTextElement
     public void focus(GuiContext context)
     {
         super.focus(context);
-
         int valueint = (int) this.value;
-
         this.field.setText(this.integer ? String.valueOf(valueint) : (this.value % 1 == 0) ? String.valueOf(valueint) : String.valueOf(this.value));
         this.field.setCursorPositionZero();
     }
@@ -310,7 +288,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
     public void resize()
     {
         super.resize();
-
         this.plusOne.copy(this.area);
         this.minusOne.copy(this.area);
         this.plusOne.w = this.minusOne.w = 20;
@@ -332,7 +309,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         if (context.mouseButton == 0)
         {
             boolean wasFocused = this.field.isFocused();
-
             this.field.mouseClicked(context.mouseX, context.mouseY, context.mouseButton);
 
             if (wasFocused != this.field.isFocused())
@@ -345,7 +321,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
                 if (GLFW.GLFW_isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
                 {
                     this.setValueAndNotify(Math.round(this.value));
-
                     return true;
                 }
 
@@ -358,7 +333,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
                 {
                     valueBeforeDrag = this.value;
                 }
-
                 this.dragging = true;
                 context.awaitsRightClick = true;
                 this.initialX = context.mouseX;
@@ -372,12 +346,9 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         if (context.mouseButton == 1 && this.dragging)
         {
             this.setValueAndNotify(this.valueBeforeDrag);
-
             this.stopDragging(context);
-
             return true;
         }
-
         return context.mouseButton == 0 && this.area.isInside(context);
     }
 
@@ -398,9 +369,7 @@ public class GuiTrackpadElement extends GuiBaseTextElement
                 this.setValueAndNotify(this.value - this.increment);
             }
         }
-
         this.stopDragging(context);
-
         super.mouseReleased(context);
     }
 
@@ -424,25 +393,21 @@ public class GuiTrackpadElement extends GuiBaseTextElement
             if (context.keyCode == GLFW.GLFW_KEY_UP)
             {
                 this.setValueAndNotify(this.value + this.getValueModifier());
-
                 return true;
             }
             else if (context.keyCode == GLFW.GLFW_KEY_DOWN)
             {
                 this.setValueAndNotify(this.value - this.getValueModifier());
-
                 return true;
             }
             else if (context.keyCode == GLFW.GLFW_KEY_TAB)
             {
                 context.focus(this, -1, GuiScreen.isShiftKeyDown() ? -1 : 1);
-
                 return true;
             }
             else if (context.keyCode == GLFW.GLFW_KEY_ESCAPE)
             {
                 context.unfocus();
-
                 return true;
             }
             else if (context.keyCode == GLFW.GLFW_KEY_ENTER && GuiScreen.isAltKeyDown())
@@ -450,11 +415,12 @@ public class GuiTrackpadElement extends GuiBaseTextElement
                 try
                 {
                     MathBuilder builder = new MathBuilder();
-
                     this.setValueAndNotify(builder.parse(this.field.getText()).get().doubleValue());
                 }
                 catch (Exception e)
-                {}
+                {
+                    this.setValue(this.value);
+                }
             }
         }
 
@@ -474,9 +440,10 @@ public class GuiTrackpadElement extends GuiBaseTextElement
                 }
             }
             catch (Exception e)
-            {}
+            {
+                //ignore
+            }
         }
-
         return result;
     }
 
@@ -494,9 +461,7 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         int w = this.area.w;
         int h = this.area.h;
         int padding = McLib.enableBorders.get() ? 1 : 0;
-
         this.area.draw(0xff000000);
-
         boolean dragging = this.isDraggingTime();
         boolean plus = !dragging && this.plusOne.isInside(context);
         boolean minus = !dragging && this.minusOne.isInside(context);
@@ -506,7 +471,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
             /* Draw filling background */
             int color = McLibReloaded.primaryColor.get();
             int fx = MathUtils.clamp(context.mouseX, this.area.x + padding, this.area.ex() - padding);
-
             Gui.drawRect(Math.min(fx, this.initialX), this.area.y + padding, Math.max(fx, this.initialX), this.area.ey() - padding, 0xff000000 + color);
         }
 
@@ -516,7 +480,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
             this.plusOne.draw(plus ? 0x22ffffff : 0x0affffff, padding);
             this.minusOne.draw(minus ? 0x22ffffff : 0x0affffff, padding);
             RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F);
-
             RenderSystem.enableBlend();
             ColorUtils.bindColor(minus ? 0xffffffff : 0x80ffffff);
             Icons.MOVE_LEFT.render(x + 5, y + (h - 16) / 2);
@@ -526,7 +489,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         }
 
         int width = MathUtils.clamp(this.font.getStringWidth(this.field.getText()), 0, w - 16);
-
         this.field.x = this.area.mx(width);
         this.field.y = this.area.my() - 4;
         this.field.width = width + 6;
@@ -557,7 +519,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
                 else if (mouseX >= context.screen.width - border)
                 {
                     Mouse.setCursorPosition((int) (factor * borderPadding), Mouse.getY());
-
                     this.shiftX += context.screen.width - borderPadding * 2;
                     this.changed.mark();
                     stop = true;
@@ -575,10 +536,8 @@ public class GuiTrackpadElement extends GuiBaseTextElement
                     if (dx != 0)
                     {
                         double value = this.getValueModifier();
-
                         double diff = (Math.abs(dx) - 3) * value;
                         double newValue = this.lastValue + (dx < 0 ? -diff : diff);
-
                         newValue = diff < 0 ? this.lastValue : Double.valueOf(this.getRoundingFormat().format(newValue));;
 
                         if (this.value != newValue)
@@ -588,13 +547,10 @@ public class GuiTrackpadElement extends GuiBaseTextElement
                     }
                 }
             }
-
             /* Draw active element */
             GuiDraw.drawOutlineCenter(this.initialX, this.initialY, 4, 0xffffffff);
         }
-
         GuiDraw.drawLockedArea(this);
-
         super.draw(context);
     }
 
@@ -614,7 +570,6 @@ public class GuiTrackpadElement extends GuiBaseTextElement
         {
             value = this.weak;
         }
-
         return value;
     }
 
@@ -638,13 +593,10 @@ public class GuiTrackpadElement extends GuiBaseTextElement
             {
                 decimals += "#";
             }
-
             this.rounding = new DecimalFormat("#."+decimals);
             this.decimalPlaces = McLib.trackpadDecimalPlaces.get();
-
             this.rounding.setRoundingMode(RoundingMode.HALF_EVEN);
         }
-
         return this.rounding;
     }
 }

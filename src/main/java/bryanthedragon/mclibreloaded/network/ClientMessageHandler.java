@@ -23,7 +23,7 @@ public abstract class ClientMessageHandler<T extends CustomPacketPayload> extend
      * @param message The message to be processed.
      */
     @OnlyIn(Dist.CLIENT)
-    public abstract void run(final LocalPlayer player, final T message);
+    public abstract void runLocalPlayer(final LocalPlayer player, final T message);
     
     /**
      * Handle a client-side message by scheduling it to be processed on the main client thread.

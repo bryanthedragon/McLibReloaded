@@ -6,6 +6,7 @@ import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiDraw;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.ITextColoring;
 import bryanthedragon.mclibreloaded.client.gui.utils.keys.IKey;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
+
 import net.minecraft.client.Minecraft;
 
 import java.util.function.Consumer;
@@ -13,10 +14,8 @@ import java.util.function.Consumer;
 public class GuiButtonElement extends GuiClickElement<GuiButtonElement> implements ITextColoring
 {
     public IKey label;
-
     public int textColor = 0xffffff;
     public boolean textShadow = true;
-
     public boolean custom;
     public int customColor;
     public boolean background = true;
@@ -24,7 +23,6 @@ public class GuiButtonElement extends GuiClickElement<GuiButtonElement> implemen
     public GuiButtonElement(Minecraft mc, IKey label, Consumer<GuiButtonElement> callback)
     {
         super(mc, callback);
-
         this.label = label;
         this.flex().h(20);
     }
@@ -33,7 +31,6 @@ public class GuiButtonElement extends GuiClickElement<GuiButtonElement> implemen
     {
         this.custom = true;
         this.customColor = color & 0xffffff;
-
         return this;
     }
 
@@ -41,14 +38,12 @@ public class GuiButtonElement extends GuiClickElement<GuiButtonElement> implemen
     {
         this.textColor = color;
         this.textShadow = shadow;
-
         return this;
     }
 
     public GuiButtonElement background(boolean background)
     {
         this.background = background;
-
         return this;
     }
 
@@ -83,9 +78,7 @@ public class GuiButtonElement extends GuiClickElement<GuiButtonElement> implemen
         String label = this.label.get();
         int x = this.area.mx(this.font.getStringWidth(label));
         int y = this.area.my(this.font.FONT_HEIGHT - 1);
-
         this.font.drawString(label, x, y, ColorUtils.multiplyColor(this.textColor, this.hover ? 0.9F : 1F), this.textShadow);
-
         GuiDraw.drawLockedArea(this);
     }
 }

@@ -12,102 +12,102 @@ import org.objectweb.asm.tree.MethodNode;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-public class EntityRendererTransformer extends ClassTransformer
+public class EntityRendererTransformer // extends ClassTransformer
 {
-    @Override
-    public void process(String name, ClassNode node)
-    {
-        for (MethodNode methodNode : node.methods)
-        {
-            if (methodNode.name.equals(this.checkName(methodNode, "a", "(FJ)V", "updateCameraAndRender", "(FJ)V")))
-            {
-                this.processUpdateCameraAndRender(methodNode);
-            }
-            else if(methodNode.name.equals(this.checkName(methodNode, "a", "(IFJ)V", "renderWorldPass", "(IFJ)V")))
-            {
-                this.processRenderWorldPass(methodNode);
-            }
-        }
-    }
+    // @Override
+    // public void process(String name, ClassNode node)
+    // {
+    //     for (MethodNode methodNode : node.methods)
+    //     {
+    //         if (methodNode.name.equals(this.checkName(methodNode, "a", "(FJ)V", "updateCameraAndRender", "(FJ)V")))
+    //         {
+    //             this.processUpdateCameraAndRender(methodNode);
+    //         }
+    //         else if(methodNode.name.equals(this.checkName(methodNode, "a", "(IFJ)V", "renderWorldPass", "(IFJ)V")))
+    //         {
+    //             this.processRenderWorldPass(methodNode);
+    //         }
+    //     }
+    // }
 
-    public void processRenderWorldPass(MethodNode method)
-    {
-        ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+    // public void processRenderWorldPass(MethodNode method)
+    // {
+    //     ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
 
-        while (iterator.hasNext())
-        {
-            AbstractInsnNode currentNode = iterator.next();
+    //     while (iterator.hasNext())
+    //     {
+    //         AbstractInsnNode currentNode = iterator.next();
 
-            if (currentNode instanceof MethodInsnNode)
-            {
-                /* credit goes to MiaoNLI for discovering this possibility and implementing it in Minema */
+    //         if (currentNode instanceof MethodInsnNode)
+    //         {
+    //             /* credit goes to MiaoNLI for discovering this possibility and implementing it in Minema */
 
-                MethodInsnNode mnode = (MethodInsnNode) currentNode;
-                if ((mnode.name.equals("a") || mnode.name.equals("setupCameraTransform")) && mnode.desc.equals("(FI)V"))
-                {
-                    iterator.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/mclib/utils/MatrixUtils", "ASMAfterCamera", "()V", false));
+    //             MethodInsnNode mnode = (MethodInsnNode) currentNode;
+    //             if ((mnode.name.equals("a") || mnode.name.equals("setupCameraTransform")) && mnode.desc.equals("(FI)V"))
+    //             {
+    //                 iterator.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/mclib/utils/MatrixUtils", "ASMAfterCamera", "()V", false));
 
-                    System.out.println("McLib: successfully patched renderWorldPass!");
+    //                 System.out.println("McLib: successfully patched renderWorldPass!");
 
-                    break;
-                }
-            }
-        }
-    }
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
 
-    public void processUpdateCameraAndRender(MethodNode method)
-    {
-        Iterator<AbstractInsnNode> it = method.instructions.iterator();
-        AbstractInsnNode pre = null;
-        AbstractInsnNode post = null;
+    // public void processUpdateCameraAndRender(MethodNode method)
+    // {
+    //     Iterator<AbstractInsnNode> it = method.instructions.iterator();
+    //     AbstractInsnNode pre = null;
+    //     AbstractInsnNode post = null;
 
-        int i = 0;
-        boolean gui = false;
+    //     int i = 0;
+    //     boolean gui = false;
 
-        while (it.hasNext())
-        {
-            AbstractInsnNode node = it.next();
+    //     while (it.hasNext())
+    //     {
+    //         AbstractInsnNode node = it.next();
 
-            if (node instanceof MethodInsnNode)
-            {
-                MethodInsnNode methodNode = (MethodInsnNode) node;
-                String desc = methodNode.owner + "/" + methodNode.name + methodNode.desc;
-                String targetPost = CoreClassTransformer.obfuscated ? "rl/b()V" : "net/minecraft/profiler/Profiler/endSection()V";
-                String targetPre = CoreClassTransformer.obfuscated ? "rl/c(Ljava/lang/String;)V" : "net/minecraft/profiler/Profiler/endStartSection(Ljava/lang/String;)V";
+    //         if (node instanceof MethodInsnNode)
+    //         {
+    //             MethodInsnNode methodNode = (MethodInsnNode) node;
+    //             String desc = methodNode.owner + "/" + methodNode.name + methodNode.desc;
+    //             String targetPost = CoreClassTransformer.obfuscated ? "rl/b()V" : "net/minecraft/profiler/Profiler/endSection()V";
+    //             String targetPre = CoreClassTransformer.obfuscated ? "rl/c(Ljava/lang/String;)V" : "net/minecraft/profiler/Profiler/endStartSection(Ljava/lang/String;)V";
 
-                if (desc.equals(targetPost))
-                {
-                    i++;
+    //             if (desc.equals(targetPost))
+    //             {
+    //                 i++;
 
-                    if (i == 2)
-                    {
-                        post = node.getPrevious().getPrevious().getPrevious();
+    //                 if (i == 2)
+    //                 {
+    //                     post = node.getPrevious().getPrevious().getPrevious();
 
-                        break;
-                    }
-                }
-                else if (gui && desc.equals(targetPre))
-                {
-                    pre = node;
-                }
-            }
-            else if (node instanceof LdcInsnNode)
-            {
-                LdcInsnNode ldc = (LdcInsnNode) node;
+    //                     break;
+    //                 }
+    //             }
+    //             else if (gui && desc.equals(targetPre))
+    //             {
+    //                 pre = node;
+    //             }
+    //         }
+    //         else if (node instanceof LdcInsnNode)
+    //         {
+    //             LdcInsnNode ldc = (LdcInsnNode) node;
 
-                if (ldc.cst.equals("gui"))
-                {
-                    gui = true;
-                }
-            }
-        }
+    //             if (ldc.cst.equals("gui"))
+    //             {
+    //                 gui = true;
+    //             }
+    //         }
+    //     }
 
-        if (pre != null && post != null)
-        {
-            method.instructions.insert(pre, new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/mclib/client/InputRenderer", "preRenderOverlay", "()V", false));
-            method.instructions.insertBefore(post, new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/mclib/client/InputRenderer", "postRenderOverlay", "()V", false));
+    //     if (pre != null && post != null)
+    //     {
+    //         method.instructions.insert(pre, new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/mclib/client/InputRenderer", "preRenderOverlay", "()V", false));
+    //         method.instructions.insertBefore(post, new MethodInsnNode(Opcodes.INVOKESTATIC, "mchorse/mclib/client/InputRenderer", "postRenderOverlay", "()V", false));
 
-            System.out.println("McLib: successfully patched updateCameraAndRender!");
-        }
-    }
+    //         System.out.println("McLib: successfully patched updateCameraAndRender!");
+    //     }
+    // }
 }

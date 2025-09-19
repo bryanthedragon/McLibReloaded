@@ -116,7 +116,6 @@ public class GuiSheet
         {
             return null;
         }
-
         return this.channel.get(this.selected.get(0));
     }
 
@@ -138,10 +137,8 @@ public class GuiSheet
     public void removeSelectedKeyframes()
     {
         List<Integer> sorted = new ArrayList<Integer>(this.selected);
-
         Collections.sort(sorted);
         Collections.reverse(sorted);
-
         this.clearSelection();
 
         for (int index : sorted)
@@ -156,7 +153,6 @@ public class GuiSheet
     {
         List<Keyframe> selected = new ArrayList<Keyframe>();
         List<Keyframe> created = new ArrayList<Keyframe>();
-
         long minTick = Integer.MAX_VALUE;
 
         for (int index : this.selected)
@@ -171,7 +167,6 @@ public class GuiSheet
         }
 
         selected.sort(Comparator.comparingLong(a -> a.tick));
-
         long diff = tick - minTick;
 
         for (Keyframe keyframe : selected)
@@ -179,7 +174,6 @@ public class GuiSheet
             long fin = keyframe.tick + diff;
             int index = this.channel.insert(fin, keyframe.value);
             Keyframe current = this.channel.get(index);
-
             current.copy(keyframe);
             current.tick = fin;
             created.add(current);

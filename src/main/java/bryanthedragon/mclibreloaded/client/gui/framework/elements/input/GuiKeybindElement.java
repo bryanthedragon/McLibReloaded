@@ -51,7 +51,6 @@ public class GuiKeybindElement extends GuiElement
     public GuiKeybindElement(Minecraft mc, Consumer<Integer> callback)
     {
         super(mc);
-
         this.callback = callback;
         this.flex().h(20);
     }

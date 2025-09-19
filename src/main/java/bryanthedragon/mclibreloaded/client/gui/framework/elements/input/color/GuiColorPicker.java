@@ -347,33 +347,27 @@ public class GuiColorPicker extends GuiElement
         color.copy(this.color);
         color.r = 0;
         int left = color.getRGBAColor();
-
         color.copy(this.color);
         color.r = 1;
         int right = color.getRGBAColor();
-
         GuiDraw.drawHorizontalGradientRect(this.red.x, this.red.y, this.red.ex(), this.red.ey(), left, right);
 
         /* Draw green slider */
         color.copy(this.color);
         color.g = 0;
         left = color.getRGBAColor();
-
         color.copy(this.color);
         color.g = 1;
         right = color.getRGBAColor();
-
         GuiDraw.drawHorizontalGradientRect(this.green.x, this.green.y, this.green.ex(), this.green.ey(), left, right);
 
         /* Draw blue slider */
         color.copy(this.color);
         color.b = 0;
         left = color.getRGBAColor();
-
         color.copy(this.color);
         color.b = 1;
         right = color.getRGBAColor();
-
         GuiDraw.drawHorizontalGradientRect(this.blue.x, this.blue.y, this.blue.ex(), this.blue.ey(), left, right);
 
         if (this.editAlpha)
@@ -382,16 +376,13 @@ public class GuiColorPicker extends GuiElement
             color.copy(this.color);
             color.a = 0;
             left = color.getRGBAColor();
-
             color.copy(this.color);
             color.a = 1;
             right = color.getRGBAColor();
-
             GuiDraw.drawHorizontalGradientRect(this.alpha.x, this.alpha.y, this.alpha.ex(), this.alpha.ey(), left, right);
         }
 
         GuiDraw.drawOutline(this.red.x, this.red.y, this.red.ex(), this.editAlpha ? this.alpha.ey() : this.blue.ey(), 0x44000000);
-
         this.drawMarker(this.red.x + 7 + (int) ((this.red.w - 14) * this.color.r), this.red.my());
         this.drawMarker(this.green.x + 7 + (int) ((this.green.w - 14) * this.color.g), this.green.my());
         this.drawMarker(this.blue.x + 7 + (int) ((this.blue.w - 14) * this.color.b), this.blue.my());
@@ -410,7 +401,6 @@ public class GuiColorPicker extends GuiElement
         {
             this.font.drawString(RECENT.get(), this.recent.area.x, this.recent.area.y - 10, 0x888888);
         }
-
         super.draw(context);
     }
 

@@ -3,8 +3,8 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.buttons;
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.utils.GuiContext;
 import bryanthedragon.mclibreloaded.client.gui.utils.Icon;
 import bryanthedragon.mclibreloaded.utils.ColorUtils;
-import net.minecraft.client.Minecraft;
 
+import net.minecraft.client.Minecraft;
 
 import java.util.function.Consumer;
 
@@ -20,7 +20,6 @@ public class GuiIconElement extends GuiClickElement<GuiIconElement>
     public GuiIconElement(Minecraft mc, Icon icon, Consumer<GuiIconElement> callback)
     {
         super(mc, callback);
-
         this.icon = icon;
         this.hoverIcon = icon;
         this.flex().wh(20, 20);
@@ -29,42 +28,36 @@ public class GuiIconElement extends GuiClickElement<GuiIconElement>
     public GuiIconElement both(Icon icon)
     {
         this.icon = this.hoverIcon = icon;
-
         return this;
     }
 
-    public GuiIconElement icon(Icon icon)
+    public GuiIconElement getIcon(Icon icon)
     {
         this.icon = icon;
-
         return this;
     }
 
     public GuiIconElement hovered(Icon icon)
     {
         this.hoverIcon = icon;
-
         return this;
     }
 
-    public GuiIconElement iconColor(int color)
+    public GuiIconElement getIconColor(int color)
     {
         this.iconColor = color;
-
         return this;
     }
 
-    public GuiIconElement hoverColor(int color)
+    public GuiIconElement getHoveredColor(int color)
     {
         this.hoverColor = color;
-
         return this;
     }
 
-    public GuiIconElement disabledColor(int color)
+    public GuiIconElement getDisabledColor(int color)
     {
         this.disabledColor = color;
-
         return this;
     }
 

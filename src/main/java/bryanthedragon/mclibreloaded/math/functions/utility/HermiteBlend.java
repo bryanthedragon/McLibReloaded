@@ -20,7 +20,6 @@ public class HermiteBlend extends NNFunction
     public double doubleValue()
     {
         double x = this.getArg(0).doubleValue();
-
         return 3 * x * x - 2 * x * x * x;
     }
 }

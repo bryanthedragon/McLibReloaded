@@ -19,7 +19,12 @@ public class ClientHandlerBoolean extends AbstractClientHandlerAnswer<PacketBool
      * @param player The player associated with the message.
      * @param message The message to be processed.
      */
-    public void run(LocalPlayer player, CustomPacketPayload message) 
+    public void runLocalPlayer(LocalPlayer SPPlayer, CustomPacketPayload message) 
+    {
+        // only here for inheritance
+    }
+    
+    public void runServerPlayer(ServerPlayer MPPlayer, CustomPacketPayload message) 
     {
         // only here for inheritance
     }

@@ -64,14 +64,12 @@ public class GuiTransformations extends GuiElement
     public GuiTransformations(Minecraft mc)
     {
         super(mc);
-
         this.tx = new GuiTrackpadElement(mc, (value) -> this.internalSetT(value, this.ty.value, this.tz.value)).block();
         this.tx.tooltipLabel(IKey.lang("mclib.gui.transforms.x"));
         this.ty = new GuiTrackpadElement(mc, (value) -> this.internalSetT(this.tx.value, value, this.tz.value)).block();
         this.ty.tooltipLabel(IKey.lang("mclib.gui.transforms.y"));
         this.tz = new GuiTrackpadElement(mc, (value) -> this.internalSetT(this.tx.value, this.ty.value, value)).block();
         this.tz.tooltipLabel(IKey.lang("mclib.gui.transforms.z"));
-
         this.sx = new GuiTrackpadElement(mc, (value) ->
         {
             boolean one = this.one.isToggled();
@@ -82,7 +80,6 @@ public class GuiTransformations extends GuiElement
         this.sy.tooltipLabel(IKey.lang("mclib.gui.transforms.y"));
         this.sz = new GuiTrackpadElement(mc, (value) -> this.internalSetS(this.sx.value, this.sy.value, value));
         this.sz.tooltipLabel(IKey.lang("mclib.gui.transforms.z"));
-
         this.rx = new GuiTrackpadElement(mc, (value) -> this.internalSetR(value, this.ry.value, this.rz.value)).degrees();
         this.rx.tooltipLabel(IKey.lang("mclib.gui.transforms.x"));
         this.ry = new GuiTrackpadElement(mc, (value) -> this.internalSetR(this.rx.value, value, this.rz.value)).degrees();
@@ -102,39 +99,29 @@ public class GuiTransformations extends GuiElement
         });
 
         this.one.flex().relative(this.sx).x(1F).y(-13).wh(11, 11).anchorX(1F);
-        
         this.drx = new GuiRelativeTrackpadElement(mc, (value) -> this.deltaRotate(value, 0, 0), IKey.str("Rx")).degrees();
         this.dry = new GuiRelativeTrackpadElement(mc, (value) -> this.deltaRotate(0, value, 0), IKey.str("Ry")).degrees();
         this.drz = new GuiRelativeTrackpadElement(mc, (value) -> this.deltaRotate(0, 0, value), IKey.str("Rz")).degrees();
         this.origin = new GuiToggleElement(mc, IKey.EMPTY, false, null);
         this.origin.flex().relative(this.drx).x(1F).y(-13).wh(11, 11).anchorX(1F);
         this.origin.tooltipLabelLabel(IKey.lang("mclib.gui.transforms.delta.origin"));
-
         this.localtx = new GuiRelativeTrackpadElement(mc, (value) -> this.localTranslate(value, 0, 0), IKey.str("X")).block();
         this.localty = new GuiRelativeTrackpadElement(mc, (value) -> this.localTranslate(0, value, 0), IKey.str("Y")).block();
         this.localtz = new GuiRelativeTrackpadElement(mc, (value) -> this.localTranslate(0, 0, value), IKey.str("Z")).block();
-        this.orientation = new GuiStaticTransformOrientation(mc, (value) ->
-        {
-            this.updateFields();
-        });
+        this.orientation = new GuiStaticTransformOrientation(mc, (value) -> {this.updateFields();});
         this.orientation.addLabel(IKey.lang("mclib.gui.transforms.orientation.global"));
         this.orientation.addLabel(IKey.lang("mclib.gui.transforms.orientation.local"));
         this.orientation.tooltipLabel(IKey.lang("mclib.gui.transforms.orientation.tooltipLabel"));
         this.orientation.flex().relative(this.tx).set(0, -44, 60, 20);
-        
         this.first = new GuiElement(mc);
         this.second = new GuiElement(mc);
         this.third = new GuiElement(mc);
-
         this.first.flex().relative(this).w(1.25F).h(20).row(5).height(20);
         this.first.add(this.tx, sx, rx, drx);
-
         this.second.flex().relative(this).y(0.5F, -10).w(1.25F).h(20).row(5).height(20);
         this.second.add(this.ty, sy, ry, dry);
-
         this.third.flex().relative(this).y(1F, -20).w(1.25F).h(20).row(5).height(20);
         this.third.add(this.tz, sz, rz, drz);
-
         this.add(this.first, this.second, this.third, this.orientation, this.one, this.origin);
     }
 
@@ -159,7 +146,6 @@ public class GuiTransformations extends GuiElement
             this.second.addBefore(this.sy, this.localty);
             this.third.addBefore(this.sz, this.localtz);
         }
-
         this.parent.resize();
     }
 
@@ -203,7 +189,6 @@ public class GuiTransformations extends GuiElement
     public void fillS(double x, double y, double z)
     {
         this.resetScale();
-
         this.sx.setValue(x);
         this.sy.setValue(y);
         this.sz.setValue(z);
@@ -253,13 +238,25 @@ public class GuiTransformations extends GuiElement
     }
 
     public void setT(double x, double y, double z)
-    {}
+    {
+        this.tx.setValueAndNotify(x);
+        this.ty.setValueAndNotify(y);
+        this.tz.setValueAndNotify(z);
+    }
 
     public void setS(double x, double y, double z)
-    {}
+    {
+        this.sx.setValueAndNotify(x);
+        this.sy.setValueAndNotify(y);
+        this.sz.setValueAndNotify(z);
+    }
 
     public void setR(double x, double y, double z)
-    {}
+    {
+        this.rx.setValueAndNotify(x);
+        this.ry.setValueAndNotify(y);
+        this.rz.setValueAndNotify(z);
+    }
 
     @Override
     public GuiContextMenu createContextMenu(GuiContext context)
@@ -278,42 +275,39 @@ public class GuiTransformations extends GuiElement
             }
         }
         catch (Exception e)
-        {}
+        {
+            e.printStackTrace();
+        }
 
         menu.action(Icons.COPY, IKey.lang("mclib.gui.transforms.context.copy"), () -> this.copyTransformations());
 
         if (transforms != null)
         {
             final ListTag innerList = transforms;
-
             menu.action(Icons.PASTE, IKey.lang("mclib.gui.transforms.context.paste"), () -> this.pasteAll(innerList));
             menu.action(Icons.ALL_DIRECTIONS, IKey.lang("mclib.gui.transforms.context.paste_translation"), () -> this.pasteTranslation(innerList));
             menu.action(Icons.MAXIMIZE, IKey.lang("mclib.gui.transforms.context.paste_scale"), () -> this.pasteScale(innerList));
             menu.action(Icons.REFRESH, IKey.lang("mclib.gui.transforms.context.paste_rotation"), () -> this.pasteRotation(innerList));
         }
-
         menu.action(Icons.CLOSE, IKey.lang("mclib.gui.transforms.context.reset"), this::reset);
-
         return menu;
     }
 
-    // @SuppressWarnings("removal")
-    // private void copyTransformations()
-    // {
-    //     ListTag list = new ListTag();
-
-    //     list.appendTag(new DoubleTag(this.tx.value));
-    //     list.appendTag(new DoubleTag(this.ty.value));
-    //     list.appendTag(new DoubleTag(this.tz.value));
-    //     list.appendTag(new DoubleTag(this.sx.value));
-    //     list.appendTag(new DoubleTag(this.sy.value));
-    //     list.appendTag(new DoubleTag(this.sz.value));
-    //     list.appendTag(new DoubleTag(this.rx.value));
-    //     list.appendTag(new DoubleTag(this.ry.value));
-    //     list.appendTag(new DoubleTag(this.rz.value));
-
-    //     Screen.setClipboardString(list.toString());
-    // }
+    @SuppressWarnings("removal")
+    private void copyTransformations()
+    {
+        ListTag list = new ListTag();
+        list.appendTag(new DoubleTag(this.tx.value));
+        list.appendTag(new DoubleTag(this.ty.value));
+        list.appendTag(new DoubleTag(this.tz.value));
+        list.appendTag(new DoubleTag(this.sx.value));
+        list.appendTag(new DoubleTag(this.sy.value));
+        list.appendTag(new DoubleTag(this.sz.value));
+        list.appendTag(new DoubleTag(this.rx.value));
+        list.appendTag(new DoubleTag(this.ry.value));
+        list.appendTag(new DoubleTag(this.rz.value));
+        Screen.setClipboardString(list.toString());
+    }
 
     public void pasteAll(ListTag list)
     {
@@ -325,7 +319,6 @@ public class GuiTransformations extends GuiElement
     public void pasteTranslation(ListTag list)
     {
         Vector3d translation = this.getVector(list, 0);
-
         this.tx.setValue(translation.x);
         this.ty.setValue(translation.y);
         this.tz.setValueAndNotify(translation.z);
@@ -334,7 +327,6 @@ public class GuiTransformations extends GuiElement
     public void pasteScale(ListTag list)
     {
         Vector3d scale = this.getVector(list, 3);
-
         this.sz.setValue(scale.z);
         this.sy.setValue(scale.y);
         this.sx.setValueAndNotify(scale.x);
@@ -343,7 +335,6 @@ public class GuiTransformations extends GuiElement
     public void pasteRotation(ListTag list)
     {
         Vector3d rotation = this.getVector(list, 6);
-
         this.rx.setValue(rotation.x);
         this.ry.setValue(rotation.y);
         this.rz.setValueAndNotify(rotation.z);
@@ -352,11 +343,9 @@ public class GuiTransformations extends GuiElement
     private Vector3d getVector(ListTag list, int offset)
     {
         Vector3d result = new Vector3d();
-
         result.x = list.getDouble(offset);
         result.y = list.getDouble(offset + 1);
         result.z = list.getDouble(offset + 2);
-
         return result;
     }
 
@@ -388,7 +377,14 @@ public class GuiTransformations extends GuiElement
 
     protected void localTranslate(double x, double y, double z)
     {
-
+        Matrix4f mat = new Matrix4f();
+        mat.setIdentity();
+        if (this.origin.isToggled())
+        {
+            mat.m03 = (float) this.tx.value;
+            mat.m13 = (float) this.ty.value;
+            mat.m23 = (float) this.tz.value;
+        }
     }
 
     protected void deltaRotate(double x, double y, double z)
@@ -439,7 +435,6 @@ public class GuiTransformations extends GuiElement
             this.tx.setTextColor(new Color(1,0.5F,0.5F));
             this.ty.setTextColor(new Color(0.5F,1,0.5F));
             this.tz.setTextColor(new Color(0.5F,0.5F,1));
-
             this.localtx.setTextColor(new Color(1,0.5F,0.5F));
             this.localty.setTextColor(new Color(0.5F,1,0.5F));
             this.localtz.setTextColor(new Color(0.5F,0.5F,1));
@@ -447,7 +442,6 @@ public class GuiTransformations extends GuiElement
         else
         {
             Color color = new Color(14737632);
-
             this.tx.setTextColor(color);
             this.ty.setTextColor(color);
             this.tz.setTextColor(color);
@@ -455,7 +449,6 @@ public class GuiTransformations extends GuiElement
             this.localty.setTextColor(color);
             this.localtz.setTextColor(color);
         }
-
         super.draw(context);
     }
     
@@ -526,7 +519,6 @@ public class GuiTransformations extends GuiElement
             if (this.disabled.contains(newValue))
             {
                 this.setValue(newValue + direction, direction);
-
                 return;
             }
 
@@ -544,7 +536,6 @@ public class GuiTransformations extends GuiElement
         protected void click(int mouseButton)
         {
             int direction = mouseButton == 0 ? 1 : -1;
-
             this.setValue(value + direction, direction);
 
             if (this.callback != null)

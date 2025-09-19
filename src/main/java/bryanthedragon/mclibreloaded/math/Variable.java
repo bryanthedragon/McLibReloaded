@@ -17,14 +17,12 @@ public class Variable extends Constant
     public Variable(String name, double value)
     {
         super(value);
-
         this.name = name;
     }
 
     public Variable(String name, String value)
     {
         super(value);
-
         this.name = name;
     }
 

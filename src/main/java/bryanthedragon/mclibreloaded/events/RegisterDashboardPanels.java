@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.events;
 
 import bryanthedragon.mclibreloaded.client.gui.mclib.GuiAbstractDashboard;
+
 import net.minecraftforge.eventbus.api.Event;
 
 public class RegisterDashboardPanels extends Event

@@ -41,11 +41,11 @@ public class WavePlayer
 
     /**
      * Deletes the audio source and buffer associated with this player, freeing
-     * their OpenAL resources.
-     * 
+     * their OpenAL resources. 
      * After this method is called, the player will be in an invalid state and
      * should not be used until initialized again with {@link #initialize(Wave)}.
      */
+
     public void delete()
     {
         AL10.alDeleteBuffers(this.buffer);
@@ -57,7 +57,6 @@ public class WavePlayer
 
     /**
      * Plays the audio source if it is currently stopped or paused.
-     * 
      * After this method is called, the source will be in the "playing" state.
      * 
      * @see #pause()

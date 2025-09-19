@@ -81,7 +81,6 @@ public class BetterLightsHelper
         return betterLightsClass.element != null;
     }
 
-
     private static class ReflectionElement<T>
     {
         private T element;

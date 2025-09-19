@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 /**
  * Dope sheet editor
  *
- * This GUI element is responsible for editing mutliple keyframe channels
+ * This GUI element is responsible for editing multiple keyframe channels
  * at the same time (however without editing the Y values of these individual
  * channels)
  */
@@ -430,7 +430,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
                 this.setKeyframe(this.getCurrent());
             }
         }
-
         super.resetMouseReleased(context);
     }
 
@@ -443,17 +442,14 @@ public class GuiDopeSheet extends GuiKeyframeElement
         int sheetCount = this.sheets.size();
         int h = (this.area.h - TOP_MARGIN) / sheetCount;
         int y = this.area.ey() - h * sheetCount;
-
         BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
         for (GuiSheet sheet : this.sheets)
         {
             COLOR.alphaSetter(sheet.color, false);
-
             vb.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
             vb.pos(this.area.x, y + h / 2, 0).color(COLOR.r, COLOR.g, COLOR.b, 0.65F).endVertex();
             vb.pos(this.area.ex(), y + h / 2, 0).color(COLOR.r, COLOR.g, COLOR.b, 0.65F).endVertex();
-
             Tessellator.getInstance().draw();
 
             /* Draw points */
@@ -476,7 +472,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
                 {
                     this.drawRect(vb, this.toGraphX(frame.tick - frame.lx), y + h / 2, 2, sheet.hasSelected(index) ? 0xffffff : sheet.color);
                 }
-
                 prev = frame;
                 index++;
             }
@@ -497,19 +492,14 @@ public class GuiDopeSheet extends GuiKeyframeElement
                 {
                     this.drawRect(vb, this.toGraphX(frame.tick - frame.lx), y + h / 2, 1, this.which == Selection.LEFT_HANDLE && sheet.hasSelected(index) ? 0x0080ff : 0);
                 }
-
                 prev = frame;
                 index++;
             }
-
             Tessellator.getInstance().draw();
-
             int lw = this.font.width(sheet.title.get()) + 10;
             GuiDraw.drawHorizontalGradientRect(this.area.ex() - lw - 10, y, this.area.ex(), y + h, sheet.color, 0xaa000000 + sheet.color, 0);
             this.font.drawStringWithShadow(sheet.title.get(), this.area.ex() - lw + 5, y + (h - this.font.FONT_HEIGHT) / 2 + 1, 0xffffff);
-
             RenderSystem.disableTexture2D();
-
             y += h;
         }
     }
@@ -532,7 +522,6 @@ public class GuiDopeSheet extends GuiKeyframeElement
             {
                 int dx = mouseX - this.lastX;
                 int xx = this.toGraphX(this.lastT);
-
                 x = this.fromGraphX(xx + dx);
             }
 
@@ -544,10 +533,8 @@ public class GuiDopeSheet extends GuiKeyframeElement
             {
                 x = (int) x - frame.tick;
             }
-
             this.setTick(x, !Screen.hasAltDown());
         }
-
         return frame;
     }
 }

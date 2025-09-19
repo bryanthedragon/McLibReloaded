@@ -60,11 +60,13 @@ public class Interpolations
      */
     public static double cubicHermiteYaw(float y0, float y1, float y2, float y3, float position)
     {
+        /* Degrees Wrappers */
         y0 = MathHelper.wrapDegrees(y0);
         y1 = MathHelper.wrapDegrees(y1);
         y2 = MathHelper.wrapDegrees(y2);
         y3 = MathHelper.wrapDegrees(y3);
-
+        
+        /* Normalizers */
         y1 = normalizeYaw(y0, y1);
         y2 = normalizeYaw(y1, y2);
         y3 = normalizeYaw(y2, y3);
@@ -86,24 +88,21 @@ public class Interpolations
         float a = y3 - y2 - y0 + y1;
         float b = y0 - y1 - a;
         float c = y2 - y0;
-
         return ((a * x + b) * x + c) * x + y1;
     }
 
-    /**
-     * Yaw normalization for cubic interpolation
-     */
     public static float cubicYaw(float y0, float y1, float y2, float y3, float position)
     {
+        /* Degrees Wrappers */
         y0 = MathHelper.wrapDegrees(y0);
         y1 = MathHelper.wrapDegrees(y1);
         y2 = MathHelper.wrapDegrees(y2);
         y3 = MathHelper.wrapDegrees(y3);
 
+        /* Normalizers */
         y1 = normalizeYaw(y0, y1);
         y2 = normalizeYaw(y1, y2);
         y3 = normalizeYaw(y2, y3);
-
         return cubic(y0, y1, y2, y3, position);
     }
 
@@ -142,6 +141,7 @@ public class Interpolations
      * Calculate X value for given T using default epsilon value. See 
      * other overload method for more information. 
      */
+
     public static float bezierX(float x1, float x2, float t)
     {
         return bezierX(x1, x2, t, 0.0005F);
@@ -171,6 +171,7 @@ public class Interpolations
      * Normalize yaw rotation (argument {@code b}) based on the previous
      * yaw rotation.
      */
+
     public static float normalizeYaw(float a, float b)
     {
         float diff = a - b;
@@ -187,9 +188,9 @@ public class Interpolations
 
     /**
      * Envelope function allows to create simple attack, sustain and release function.
-     *
      * This version only goes from 0 to duration with fade in/out being the same
      */
+
     public static float envelopeFloater(float x, float duration, float fades)
     {
         return envelopeFloat(x, 0, fades, duration - fades, duration);
@@ -197,14 +198,23 @@ public class Interpolations
 
     /**
      * Envelope function allows to create simple attack, sustain and release function.
-     *
      * This advanced version allows you to specify a more customized range
      */
+
     public static float envelopeFloat(float x, float lowIn, float lowOut, float highIn, float highOut)
     {
-        if (x < lowIn || x > highOut) return 0;
-        if (x < lowOut) return (x - lowIn) / (lowOut - lowIn);
-        if (x > highIn) return 1 - (x - highIn) / (highOut - highIn);
+        if (x < lowIn || x > highOut) 
+        {
+            return 0;
+        }
+        if (x < lowOut)
+        {
+            return (x - lowIn) / (lowOut - lowIn);
+        }
+        if (x > highIn) 
+        {
+            return 1 - (x - highIn) / (highOut - highIn);
+        }
         return 1;
     }
 
@@ -213,7 +223,8 @@ public class Interpolations
     /**
      * Linear interpolation
      */
-    public static double lerp(double a, double b, double position)
+
+    public static double lerper(double a, double b, double position)
     {
         return a + (b - a) * position;
     }
@@ -222,7 +233,6 @@ public class Interpolations
      * Special interpolation method for interpolating yaw. The problem with yaw,
      * is that it may go in the "wrong" direction when having, for example,
      * -170 (as a) and 170 (as b) degrees or other way around (170 and -170).
-     *
      * This interpolation method fixes this problem.
      */
     public static double lerpYaw(double a, double b, double position)
@@ -252,13 +262,16 @@ public class Interpolations
     /**
      * Yaw normalization for cubic interpolation
      */
+    
     public static double cubicYaw(double y0, double y1, double y2, double y3, double position)
     {
+        /* Degrees Wrappers */
         y0 = MathHelper.wrapDegrees(y0);
         y1 = MathHelper.wrapDegrees(y1);
         y2 = MathHelper.wrapDegrees(y2);
         y3 = MathHelper.wrapDegrees(y3);
-
+    
+        /* Normalizers */
         y1 = normalizeYaw(y0, y1);
         y2 = normalizeYaw(y1, y2);
         y3 = normalizeYaw(y2, y3);
@@ -284,7 +297,6 @@ public class Interpolations
         while (Math.abs(t - init) > epsilon)
         {
             double oldFactor = factor;
-
             x += factor;
             init = bezier(0, x1, x2, 1, x);
 
@@ -301,6 +313,7 @@ public class Interpolations
      * Calculate X value for given T using default epsilon value. See 
      * other overload method for more information. 
      */
+
     public static double bezierX(double x1, double x2, float t)
     {
         return bezierX(x1, x2, t, 0.0005F);
@@ -329,6 +342,7 @@ public class Interpolations
      * Normalize yaw rotation (argument {@code b}) based on the previous
      * yaw rotation.
      */
+
     public static double normalizeYaw(double a, double b)
     {
         double diff = a - b;
@@ -342,9 +356,9 @@ public class Interpolations
 
     /**
      * Envelope function allows to create simple attack, sustain and release function.
-     *
      * This version only goes from 0 to duration with fade in/out being the same
      */
+
     public static double envelopeDoubler(double x, double duration, double fades)
     {
         return envelopeDouble(x, 0, fades, duration - fades, duration);
@@ -352,14 +366,23 @@ public class Interpolations
 
     /**
      * Envelope function allows to create simple attack, sustain and release function.
-     *
      * This advanced version allows you to specify a more customized range
      */
+
     public static double envelopeDouble(double x, double lowIn, double lowOut, double highIn, double highOut)
     {
-        if (x < lowIn || x > highOut) return 0;
-        if (x < lowOut) return (x - lowIn) / (lowOut - lowIn);
-        if (x > highIn) return 1 - (x - highIn) / (highOut - highIn);
+        if (x < lowIn || x > highOut) 
+        {
+            return 0;
+        }
+        if (x < lowOut) 
+        {
+            return (x - lowIn) / (lowOut - lowIn);
+        }
+        if (x > highIn) 
+        {
+            return 1 - (x - highIn) / (highOut - highIn);
+        }
         return 1;
     }
 }

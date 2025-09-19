@@ -9,29 +9,23 @@ import org.objectweb.asm.tree.MethodNode;
 
 public abstract class ClassTransformer
 {
-    public byte[] transform(String name, byte[] bytes)
+    public byte[] transformNamedBytes(String name, byte[] bytes)
     {
         ClassNode classNode = new ClassNode();
         ClassReader classReader = new ClassReader(bytes);
-
         classReader.accept(classNode, 0);
-
         this.process(name, classNode);
-
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-
         classNode.accept(writer);
-
         return writer.toByteArray();
     }
 
-    protected String checkName(MethodNode method, String notch, String notchSign, String mcp, String mcpSign)
+    protected String checkNamedNode(MethodNode method, String notch, String notchSign, String mcp, String mcpSign)
     {
         if (CoreClassTransformer.obfuscated)
         {
             return method.name.equals(notch) && method.desc.equals(notchSign) ? notch : null;
         }
-
         return method.name.equals(mcp) && method.desc.equals(mcpSign) ? mcp : null;
     }
 
@@ -45,12 +39,10 @@ public abstract class ClassTransformer
             {
                 return (LabelNode) node;
             }
-
             node = node.getNext();
         }
-
         return null;
     }
 
-    public abstract void process(String name, ClassNode node);
+    public abstract void processNamedNode(String name, ClassNode node);
 }

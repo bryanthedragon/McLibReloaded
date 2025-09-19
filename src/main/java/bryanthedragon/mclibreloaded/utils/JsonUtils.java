@@ -26,6 +26,7 @@ public class JsonUtils
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         jsonWriter.setIndent("    ");
         gson.toJson(element, jsonWriter);
+        
         /* Prettify arrays */
         return writer.toString();
     }

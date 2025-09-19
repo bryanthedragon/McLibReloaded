@@ -1,12 +1,15 @@
 package bryanthedragon.mclibreloaded.permissions;
 
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.forge.fml.common.network.ForgeByteBufUtils;
 import bryanthedragon.mclibreloaded.forge.permissions.DefaultPermissionLevel;
 import bryanthedragon.mclibreloaded.forge.permissions.PermissionAPI;
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
+
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,9 +116,7 @@ public class PermissionCategory implements IByteBufSerializable
     {
         ForgeByteBufUtils.writeUTF8String(buffer, this.name);
         buffer.writeInt(this.level.ordinal());
-
         buffer.writeInt(this.children.size());
-
         for (PermissionCategory category : this.children)
         {
             category.toBytes(buffer);

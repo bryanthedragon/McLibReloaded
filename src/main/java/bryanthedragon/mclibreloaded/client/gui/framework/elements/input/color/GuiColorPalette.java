@@ -26,21 +26,18 @@ public class GuiColorPalette extends GuiElement
     public GuiColorPalette(Minecraft mc, Consumer<Color> callback)
     {
         super(mc);
-
         this.callback = callback;
     }
 
     public GuiColorPalette colors(List<Color> colors)
     {
         this.colors = colors;
-
         return this;
     }
 
     public GuiColorPalette cellSize(int cellSize)
     {
         this.cellSize = cellSize;
-
         return this;
     }
 
@@ -75,14 +72,12 @@ public class GuiColorPalette extends GuiElement
             {
                 this.callback.accept(this.colors.get(index));
             }
-
             return true;
         }
-
         return false;
     }
 
-    public void draw(GuiContext context)
+    public void drawer(GuiContext context)
     {
         /* Draw recent colors panel */
         int count = this.colors.size();
@@ -106,7 +101,6 @@ public class GuiColorPalette extends GuiElement
                 GuiColorPicker.drawAlphaPreviewQuad(x, y, x + this.cellSize, y + this.cellSize, c);
             }
         }
-
         super.draw(context);
     }
 }

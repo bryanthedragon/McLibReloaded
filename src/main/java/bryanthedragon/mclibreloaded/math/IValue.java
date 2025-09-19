@@ -17,9 +17,9 @@ public interface IValue
 
     public boolean isNumber();
 
-    public void set(double value);
+    public void setDouble(double value);
 
-    public void set(String value);
+    public void setString(String value);
 
     public double doubleValue();
 

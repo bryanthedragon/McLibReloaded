@@ -2,6 +2,7 @@ package bryanthedragon.mclibreloaded.client.gui.framework.elements.keyframes;
 
 import bryanthedragon.mclibreloaded.client.gui.framework.elements.input.GuiTrackpadElement;
 import bryanthedragon.mclibreloaded.utils.keyframes.Keyframe;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

@@ -9,7 +9,6 @@ package bryanthedragon.mclibreloaded.math;
 public class Operator implements IValue
 {
     public static boolean DEBUG = false;
-
     public Operation operation;
     public IValue a;
     public IValue b;
@@ -33,7 +32,6 @@ public class Operator implements IValue
         {
             this.result.set(this.doubleValue());
         }
-
         return this.result;
     }
 
@@ -45,11 +43,15 @@ public class Operator implements IValue
 
     @Override
     public void set(double value)
-    {}
+    {
+
+    }
 
     @Override
     public void set(String value)
-    {}
+    {
+
+    }
 
     @Override
     public double doubleValue()
@@ -58,7 +60,6 @@ public class Operator implements IValue
         {
             return this.a.stringValue().equals(this.b.stringValue()) ? 1 : 0;
         }
-
         return this.operation.calculate(this.a.doubleValue(), this.b.doubleValue());
     }
 
@@ -75,7 +76,6 @@ public class Operator implements IValue
         {
             return this.a.stringValue() + this.b.stringValue();
         }
-
         return this.a.stringValue();
     }
 
@@ -86,7 +86,6 @@ public class Operator implements IValue
         {
             return "(" + this.a.toString() + " " + this.operation.sign + " " + this.b.toString() + ")";
         }
-
         return this.a.toString() + " " + this.operation.sign + " " + this.b.toString();
     }
 }

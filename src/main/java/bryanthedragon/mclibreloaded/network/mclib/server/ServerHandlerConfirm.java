@@ -2,6 +2,7 @@ package bryanthedragon.mclibreloaded.network.mclib.server;
 
 import bryanthedragon.mclibreloaded.network.ServerMessageHandler;
 import bryanthedragon.mclibreloaded.network.mclib.common.PacketConfirm;
+
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Map.Entry;
@@ -20,7 +21,7 @@ public class ServerHandlerConfirm extends ServerMessageHandler<PacketConfirm>
      * @param ServerPlayer the player who sent the packet
      * @param packetConfirm the packet received from the client
      */
-    public void run(ServerPlayer ServerPlayer, PacketConfirm packetConfirm)
+    public void runServerPlayer(ServerPlayer ServerPlayer, PacketConfirm packetConfirm)
     {
         if (consumers.containsKey(packetConfirm.consumerID))
         {

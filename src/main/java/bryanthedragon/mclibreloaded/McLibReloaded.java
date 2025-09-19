@@ -60,7 +60,6 @@ public class McLibReloaded
     public static ValueInt scrollbarShadow;
     public static ValueInt scrollbarWidth;
     public static ValueInt maxPacketSize;
-
     public static ValueBoolean enableBorders;
     public static ValueBoolean enableCheckboxRendering;
     public static ValueBoolean enableTrackpadIncrements;
@@ -138,12 +137,9 @@ public class McLibReloaded
     public void onPermissionRegister(RegisterPermissionsEvent event)
     {
         event.registerMod(MOD_ID, DefaultPermissionLevel.OP);
-
         event.registerPermission(McLibPermissions.configEdit = new PermissionCategory("edit_config"));
-
         event.registerCategory(new PermissionCategory("gui"));
         event.registerPermission(McLibPermissions.accessGui = new PermissionCategory("access_gui"));
-
         event.endMod();
     }
 

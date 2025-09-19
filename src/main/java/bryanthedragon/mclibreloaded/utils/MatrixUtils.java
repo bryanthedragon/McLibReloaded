@@ -668,6 +668,7 @@ public class MatrixUtils
                 rotation[order.thirdIndex] = angle = refFloats[order.thirdIndex];
                 mat.mul(getRotationMatrix(order.thirdIndex, -angle), mat);
             }
+
             angle = order.doTest(order.secondIndex, mat);
 
             if (angle == null)
@@ -683,7 +684,6 @@ public class MatrixUtils
 
             rotation[order.secondIndex] = angle;
             mat.mul(getRotationMatrix(order.secondIndex, -angle), mat);
-
             angle = order.doTest(order.firstIndex, mat);
 
             if (angle == null)
@@ -694,9 +694,7 @@ public class MatrixUtils
             {
                 angle = refFloats[order.firstIndex] + MathHelper.wrapDegrees(angle - refFloats[order.firstIndex]);
             }
-
             rotation[order.firstIndex] = angle;
-
             return new Vector3f(rotation);
         }
 
@@ -728,7 +726,6 @@ public class MatrixUtils
             {
                 getInvertAxisMatrix(invAxis).transform(scale);
             }
-
             return scale;
         }
 
@@ -770,7 +767,6 @@ public class MatrixUtils
                     mat.m22 = -1;
                     break;
             }
-
             return mat;
         }
     }
@@ -800,12 +796,9 @@ public class MatrixUtils
         public Float doTest(int index, Matrix3f test)
         {
             float[] buffer = new float[3];
-
             buffer[index == firstIndex ? secondIndex : firstIndex] = 1;
-
             Vector3f in = new Vector3f(buffer);
             Vector3f out = new Vector3f();
-
             test.transform(in, out);
             out.get(buffer);
             buffer[index] = 0;
@@ -817,14 +810,10 @@ public class MatrixUtils
             }
 
             out.normalize();
-
             float cos = in.dot(out);
-
             out.cross(in, out);
             out.get(buffer);
-
             float sin = out.length() * Math.signum(buffer[index]);
-
             return (float) Math.toDegrees(Math.atan2(sin, cos));
         }
     }

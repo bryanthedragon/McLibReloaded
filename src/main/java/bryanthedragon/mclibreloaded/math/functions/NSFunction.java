@@ -33,7 +33,6 @@ public abstract class NSFunction extends Function
     public IValue get()
     {
         this.result.set(this.stringValue());
-
         return this.result;
     }
 

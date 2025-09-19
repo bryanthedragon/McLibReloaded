@@ -17,7 +17,7 @@ public abstract class BinaryReader
         return ((c3 << 24) & 0xff000000) | ((c2 << 16) & 0x00ff0000) | ((c1 << 8) & 0x0000ff00) | (c0 & 0x000000ff);
     }
 
-    public int fourChars(String string) throws Exception
+    public int GetFourChars(String string) throws Exception
     {
         char[] chars = string.toCharArray();
 
@@ -25,14 +25,12 @@ public abstract class BinaryReader
         {
             throw new Exception("Given string '" + string + "'");
         }
-
         return this.fourChars(chars[0], chars[1], chars[2], chars[3]);
     }
 
     public String readFourString(InputStream stream) throws Exception
     {
         stream.read(this.buf);
-
         return new String(this.buf);
     }
 
@@ -42,7 +40,6 @@ public abstract class BinaryReader
         {
             throw new IOException();
         }
-
         return b2i(this.buf[0], this.buf[1], this.buf[2], this.buf[3]);
     }
 
@@ -52,11 +49,10 @@ public abstract class BinaryReader
         {
             throw new IOException();
         }
-
         return b2i(this.buf[0], this.buf[1], (byte) 0, (byte) 0);
     }
 
-    public void skip(InputStream stream, long bytes) throws Exception
+    public void skipInputStream(InputStream stream, long bytes) throws Exception
     {
         while (bytes > 0)
         {

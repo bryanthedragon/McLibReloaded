@@ -21,7 +21,7 @@ public class ServerHandlerConfig extends ServerMessageHandler<PacketConfig>
      * @param player The player associated with the message.
      * @param message The message to be processed.
      */
-    public void run(ServerPlayer player, PacketConfig message)
+    public void runServerPlayer(ServerPlayer player, PacketConfig message)
     {
         if (!OpHelper.isPlayerOp(player))
         {

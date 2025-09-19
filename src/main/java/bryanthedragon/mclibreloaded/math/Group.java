@@ -28,13 +28,13 @@ public class Group implements IValue
     }
 
     @Override
-    public void set(double value)
+    public void setDouble(double value)
     {
         this.value.set(value);
     }
 
     @Override
-    public void set(String value)
+    public void setString(String value)
     {
         this.value.set(value);
     }

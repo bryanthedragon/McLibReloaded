@@ -73,21 +73,18 @@ public class GuiTexturePicker extends GuiElement
     public GuiTexturePicker(Minecraft mc, Consumer<ResourceLocation> callback)
     {
         super(mc);
-
         this.right = new GuiElement(mc);
         this.text = new GuiTextElement(mc, 1000, (str) -> this.selectCurrent(str.isEmpty() ? null : RLUtils.create(str)));
         this.text.context(() ->
         {
             GuiSimpleContextMenu menu = new GuiSimpleContextMenu(mc);
             ResourceLocation location = this.parseRL();
-
             menu.action(Icons.COPY, IKey.lang("mclib.gui.context.multi_skin.copy"), this::copyRL);
 
             if (location != null)
             {
                 menu.action(Icons.PASTE, IKey.lang("mclib.gui.context.multi_skin.paste"), () -> this.pasteRL(location));
             }
-
             return menu;
         });
         this.close = new GuiButtonElement(mc, IKey.str("X"), (b) -> this.close());
@@ -95,54 +92,42 @@ public class GuiTexturePicker extends GuiElement
         this.picker = new GuiFolderEntryListElement(mc, (entry) ->
         {
             ResourceLocation rl = entry.resource;
-
             this.selectCurrent(rl);
             this.text.setText(rl == null ? "" : rl.toString());
-        }) {
-    
-            public void setFolder(FolderEntry folder)
-            {
-                super.setFolder(folder);
-
-                GuiTexturePicker.this.updateFolderButton();
-            }
-        };
+        });
         this.picker.cancelScrollEdge();
-
         this.multi = new GuiButtonElement(mc, IKey.lang("mclib.gui.multi_skin"), (b) -> this.toggleMultiSkin());
         this.multiList = new GuiFRLListElement(mc, (list) -> this.setFRL(list.get(0)));
-
         this.editor = new GuiMultiSkinEditor(mc, this);
         this.editor.setVisible(false);
-
         this.buttons = new GuiElement(mc);
         this.add = new GuiIconElement(mc, Icons.ADD, (b) -> this.addMultiSkin());
         this.remove = new GuiIconElement(mc, Icons.REMOVE, (b) -> this.removeMultiSkin());
         this.edit = new GuiIconElement(mc, Icons.EDIT, (b) -> this.toggleEditor());
-
         this.right.flex().relative(this).wh(1F, 1F);
         this.text.flex().relative(this.multi).x(1F, 20).wTo(this.close.flex(), -5).h(20);
         this.close.flex().relative(this).set(0, 10, 20, 20).x(1, -30);
         this.folder.flex().relative(this.right).set(0, 0, 80, 20).x(1, -10).y(1, -10).anchor(1F, 1F);
         this.picker.flex().relative(this.right).set(10, 30, 0, 0).w(1, -10).h(1, -30);
-
         this.multi.flex().relative(this).set(10, 10, 100, 20);
         this.multiList.flex().relative(this).set(10, 35, 100, 0).hTo(this.buttons.flex());
         this.editor.flex().relative(this).set(120, 0, 0, 0).w(1F, -120).h(1F);
-
         this.buttons.flex().relative(this).y(1F, -20).wTo(this.right.area).h(20);
         this.add.flex().relative(this.buttons).set(0, 0, 20, 20);
         this.remove.flex().relative(this.add).set(20, 0, 20, 20);
         this.edit.flex().relative(this.buttons).wh(20, 20).x(1F, -20);
-
         this.right.add(this.text, this.picker, this.folder);
         this.buttons.add(this.add, this.remove, this.edit);
         this.add(this.multi, this.multiList, this.close, this.right, this.editor, this.buttons);
-
         this.callback = callback;
-
         this.fill(null);
         this.markContainer();
+    }
+
+    public void setFolder(FolderEntry folder)
+    {
+        super.setFolder(folder);
+        GuiTexturePicker.this.updateFolderButton();
     }
 
     private ResourceLocation parseRL()
@@ -152,12 +137,12 @@ public class GuiTexturePicker extends GuiElement
         try
         {
             CompoundTag compound = JsonToNBT.getTagFromJson(GuiScreen.getClipboardString());
-
             location = RLUtils.create(compound.getTag("RL"));
         }
         catch (Exception e)
-        {}
-
+        {
+            location = RLUtils.create(GuiScreen.getClipboardString());
+        }
         return location;
     }
 
@@ -172,9 +157,7 @@ public class GuiTexturePicker extends GuiElement
         else
         {
             CompoundTag tag = new CompoundTag();
-
             tag.setTag("RL", location);
-
             GuiScreen.setClipboardString(tag.toString());
         }
     }
@@ -187,7 +170,6 @@ public class GuiTexturePicker extends GuiElement
     public void close()
     {
         boolean wasVisible = this.getParent() != null;
-
         this.editor.close();
         this.removeFromParent();
 
@@ -197,7 +179,6 @@ public class GuiTexturePicker extends GuiElement
             {
                 this.multiRL.recalculateId();
             }
-
             this.callback.accept(this.multiRL != null ? this.multiRL : this.current);
         }
     }
@@ -232,7 +213,6 @@ public class GuiTexturePicker extends GuiElement
     private void addMultiSkin()
     {
         FilteredResourceLocation rl = this.currentFRL.copier();
-
         this.multiList.add(rl);
         this.multiList.setIndex(this.multiList.getList().size() - 1);
         this.setFRL(this.multiList.getCurrent().get(0));
@@ -342,7 +322,6 @@ public class GuiTexturePicker extends GuiElement
         {
             this.callback.accept(rl);
         }
-
         this.picker.rl = rl;
     }
 
@@ -389,10 +368,8 @@ public class GuiTexturePicker extends GuiElement
                 this.selectCurrent(skin);
             }
         }
-
         this.multiList.setVisible(show);
         this.buttons.setVisible(show);
-
         this.resize();
         this.updateFolderButton();
     }
@@ -438,7 +415,7 @@ public class GuiTexturePicker extends GuiElement
     public boolean mouseClicked(GuiContext context)
     {
         /* Necessary measure to avoid triggering buttons when you press 
-         * on a text field, for example */
+        * on a text field, for example */
         return super.mouseGetsClicked(context) || (this.isVisible() && this.area.isInside(context));
     }
 
@@ -480,7 +457,6 @@ public class GuiTexturePicker extends GuiElement
             this.close();
             return true;
         }
-
         return this.pickByTyping(context.typedChar);
     }
 
@@ -501,7 +477,6 @@ public class GuiTexturePicker extends GuiElement
         {
             index = factor > 0 ? length - 1 : 0;
         }
-
         this.picker.setIndex(index);
         this.picker.scroll.scrollIntoView(index * this.picker.scroll.scrollItemSize);
         this.typed = "";
@@ -531,7 +506,6 @@ public class GuiTexturePicker extends GuiElement
                 return true;
             }
         }
-
         return true;
     }
 

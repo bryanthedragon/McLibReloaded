@@ -1,6 +1,7 @@
 package bryanthedragon.mclibreloaded.utils;
 
 import io.netty.buffer.ByteBuf;
+
 import bryanthedragon.mclibreloaded.network.IByteBufSerializable;
 
 /**

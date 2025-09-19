@@ -17,7 +17,7 @@ public enum Operation
     ADD("+", 1)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return a + b;
         }
@@ -25,7 +25,7 @@ public enum Operation
     SUB("-", 1)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return a - b;
         }
@@ -33,7 +33,7 @@ public enum Operation
     MUL("*", 2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return a * b;
         }
@@ -41,7 +41,7 @@ public enum Operation
     DIV("/", 2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             /* To avoid any exceptions */
             return a / (b == 0 ? 1 : b);
@@ -50,7 +50,7 @@ public enum Operation
     MOD("%", 2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return a % b;
         }
@@ -58,7 +58,7 @@ public enum Operation
     POW("^", 3)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return Math.pow(a, b);
         }
@@ -66,7 +66,7 @@ public enum Operation
     AND("&&", -3)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return isTrue(a) && isTrue(b) ? 1 : 0;
         }
@@ -74,7 +74,7 @@ public enum Operation
     OR("||", -3)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return isTrue(a) || isTrue(b) ? 1 : 0;
         }
@@ -82,7 +82,7 @@ public enum Operation
     SHIFT_LEFT("<<", 0)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return ((int) a) << ((int) b);
         }
@@ -90,7 +90,7 @@ public enum Operation
     SHIFT_RIGHT(">>", 0)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return ((int) a) >> ((int) b);
         }
@@ -98,7 +98,7 @@ public enum Operation
     BIT_AND("&", -1)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return ((int) a) & ((int) b);
         }
@@ -106,7 +106,7 @@ public enum Operation
     BIT_OR("|", -1)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return ((int) a) | ((int) b);
         }
@@ -114,7 +114,7 @@ public enum Operation
     BIT_XOR("^^", -1)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return ((int) a) ^ ((int) b);
         }
@@ -122,7 +122,7 @@ public enum Operation
     LESS("<", -2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return a < b ? 1 : 0;
         }
@@ -130,7 +130,7 @@ public enum Operation
     LESS_THAN("<=", -2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return a < b || equals(a, b) ? 1 : 0;
         }
@@ -138,7 +138,7 @@ public enum Operation
     GREATER_THAN(">=", -2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return a > b || equals(a, b) ? 1 : 0;
         }
@@ -146,7 +146,7 @@ public enum Operation
     GREATER(">", -2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return a > b ? 1 : 0;
         }
@@ -154,7 +154,7 @@ public enum Operation
     EQUALS("==", -2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return equals(a, b) ? 1 : 0;
         }
@@ -162,7 +162,7 @@ public enum Operation
     NOT_EQUALS("!=", -2)
     {
         @Override
-        public double calculate(double a, double b)
+        public double calculateDouble(double a, double b)
         {
             return !equals(a, b) ? 1 : 0;
         }
@@ -208,5 +208,5 @@ public enum Operation
     /**
      * Calculate the value based on given two doubles 
      */
-    public abstract double calculate(double a, double b);
+    public abstract double calculateDouble(double a, double b);
 }

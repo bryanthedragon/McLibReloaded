@@ -9,14 +9,12 @@ public class DieRoll extends NNFunction
     {
         double m = Math.max(max, min);
         double n = Math.min(max, min);
-
         double sum = 0;
 
         for (int i = 0; i < num; i++)
         {
             sum += Math.random() * (m - n) + n;
         }
-
         return sum;
     }
 

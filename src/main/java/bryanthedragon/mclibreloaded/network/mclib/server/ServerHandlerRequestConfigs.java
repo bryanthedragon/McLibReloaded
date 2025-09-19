@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class ServerHandlerRequestConfigs extends ServerMessageHandler<PacketRequestConfigs>
 {
-    public void run(ServerPlayer player, PacketRequestConfigs message)
+    public void runServerPlayer(ServerPlayer player, PacketRequestConfigs message)
     {
         if (!OpHelper.isPlayerOp(player))
         {

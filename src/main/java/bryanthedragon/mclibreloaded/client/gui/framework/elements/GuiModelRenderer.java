@@ -52,26 +52,21 @@ public abstract class GuiModelRenderer extends GuiElement
     protected boolean dragging;
     protected boolean position;
     protected Vector3f temp = new Vector3f();
-
     public float fov = 70.0F;
     public float scale;
     public float yaw;
     public float pitch;
     public Vector3f pos = new Vector3f();
     public boolean flight;
-
     public boolean hideModel;
     public boolean fullScreen;
-
     public Consumer<GuiContext> beforeRender;
     public Consumer<GuiContext> afterRender;
-
     public boolean customEntity;
     public float entityPitch;
     public float entityYawHead;
     public float entityYawBody;
     public int entityTicksExisted;
-
     protected float lastX;
     protected float lastY;
 
@@ -94,7 +89,6 @@ public abstract class GuiModelRenderer extends GuiElement
     public GuiModelRenderer(Minecraft mc)
     {
         super(mc);
-
         this.entity = new DummyEntity(mc.world);
         this.entity.rotationYaw = this.entity.prevRotationYaw = 0.0F;
         this.entity.rotationPitch = this.entity.prevRotationPitch = 0.0F;
@@ -255,7 +249,7 @@ public abstract class GuiModelRenderer extends GuiElement
     }
 
     @Override
-    public void draw(GuiContext context)
+    public void drawer(GuiContext context)
     {
         this.updateLogic(context);
         rendering = true;

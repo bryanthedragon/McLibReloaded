@@ -42,7 +42,7 @@ public class Waveform
      * @param height the height of the waveform
      * @throws IllegalStateException if the audio data is not 16-bit
      */
-    public void generate(Wave data, int pixelsPerSecond, int height)
+    public void generateWaveData(Wave data, int pixelsPerSecond, int height)
     {
         if (data.getBytesPerSample() != 2)
         {
@@ -273,8 +273,10 @@ public class Waveform
             {
                 continue;
             }
+
             int so = offset - u;
             GpuTexture gpuTex = getGpuTexture(sprite.texture);
+            
             if (gpuTex != null) 
             {
                 RenderSystem.setShaderTexture(0, gpuTex);

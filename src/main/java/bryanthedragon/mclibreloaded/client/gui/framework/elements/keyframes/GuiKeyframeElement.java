@@ -11,6 +11,7 @@ import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeEasing;
 import bryanthedragon.mclibreloaded.utils.keyframes.KeyframeInterpolation;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
@@ -20,11 +21,9 @@ import java.util.function.Consumer;
 public abstract class GuiKeyframeElement extends GuiElement
 {
     public static final Color COLOR = new Color();
-
     public Consumer<Keyframe> callback;
     public Selection which = Selection.NOT_SELECTED;
     public int duration;
-
     public double minZoom = 0.01D;
     public double maxZoom = 1000D;
 
@@ -57,20 +56,16 @@ public abstract class GuiKeyframeElement extends GuiElement
      * in order to select multiple keyframes
      */
     protected boolean grabbing;
-
     protected int lastX;
     protected int lastY;
     protected double lastT;
     protected double lastV;
-
     protected Scale scaleX;
-
     protected IAxisConverter converter;
 
     public GuiKeyframeElement(Minecraft mc, Consumer<Keyframe> callback)
     {
         super(mc);
-
         this.callback = callback;
         this.scaleX = new Scale(this.area, false);
         this.scaleX.anchor(0.5F);
@@ -137,7 +132,10 @@ public abstract class GuiKeyframeElement extends GuiElement
     }
 
     public void selectByDuration(long duration)
-    {}
+    {   
+        this.setDuration(duration);
+        this.resetView();
+    }
 
     public abstract void selectAll();
 
@@ -176,13 +174,23 @@ public abstract class GuiKeyframeElement extends GuiElement
     /* Common hooks */
 
     protected void updateMoved()
-    {}
+    {
+        this.moving = false;
+    }
 
     protected void moveNoKeyframe(GuiContext context, Keyframe frame, double x, double y)
-    {}
+    {
+        this.setKeyframe(frame);
+    }
 
     protected void drawCursor(GuiContext context)
-    {}
+    {
+        if (this.area.isInside(context))
+        {
+            int x = context.mouseX;
+            Gui.drawRect(x, this.area.y, x + 1, this.area.ey(), 0xffffffff);
+        }
+    }
 
     /* Mouse input handling */
 
@@ -225,7 +233,6 @@ public abstract class GuiKeyframeElement extends GuiElement
                     this.clearSelection();
                     this.setKeyframe(null);
                 }
-
                 this.dragging = true;
                 this.pickedKeyframe(this.getSelectedCount());
             }
@@ -234,12 +241,14 @@ public abstract class GuiKeyframeElement extends GuiElement
                 this.setupScrolling(context, mouseX, mouseY);
             }
         }
-
         return false;
     }
 
     protected void pickedKeyframe(int amount)
-    {}
+    {
+        this.lastT = this.getCurrent() != null ? this.getCurrent().tick : 0;
+        this.lastV = this.getCurrent() != null ? this.getCurrent().value : 0;
+    }
 
     protected abstract void duplicateKeyframe(GuiContext context, int mouseX, int mouseY);
 
@@ -269,12 +278,9 @@ public abstract class GuiKeyframeElement extends GuiElement
             {
                 scroll = -scroll;
             }
-
             this.zoom(scroll, context.mouseX, context.mouseY);
-
             return true;
         }
-
         return false;
     }
 
@@ -289,7 +295,6 @@ public abstract class GuiKeyframeElement extends GuiElement
     public void mouseReleased(GuiContext context)
     {
         super.mouseReleased(context);
-
         if (this.which == Selection.KEYFRAME)
         {
             if (this.sliding)
@@ -302,12 +307,13 @@ public abstract class GuiKeyframeElement extends GuiElement
                 this.updateMoved();
             }
         }
-
         this.resetMouseReleased(context);
     }
 
     protected void postSlideSort(GuiContext context)
-    {}
+    {
+        this.sliding = false;
+    }
 
     protected void resetMouseReleased(GuiContext context)
     {
@@ -324,9 +330,7 @@ public abstract class GuiKeyframeElement extends GuiElement
     {
         this.handleMouse(context, context.mouseX, context.mouseY);
         this.drawBackground(context);
-
         GuiDraw.scissor(this.area.x, this.area.y, this.area.w, this.area.h, context);
-
         this.drawGrid(context);
         this.drawCursor(context);
 
@@ -335,7 +339,6 @@ public abstract class GuiKeyframeElement extends GuiElement
         RenderSystem.disableTexture2D();
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(RenderSystem.SourceFactor.SRC_ALPHA, RenderSystem.DestFactor.ONE_MINUS_SRC_ALPHA);
-
         this.drawGraph(context, context.mouseX, context.mouseY);
 
         /* Draw selection box */
@@ -343,12 +346,9 @@ public abstract class GuiKeyframeElement extends GuiElement
         {
             Gui.drawRect(this.lastX, this.lastY, context.mouseX, context.mouseY, 0x440088ff);
         }
-
         RenderSystem.disableBlend();
         RenderSystem.enableTexture2D();
-
         GuiDraw.unscissor(context);
-
         super.draw(context);
     }
 
@@ -361,8 +361,15 @@ public abstract class GuiKeyframeElement extends GuiElement
             int leftBorder = this.toGraphX(0);
             int rightBorder = this.toGraphX(this.duration);
 
-            if (leftBorder > this.area.x) Gui.drawRect(this.area.x, this.area.y, leftBorder, this.area.y + this.area.h, ColorUtils.HALF_BLACK);
-            if (rightBorder < this.area.ex()) Gui.drawRect(rightBorder, this.area.y, this.area.ex() , this.area.y + this.area.h, ColorUtils.HALF_BLACK);
+            if (leftBorder > this.area.x) 
+            {
+                Gui.drawRect(this.area.x, this.area.y, leftBorder, this.area.y + this.area.h, ColorUtils.HALF_BLACK);
+            }
+
+            if (rightBorder < this.area.ex()) 
+            {
+                Gui.drawRect(rightBorder, this.area.y, this.area.ex() , this.area.y + this.area.h, ColorUtils.HALF_BLACK);
+            }
         }
     }
 
@@ -381,9 +388,7 @@ public abstract class GuiKeyframeElement extends GuiElement
             {
                 break;
             }
-
             String label = this.converter == null ? String.valueOf(j * mult) : this.converter.format(j * mult);
-
             Gui.drawRect(x, this.area.y, x + 1, this.area.ey(), 0x44ffffff);
             this.font.drawString(label, x + 4, this.area.y + 4, 0xffffff);
         }
@@ -394,7 +399,6 @@ public abstract class GuiKeyframeElement extends GuiElement
     protected void drawRect(BufferBuilder builder, int x, int y, int offset, int c)
     {
         COLOR.alphaSetter(c, false);
-
         builder.pos(x - offset, y + offset, 0.0D).color(COLOR.r, COLOR.g, COLOR.b, 1F).endVertex();
         builder.pos(x + offset, y + offset, 0.0D).color(COLOR.r, COLOR.g, COLOR.b, 1F).endVertex();
         builder.pos(x + offset, y - offset, 0.0D).color(COLOR.r, COLOR.g, COLOR.b, 1F).endVertex();
@@ -424,7 +428,10 @@ public abstract class GuiKeyframeElement extends GuiElement
     }
 
     protected void keepMoving()
-    {}
+    {
+        this.lastX = this.mouseX;
+        this.lastY = this.mouseY;
+    }
 
     protected void scrolling(int mouseX, int mouseY)
     {

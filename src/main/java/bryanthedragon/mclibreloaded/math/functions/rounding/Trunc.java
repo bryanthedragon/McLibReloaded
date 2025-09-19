@@ -20,7 +20,6 @@ public class Trunc extends NNFunction
     public double doubleValue()
     {
         double value = this.getArg(0).doubleValue();
-
         return value < 0 ? Math.ceil(value) : Math.floor(value);
     }
 }

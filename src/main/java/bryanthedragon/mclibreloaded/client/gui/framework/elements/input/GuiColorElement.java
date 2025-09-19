@@ -43,14 +43,12 @@ public class GuiColorElement extends GuiElement
         {
             this.picker.editAlpha();
         }
-
         this.picker.setColor(value.get());
     }
 
     public GuiColorElement(Minecraft mc, Consumer<Integer> callback)
     {
         super(mc);
-
         this.picker = new GuiColorPicker(mc, (color) ->
         {
             if (callback != null)
@@ -59,7 +57,6 @@ public class GuiColorElement extends GuiElement
             }
         });
         this.picker.markIgnored().flex().wh(200, 85).bounds(this, 2);
-
         this.direction(Direction.BOTTOM).flex().h(20);
     }
 
@@ -67,7 +64,6 @@ public class GuiColorElement extends GuiElement
     {
         this.direction = direction;
         this.picker.flex().anchor(1 - direction.anchorX, 1 - direction.anchorY);
-
         return this;
     }
 
@@ -79,7 +75,6 @@ public class GuiColorElement extends GuiElement
     public GuiColorElement noLabel()
     {
         this.label = false;
-
         return this;
     }
 
@@ -87,7 +82,6 @@ public class GuiColorElement extends GuiElement
     {
         this.target = target;
         this.picker.flex().bounds(null, 0).target = target;
-
         return this;
     }
 
@@ -105,7 +99,6 @@ public class GuiColorElement extends GuiElement
             {
                 int x = context.globalX(this.area.x(this.direction.anchorX) + 2 * this.direction.factorX);
                 int y = context.globalY(this.area.y(this.direction.anchorY) + 2 * this.direction.factorY);
-
                 (this.target == null ? this.getParentContainer() : this.target).add(this.picker);
                 this.picker.setup(x, y);
                 this.picker.resize();
@@ -114,25 +107,21 @@ public class GuiColorElement extends GuiElement
             {
                 this.picker.removeFromParent();
             }
-
             return true;
         }
-
         return false;
     }
 
     @Override
-    public void draw(GuiContext context)
+    public void drawer(GuiContext context)
     {
         int padding = 0;
 
         if (McLibReloaded.enableBorders.get())
         {
             this.area.draw(0xff000000);
-
             RenderSystem.color(1, 1, 1);
             this.picker.drawRect(this.area.x + 1, this.area.y + 1, this.area.ex() - 1, this.area.ey() - 1);
-
             padding = 1;
         }
         else
@@ -148,12 +137,9 @@ public class GuiColorElement extends GuiElement
         if (this.label)
         {
             String label = this.picker.color.stringifier(this.picker.editAlpha);
-
             GuiDraw.drawTextBackground(this.font, label, this.area.mx(this.font.getStringWidth(label)), this.area.my(this.font.FONT_HEIGHT - 1), 0xffffff, 0x55000000, 1);
         }
-
         GuiDraw.drawLockedArea(this);
-
         super.draw(context);
     }
 }

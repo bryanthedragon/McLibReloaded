@@ -16,5 +16,5 @@ public interface IAnswerRequest<T extends Serializable>
      * @return a PacketAnswer containing the value of the type of this request.
      * @throws NoSuchElementException if {@link #getCallbackID()} value is not present.
      */
-    PacketAnswer<T> getAnswer(T value) throws NoSuchElementException;
+    PacketAnswer<T> getAnswerRequest(T value) throws NoSuchElementException;
 }

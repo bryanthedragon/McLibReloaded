@@ -20,7 +20,17 @@ public class ClientHandlerConfirm extends ClientMessageHandler<PacketConfirm>
      * @param packet
      */
     @OnlyIn(Dist.CLIENT)
-    public void run(LocalPlayer player, PacketConfirm packet)
+    public void runLocalPlayer(LocalPlayer player, PacketConfirm packet)
+    {
+        switch(packet.gui)
+        {
+            case MCSCREEN:
+                Minecraft.getInstance().displayGuiScreen(new GuiConfirmationScreen(packet.langKey, (value) -> {this.dispatchPacket(packet, value);}));
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void runServerPlayer(ServerPlayer player, PacketConfirm packet)
     {
         switch(packet.gui)
         {

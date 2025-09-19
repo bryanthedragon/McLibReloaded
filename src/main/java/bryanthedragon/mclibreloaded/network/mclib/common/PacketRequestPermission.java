@@ -8,6 +8,7 @@ import bryanthedragon.mclibreloaded.McLibReloaded;
 import bryanthedragon.mclibreloaded.permissions.PermissionCategory;
 
 import javax.annotation.Nullable;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 

@@ -11,7 +11,6 @@ public class Ternary implements IValue
     public IValue condition;
     public IValue ifTrue;
     public IValue ifFalse;
-
     private IValue result = new Constant(0);
 
     public Ternary(IValue condition, IValue ifTrue, IValue ifFalse)
@@ -43,12 +42,16 @@ public class Ternary implements IValue
     }
 
     @Override
-    public void set(double value)
-    {}
+    public void setDouble(double value)
+    {
+
+    }
 
     @Override
-    public void set(String value)
-    {}
+    public void setString(String value)
+    {
+
+    }
 
     @Override
     public double doubleValue()

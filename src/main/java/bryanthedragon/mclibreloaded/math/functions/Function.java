@@ -13,7 +13,6 @@ public abstract class Function implements IValue
 {
     protected IValue[] args;
     protected String name;
-
     protected IValue result = new Constant(0);
 
     public Function(IValue[] values, String name) throws Exception
@@ -21,7 +20,6 @@ public abstract class Function implements IValue
         if (values.length < this.getRequiredArguments())
         {
             String message = String.format("Function '%s' requires at least %s arguments. %s are given!", this.getName(), this.getRequiredArguments(), values.length);
-
             throw new Exception(message);
         }
 
@@ -29,7 +27,6 @@ public abstract class Function implements IValue
         {
             this.verifyArgument(i, values[i]);
         }
-
         this.args = values;
         this.name = name;
     }

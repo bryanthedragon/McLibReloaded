@@ -10,8 +10,9 @@ import org.objectweb.asm.tree.VarInsnNode;
 public abstract class CoreClassTransformer
 {
     public static boolean obfuscated = false;
+    public AbstractInsnNode node;
 
-    public static boolean checkName(String name, String notch, String mcp)
+    public static boolean checkNamedNodes(String name, String notch, String mcp)
     {
         if (name.equals(mcp) || name.equals(notch))
         {
@@ -23,12 +24,17 @@ public abstract class CoreClassTransformer
         return false;
     }
 
-    public static String get(String notch, String mcp)
+    public static String getNodes(String notch, String mcp)
     {
         return obfuscated ? notch : mcp;
     }
 
-    public static String stringify(AbstractInsnNode node)
+    public void nodeStringifier()
+    {
+        stringifyNode(this.node);
+    }
+
+    public static String stringifyNode(AbstractInsnNode node)
     {
         String output = node.toString();
 
@@ -39,22 +45,18 @@ public abstract class CoreClassTransformer
         else if (node instanceof MethodInsnNode)
         {
             MethodInsnNode method = (MethodInsnNode) node;
-
             output = "Method " + method.owner + "." + method.name + method.desc;
         }
         else if (node instanceof FieldInsnNode)
         {
             FieldInsnNode field = (FieldInsnNode) node;
-
             output = "Field " + field.owner + "." + field.name + field.desc;
         }
         else if (node instanceof VarInsnNode)
         {
             VarInsnNode var = (VarInsnNode) node;
-
             output = "Field " + var.getOpcode() + " " + var.var;
         }
-
         return output;
     }
 }

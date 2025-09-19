@@ -26,16 +26,12 @@ public class CommonProxy
     public void init()
     {
         this.configs.register(this.configFolder);
-
         RegisterPermissionsEvent permissions = new RegisterPermissionsEvent();
 
         /* let the mods register their permissions */
         McLibReloaded.EVENT_BUS.post(permissions);
-
         permissions.loadPermissions();
-
         Icons.register();
-
         MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 }

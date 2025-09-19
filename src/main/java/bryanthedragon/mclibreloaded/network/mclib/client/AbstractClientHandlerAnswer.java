@@ -40,7 +40,14 @@ public abstract class AbstractClientHandlerAnswer<T extends PacketAnswer> extend
      * @param message the server-sent answer message
      */
     @OnlyIn(Dist.CLIENT)
-    public void run(LocalPlayer player, PacketAnswer message)
+    public void runLocalPlayer(LocalPlayer SPPlayer, PacketAnswer message)
+    {
+        CONSUMERS.consume(message.getCallbackID(), message.getValue(), false);
+        TIME.remove(message.getCallbackID());
+        REQUESTS.remove(message.getCallbackID());
+    }
+
+    public void runServerPlayer(ServerPlayer MPPlayer, PacketAnswer message)
     {
         CONSUMERS.consume(message.getCallbackID(), message.getValue(), false);
         TIME.remove(message.getCallbackID());
